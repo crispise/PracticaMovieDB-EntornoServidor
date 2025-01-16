@@ -27,7 +27,8 @@ public class PersonController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", personPage.getTotalPages());
         model.addAttribute("size", size);
-     crudServices.getJson(personPage);
+        String jsonToSend = crudServices.getJson();
+        model.addAttribute("jsonInfo", jsonToSend);
         return "persons";
     }
 }
