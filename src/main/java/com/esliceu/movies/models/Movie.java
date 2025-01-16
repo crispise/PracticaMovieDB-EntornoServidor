@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -26,7 +27,7 @@ public class Movie {
     @Column(precision = 12, scale = 6)
     private BigDecimal popularity;
 
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     private Long revenue;
 
@@ -91,11 +92,11 @@ public class Movie {
         this.overview = overview;
     }
 
-    public Date getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 

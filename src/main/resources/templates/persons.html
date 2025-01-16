@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Persons</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+</script>
+<div class="ui-widget">
+    <label for="tags">Tags: </label>
+    <input id="tags">
+</div>
+<h1>Persons</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Mostrar los resultados -->
+    <tr th:each="p : ${persons}">
+        <td th:text="${p.personId}"></td>
+        <td th:text="${p.personName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <a th:if="${currentPage > 0}"
+       th:href="@{/persons(page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+    <a th:if="${currentPage + 1 < totalPages}"
+       th:href="@{/persons(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+</div>
+
+</body>
+</html>
