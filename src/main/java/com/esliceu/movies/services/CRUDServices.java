@@ -31,4 +31,14 @@ public class CRUDServices {
         String resultado = gson.toJson(nombres);
         return resultado;
     }
+
+    public void savePerson(String personName) {
+        Person person = new Person();
+        person.setPersonName(personName);
+        personRepo.save(person);
+    }
+
+    public Person findPersonById(Integer personId) {
+        return personRepo.findById(personId).get();
+    }
 }

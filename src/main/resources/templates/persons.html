@@ -5,28 +5,29 @@
     <title>Persons</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
-    <style>
-        .ui-autocomplete {
-            max-height: 100px;
-            overflow-y: auto;
-            /* prevent horizontal scrollbar */
-            overflow-x: hidden;
-        }
-    </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script src="/js/crud.js" defer></script>
-</head>
+    <link rel="stylesheet" href="/css/persons.css"></head>
 <body>
 <script th:inline="javascript">
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
+<h1>Personas</h1>
 <div class="ui-widget">
-    <label for="tags">Tags: </label>
-    <input id="tags">
+    <form action="/persons" method="post">
+    <label for="tags">Nombre de la persona: </label>
+    <input type="text" id="tags" name="personSearch">
+    <input type="submit">
+    </form>
 </div>
-<h1>Persons</h1>
+<h3>Crear nuevas personas</h3>
+<form action="/persons" method="post">
+    Nombre:<input type="text" name="personName">
+    <br>
+    <input type="submit">
+</form>
 <table border="1">
     <thead>
     <tr>
@@ -39,17 +40,28 @@
     <tr th:each="p : ${persons}">
         <td th:text="${p.personId}"></td>
         <td th:text="${p.personName}"></td>
+        <td></td>
     </tr>
     </tbody>
 </table>
 
 <div>
+    <!-- Links to previous page, first, and last -->
+    <a th:if="${currentPage > 0}"
+       th:href="@{/persons(page=0, size=${size})}">Primero</a>
+
     <a th:if="${currentPage > 0}"
        th:href="@{/persons(page=${currentPage - 1}, size=${size})}">Anterior</a>
 
     <a th:if="${currentPage + 1 < totalPages}"
        th:href="@{/persons(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+    <a th:if="${currentPage + 1 < totalPages}"
+       th:href="@{/persons(page=${totalPages - 1}, size=${size})}">Último</a>
 </div>
 
+<div class="pagination-info">
+    <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+</div>
 </body>
 </html>

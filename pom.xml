@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>LATEST</version>  <!-- Dejar que Maven elija la última versión -->
+			<version>LATEST</version>
 		</dependency>
 
 	</dependencies>
