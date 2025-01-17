@@ -16,14 +16,19 @@ h1 {
     margin-bottom: 20px;
 }
 
+h2{
+    text-align:center
+}
+
 h3 {
+    text-align: center;
     color: #333;
     font-size: 1.5rem;
     margin-top: 30px;
     text-align: center;
 }
 
-/* Form styling */
+
 form {
     max-width: 500px;
     margin: 20px auto;
@@ -31,6 +36,24 @@ form {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Espacio entre los elementos del formulario */
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#action-select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px; /* Espacio adicional entre el select y el botón */
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
 }
 
 form input[type="text"] {
@@ -57,7 +80,7 @@ form input[type="submit"]:hover {
     background-color: #45a049;
 }
 
-/* Table styling */
+
 table {
     width: 80%;
     margin: 20px auto;
@@ -128,6 +151,24 @@ div a:active {
 
 .pagination-info span {
     margin: 0 10px;
+}
+
+.success-message {
+    color: green;
+    background-color: #d4edda;
+    border: 1px solid green;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.error-message {
+    color: red;
+    background-color: #f8d7da;
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
 }
 
 /* Responsive Design */

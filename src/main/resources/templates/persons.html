@@ -4,64 +4,105 @@
     <meta charset="UTF-8">
     <title>Persons</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script src="/js/crud.js" defer></script>
-    <link rel="stylesheet" href="/css/persons.css"></head>
+    <link rel="stylesheet" href="/css/persons.css">
+</head>
 <body>
 <script th:inline="javascript">
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
-<h1>Personas</h1>
-<div class="ui-widget">
+
+<h1> Gestión de Personas</h1>
+<div class="menu">
     <form action="/persons" method="post">
-    <label for="tags">Nombre de la persona: </label>
-    <input type="text" id="tags" name="personSearch">
-    <input type="submit">
+        <label for="action-select">Seleccione una acción:</label>
+        <select id="action-select" name="actionSelect">
+            <option value="view-all">Obtener todas las personas</option>
+            <option value="search-by-name">Buscar por nombre</option>
+            <option value="create-new">Crear nueva persona</option>
+        </select>
+        <input type="submit">
     </form>
 </div>
-<h3>Crear nuevas personas</h3>
-<form action="/persons" method="post">
-    Nombre:<input type="text" name="personName">
-    <br>
-    <input type="submit">
-</form>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Nombre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Mostrar los resultados -->
-    <tr th:each="p : ${persons}">
-        <td th:text="${p.personId}"></td>
-        <td th:text="${p.personName}"></td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
 
-<div>
-    <!-- Links to previous page, first, and last -->
-    <a th:if="${currentPage > 0}"
-       th:href="@{/persons(page=0, size=${size})}">Primero</a>
+<section th:if="${viewAll}">
+    <h2>Lista de Personas</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="person : ${persons}">
+            <td th:text="${person.personId}"></td>
+            <td th:text="${person.personName}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allPersons(page=0, size=${size})}">Primero</a>
 
-    <a th:if="${currentPage > 0}"
-       th:href="@{/persons(page=${currentPage - 1}, size=${size})}">Anterior</a>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allPersons(page=${currentPage - 1}, size=${size})}">Anterior</a>
 
-    <a th:if="${currentPage + 1 < totalPages}"
-       th:href="@{/persons(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allPersons(page=${currentPage + 1}, size=${size})}">Siguiente</a>
 
-    <a th:if="${currentPage + 1 < totalPages}"
-       th:href="@{/persons(page=${totalPages - 1}, size=${size})}">Último</a>
-</div>
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allPersons(page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
 
-<div class="pagination-info">
-    <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
-</div>
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+</section>
+
+<section th:if="${searchByName}">
+    <h2>Buscar Persona por Nombre</h2>
+    <div class="ui-widget">
+        <form action="/searchPersons" method="post">
+            <label for="tags">Nombre de la persona: </label>
+            <input type="text" id="tags" name="personName">
+            <input type="submit" value="Buscar">
+        </form>
+    </div>
+    <table th:if="${peopleFound != null and #lists.size(peopleFound) > 0}">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="person : ${peopleFound}">
+            <td th:text="${person.personId}"></td>
+            <td th:text="${person.personName}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section th:if="${createNew}">
+    <h2>Crear Nueva Persona</h2>
+    <form action="/createPerson" method="post">
+        <label for="personName">Nombre:</label>
+        <input type="text" id="personName" name="personName">
+        <input type="submit" value="Crear">
+    </form>
+
+    <div th:if="${successMessage}" class="success-message">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+</section>
 </body>
 </html>

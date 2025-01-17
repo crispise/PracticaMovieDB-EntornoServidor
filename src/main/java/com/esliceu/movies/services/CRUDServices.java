@@ -32,13 +32,24 @@ public class CRUDServices {
         return resultado;
     }
 
-    public void savePerson(String personName) {
+    public String savePerson(String personName) {
+        if (personName == null || personName.trim().isEmpty()) {
+            return "El nombre de la persona no puede estar vacío.";
+        }
+        if (personRepo.findPersonByPersonName(personName).size() > 1) {
+            return "Ya existe una persona con ese nombre.";
+        }
         Person person = new Person();
         person.setPersonName(personName);
         personRepo.save(person);
+        return null;
     }
 
     public Person findPersonById(Integer personId) {
         return personRepo.findById(personId).get();
+    }
+
+    public List<Person> findPersonsByName(String personSearch) {
+        return personRepo.findPersonByPersonName(personSearch);
     }
 }
