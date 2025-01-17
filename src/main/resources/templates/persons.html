@@ -35,12 +35,25 @@
         <tr>
             <th>Id</th>
             <th>Nombre</th>
+            <th>Opciones</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="person : ${persons}">
             <td th:text="${person.personId}"></td>
             <td th:text="${person.personName}"></td>
+            <td>
+                <a th:href="@{/updatePerson/{id}(id=${person.personId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
+                    <input type="hidden" value="${person.personId}">
+                    <button type="submit" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
+                         Eliminar
+                    </button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -77,12 +90,26 @@
         <tr>
             <th>Id</th>
             <th>Nombre</th>
+            <th>Opciones</th>
+
         </tr>
         </thead>
         <tbody>
         <tr th:each="person : ${peopleFound}">
             <td th:text="${person.personId}"></td>
             <td th:text="${person.personName}"></td>
+            <td>
+                <a th:href="@{/updatePerson/{id}(id=${person.personId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
+                    <input type="hidden" value="${person.personId}">
+                    <button type="submit" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
