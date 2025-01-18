@@ -47,10 +47,12 @@
                     Actualizar
                 </a>
 
-                <form class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
-                    <input type="hidden" value="${person.personId}">
-                    <button type="submit" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
-                         Eliminar
+                <form id="miFormulario" class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${person.personId}" name="personId">
+                    <input type="hidden" th:value="${currentPage}" name="currentPage"> <!-- Campo oculto para la página actual -->
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
+                        Eliminar
                     </button>
                 </form>
             </td>
@@ -104,8 +106,9 @@
                 </a>
 
                 <form class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
-                    <input type="hidden" value="${person.personId}">
-                    <button type="submit" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
+                    <input type="hidden" th:value="${person.personId}" name="personId">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
                         Eliminar
                     </button>
                 </form>
@@ -122,14 +125,45 @@
         <input type="text" id="personName" name="personName">
         <input type="submit" value="Crear">
     </form>
-
-    <div th:if="${successMessage}" class="success-message">
-        <p th:text="${successMessage}"></p>
-    </div>
-
-    <div th:if="${errorMessage}" class="error-message">
-        <p th:text="${errorMessage}"></p>
-    </div>
 </section>
+
+<section th:if="${update}">
+    <h2>Actualizar persona</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${person.personId}"></td>
+            <td th:text="${person.personName}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${updateForm}">
+        <form action="/updatePerson" method="post">
+            <input type="hidden" th:value="${person.personId}" name="personId">
+            <label for="nameChanged">Nombre:</label>
+            <input type="text" id="nameChanged" name="personName">
+            <input type="submit" value="Actualizar">
+        </form>
+    </div>
+
+
+</section>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<script src="/js/crud.js"></script>
+
 </body>
 </html>

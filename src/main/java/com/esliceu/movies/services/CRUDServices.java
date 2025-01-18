@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,5 +52,27 @@ public class CRUDServices {
 
     public List<Person> findPersonsByName(String personSearch) {
         return personRepo.findPersonByPersonName(personSearch);
+    }
+
+    public String deletePerson(Integer personId) {
+        try {
+            personRepo.deleteById(personId);
+            return "Ok";
+        }catch (Exception e) {
+            return "Error";
+        }
+
+    }
+
+    public Person updatePerson(Integer personId, String personName) {
+        Optional<Person> existingPerson = personRepo.findById(personId);
+        if (existingPerson.isPresent()) {
+            Person updatedPerson = existingPerson.get();
+            updatedPerson.setPersonName(personName);
+            personRepo.save(updatedPerson);
+            return updatedPerson;
+        } else {
+            return null;
+        }
     }
 }

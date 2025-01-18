@@ -202,7 +202,6 @@ div a:active {
     transform: scale(1.05);  /* Aumento del tamaño del botón */
 }
 .deleteButtonForm{
-    display:inline
     max-width: 500px;
     margin-left: 10px;
     padding: 0;
