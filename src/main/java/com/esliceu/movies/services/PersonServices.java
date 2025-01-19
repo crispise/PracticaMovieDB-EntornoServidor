@@ -1,6 +1,8 @@
 package com.esliceu.movies.services;
 
 import com.esliceu.movies.models.Person;
+import com.esliceu.movies.models.ProductionCompany;
+import com.esliceu.movies.repos.PCompaniesRepo;
 import com.esliceu.movies.repos.PersonRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,50 +15,50 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CRUDServices {
+public class PersonServices {
     @Autowired
     PersonRepo personRepo;
-
 
     public Page<Person> findAllPersons(Pageable pageable) {
         return personRepo.findAll(pageable);
     }
 
-    public String getJson() {
+    public String getPersonJson() {
         List<Person> persons = personRepo.findAll();
-        List<String> nombres = persons.stream()
+        List<String> names = persons.stream()
                 .map(p -> p.getPersonName())
                 .collect(Collectors.toList());
 
         Gson gson = new Gson();
-        String resultado = gson.toJson(nombres);
-        return resultado;
+        String result = gson.toJson(names);
+        return result;
     }
 
-    public String savePerson(String personName) {
-        if (personName == null || personName.trim().isEmpty()) {
+    public String savePerson(String name) {
+        if (name == null || name.trim().isEmpty()) {
             return "El nombre de la persona no puede estar vacío.";
         }
-        if (personRepo.findPersonByPersonName(personName).size() > 1) {
+        if (personRepo.findPersonByPersonName(name).size() > 1) {
             return "Ya existe una persona con ese nombre.";
         }
         Person person = new Person();
-        person.setPersonName(personName);
+        person.setPersonName(name);
         personRepo.save(person);
         return null;
     }
 
-    public Person findPersonById(Integer personId) {
-        return personRepo.findById(personId).get();
+
+    public Person findPersonById(Integer id) {
+        return personRepo.findById(id).get();
     }
 
     public List<Person> findPersonsByName(String personSearch) {
         return personRepo.findPersonByPersonName(personSearch);
     }
 
-    public String deletePerson(Integer personId) {
+    public String deletePerson(Integer id) {
         try {
-            personRepo.deleteById(personId);
+            personRepo.deleteById(id);
             return "Ok";
         }catch (Exception e) {
             return "Error";
@@ -64,15 +66,16 @@ public class CRUDServices {
 
     }
 
-    public Person updatePerson(Integer personId, String personName) {
-        Optional<Person> existingPerson = personRepo.findById(personId);
+    public Person updatePerson(Integer id, String name) {
+        Optional<Person> existingPerson = personRepo.findById(id);
         if (existingPerson.isPresent()) {
             Person updatedPerson = existingPerson.get();
-            updatedPerson.setPersonName(personName);
+            updatedPerson.setPersonName(name);
             personRepo.save(updatedPerson);
             return updatedPerson;
         } else {
             return null;
         }
     }
+
 }

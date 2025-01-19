@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Persons</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/persons.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+
+</script>
+
+<h1> Gestión de Departamentos</h1>
+<div class="menu">
+    <form action="/departments" method="post">
+        <label for="action-select">Seleccione una acción:</label>
+        <select id="action-select" name="actionSelect">
+            <option value="view-all">Obtener todos los departamentos</option>
+            <option value="search-by-name">Buscar por nombre</option>
+            <option value="create-new">Crear nuevo departamento</option>
+        </select>
+        <input type="submit">
+    </form>
+</div>
+
+<section th:if="${viewAll}">
+    <h2>Lista de Departamentos</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department: ${departments}">
+            <td th:text="${department.departmentId}"></td>
+            <td th:text="${department.departmentName}"></td>
+            <td>
+                <a th:href="@{/updateDepartment/{id}(id=${department.departmentId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteDepartment" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${department.departmentId}" name="departmentId">
+                    <input type="hidden" th:value="${currentPage}" name="currentPage">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este departamento?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allDepartments(page=0, size=${size})}">Primero</a>
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allDepartments(page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allDepartments(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allDepartments(page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
+
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+</section>
+
+<section th:if="${searchByName}">
+    <h2>Buscar Departamento por Nombre</h2>
+    <div class="ui-widget">
+        <form action="/searchDepartments" method="post">
+            <label for="tags">Nombre del departamento: </label>
+            <input type="text" id="tags" name="departmentName">
+            <input type="submit" value="Buscar">
+        </form>
+    </div>
+    <table th:if="${departmentFound != null and #lists.size(departmentFound) > 0}">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department: ${departmentFound}">
+            <td th:text="${department.departmentId}"></td>
+            <td th:text="${department.departmentName}"></td>
+            <td>
+                <a th:href="@{/updateDepartment/{id}(id=${department.departmentId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteDepartment" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${department.departmentId}" name="departmentId">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este departamento?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section th:if="${createNew}">
+    <h2>Crear Nuevo Departamento</h2>
+    <form action="/createDepartment" method="post">
+        <label for="departmentName">Nombre:</label>
+        <input type="text" id="departmentName" name="departmentName">
+        <input type="submit" value="Crear">
+    </form>
+</section>
+
+<section th:if="${update}">
+    <h2>Actualizar departamento</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${department.departmentId}"></td>
+            <td th:text="${department.departmentName}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${updateForm}">
+        <form action="/updateDepartment" method="post">
+            <input type="hidden" th:value="${department.departmentId}" name="departmentId">
+            <label for="nameChanged">Nombre:</label>
+            <input type="text" id="nameChanged" name="departmentName">
+            <input type="submit" value="Actualizar">
+        </form>
+    </div>
+
+
+</section>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<script src="/js/crud.js"></script>
+
+</body>
+</html>

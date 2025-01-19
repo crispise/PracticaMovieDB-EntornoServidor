@@ -1,9 +1,8 @@
 package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Person;
-import com.esliceu.movies.services.CRUDServices;
+import com.esliceu.movies.services.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,7 @@ import java.util.List;
 public class PersonController {
 
     @Autowired
-    CRUDServices crudServices;
+    PersonServices personServices;
 
     @GetMapping("/persons")
     public String getPersons() {
@@ -47,7 +46,7 @@ public class PersonController {
     public String getAllPersons(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
         model.addAttribute("viewAll", true);
         Pageable pageable = PageRequest.of(page, size);
-        Page<Person> personPage = crudServices.findAllPersons(pageable);
+        Page<Person> personPage = personServices.findAllPersons(pageable);
         model.addAttribute("persons", personPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", personPage.getTotalPages());
@@ -58,7 +57,7 @@ public class PersonController {
     @GetMapping("/searchPersons")
     public String searchPersons(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
         model.addAttribute("searchByName", true);
-        String jsonToSend = crudServices.getJson();
+        String jsonToSend = personServices.getPersonJson();
         model.addAttribute("jsonInfo", jsonToSend);
         return "persons";
     }
@@ -66,9 +65,9 @@ public class PersonController {
     @PostMapping("/searchPersons")
     public String getPersonWanted(@RequestParam String personName, Model model) {
         model.addAttribute("searchByName", true);
-        String jsonToSend = crudServices.getJson();
+        String jsonToSend = personServices.getPersonJson();
         model.addAttribute("jsonInfo", jsonToSend);
-        List<Person> peopleFound = crudServices.findPersonsByName(personName);
+        List<Person> peopleFound = personServices.findPersonsByName(personName);
         model.addAttribute("peopleFound", peopleFound);
         return "persons";
     }
@@ -85,7 +84,7 @@ public class PersonController {
     @PostMapping("/createPerson")
     public String savePerson(@RequestParam String personName, Model model) {
        model.addAttribute("createNew", true);
-        String resultMessage =crudServices.savePerson(personName);
+        String resultMessage =personServices.savePerson(personName);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Persona creada exitosamente!");
         } else {
@@ -95,19 +94,24 @@ public class PersonController {
     }
 
     @PostMapping("/deletePerson")
-    public String deletePerson(@RequestParam Integer personId, @RequestParam int currentPage, Model model){
-        String message = crudServices.deletePerson(personId);
+    public String deletePerson(@RequestParam Integer personId, @RequestParam(required = false) Integer currentPage, Model model){
+        String message = personServices.deletePerson(personId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "La persona se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar a la persona");
         }
-        return "redirect:/allPersons?page=" + currentPage + "&size=" + 20;
+        if (currentPage != null){
+            return "redirect:/allPersons?page=" + currentPage + "&size=" + 20;
+        }else {
+            return "persons";
+        }
+
     }
 
     @GetMapping("/updatePerson/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Person person = crudServices.findPersonById(id);
+        Person person = personServices.findPersonById(id);
         if (person != null) {
             model.addAttribute("person", person);
             model.addAttribute("update", true);
@@ -121,7 +125,7 @@ public class PersonController {
 
    @PostMapping("/updatePerson")
     public String updatePerson(@RequestParam Integer personId, @RequestParam String personName, Model model){
-        Person personUpdate = crudServices.updatePerson(personId, personName);
+        Person personUpdate = personServices.updatePerson(personId, personName);
         model.addAttribute("person", personUpdate);
         model.addAttribute("update", true);
         return "persons";

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Compañias de Producción</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/persons.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+
+</script>
+
+<h1> Gestión de Compañias de Producción</h1>
+<div class="menu">
+    <form action="/productionCompany" method="post">
+        <label for="action-select">Seleccione una acción:</label>
+        <select id="action-select" name="actionSelect">
+            <option value="view-all">Obtener todas las compañias</option>
+            <option value="search-by-name">Buscar por nombre</option>
+            <option value="create-new">Crear nueva compañia</option>
+        </select>
+        <input type="submit">
+    </form>
+</div>
+
+<section th:if="${viewAll}">
+    <h2>Lista de Compañias de Producción</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="company : ${companies}">
+            <td th:text="${company.companyId}"></td>
+            <td th:text="${company.companyName}"></td>
+            <td>
+                <a th:href="@{/updateCompany/{id}(id=${company.companyId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteCompany" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${company.companyId}" name="companyId">
+                    <input type="hidden" th:value="${currentPage}" name="currentPage">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta compañia?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allCompanies(page=0, size=${size})}">Primero</a>
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allCompanies(page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allCompanies(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allCompanies(page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
+
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+</section>
+
+<section th:if="${searchByName}">
+    <h2>Buscar Compañia por Nombre</h2>
+    <div class="ui-widget">
+        <form action="/searchCompanies" method="post">
+            <label for="tags">Nombre de la compañia: </label>
+            <input type="text" id="tags" name="companyName">
+            <input type="submit" value="Buscar">
+        </form>
+    </div>
+    <table th:if="${companiesFound != null and #lists.size(companiesFound) > 0}">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="company : ${companiesFound}">
+            <td th:text="${company.companyId}"></td>
+            <td th:text="${company.companyName}"></td>
+            <td>
+                <a th:href="@{/updateCompany/{id}(id=${company.companyId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteCompany" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${company.companyId}" name="companyId">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta compañia?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section th:if="${createNew}">
+    <h2>Crear Nueva Compañia</h2>
+    <form action="/createCompany" method="post">
+        <label for="companyName">Nombre:</label>
+        <input type="text" id="companyName" name="companyName">
+        <input type="submit" value="Crear">
+    </form>
+</section>
+
+<section th:if="${update}">
+    <h2>Actualizar Compañia</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${company.companyId}"></td>
+            <td th:text="${company.companyName}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${updateForm}">
+        <form action="/updateCompany" method="post">
+            <input type="hidden" th:value="${company.companyId}" name="companyId">
+            <label for="nameChanged">Nombre:</label>
+            <input type="text" id="nameChanged" name="companyName">
+            <input type="submit" value="Actualizar">
+        </form>
+    </div>
+
+
+</section>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<script src="/js/crud.js"></script>
+
+</body>
+</html>

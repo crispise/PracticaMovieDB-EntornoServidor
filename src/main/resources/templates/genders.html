@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Persons</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/persons.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+
+</script>
+
+<h1> Gestión de Géneros</h1>
+<div class="menu">
+    <form action="/genders" method="post">
+        <label for="action-select">Seleccione una acción:</label>
+        <select id="action-select" name="actionSelect">
+            <option value="view-all">Obtener todos los géneros</option>
+            <option value="search-by-name">Buscar por nombre del género</option>
+            <option value="create-new">Crear nuevo género</option>
+        </select>
+        <input type="submit">
+    </form>
+</div>
+
+<section th:if="${viewAll}">
+    <h2>Lista de Géneros</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Género</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="gender : ${genders}">
+            <td th:text="${gender.genderId}"></td>
+            <td th:text="${gender.gender}"></td>
+            <td>
+                <a th:href="@{/updateGender/{id}(id=${gender.genderId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteGender" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${gender.genderId}" name="genderId">
+                    <input type="hidden" th:value="${currentPage}" name="currentPage">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este género?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allGenders(page=0, size=${size})}">Primero</a>
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allGenders(page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allGenders(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allGenders(page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
+
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+</section>
+
+<section th:if="${searchByName}">
+    <h2>Buscar Género por Nombre</h2>
+    <div class="ui-widget">
+        <form action="/searchGenders" method="post">
+            <label for="tags">Nombre del género: </label>
+            <input type="text" id="tags" name="gender">
+            <input type="submit" value="Buscar">
+        </form>
+    </div>
+    <table th:if="${genderFound != null and #lists.size(genderFound) > 0}">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Género</th>
+            <th>Opciones</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="gender : ${genderFound}">
+            <td th:text="${gender.genderId}"></td>
+            <td th:text="${gender.gender}"></td>
+            <td>
+                <a th:href="@{/updateGender/{id}(id=${gender.genderId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteGender" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${gender.genderId}" name="genderId">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este género?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section th:if="${createNew}">
+    <h2>Crear Nuevo Género</h2>
+    <form action="/createGender" method="post">
+        <label for="gender">Nombre:</label>
+        <input type="text" id="gender" name="gender">
+        <input type="submit" value="Crear">
+    </form>
+</section>
+
+<section th:if="${update}">
+    <h2>Actualizar género</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Género</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${gender.genderId}"></td>
+            <td th:text="${gender.gender}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${updateForm}">
+        <form action="/updateGender" method="post">
+            <input type="hidden" th:value="${gender.genderId}" name="genderId">
+            <label for="nameChanged">Nombre:</label>
+            <input type="text" id="nameChanged" name="gender">
+            <input type="submit" value="Actualizar">
+        </form>
+    </div>
+
+
+</section>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<script src="/js/crud.js"></script>
+
+</body>
+</html>
