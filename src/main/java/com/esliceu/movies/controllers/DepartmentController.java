@@ -56,7 +56,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/searchDepartments")
-    public String searchDepartments(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
+    public String searchDepartments(Model model) {
         model.addAttribute("searchByName", true);
         String jsonToSend = departmentServices.getDepartmentJson();
         model.addAttribute("jsonInfo", jsonToSend);

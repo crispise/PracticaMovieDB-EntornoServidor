@@ -55,7 +55,7 @@ public class PCompanyController {
     }
 
     @GetMapping("/searchCompanies")
-    public String searchCompanies(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
+    public String searchCompanies(Model model) {
         model.addAttribute("searchByName", true);
         String jsonToSend = pCompanyServices.getCompaniesJson();
         model.addAttribute("jsonInfo", jsonToSend);

@@ -56,7 +56,7 @@ public class GenderController {
     }
 
     @GetMapping("/searchGenders")
-    public String searchGenders(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
+    public String searchGenders(Model model) {
         model.addAttribute("searchByName", true);
         String jsonToSend = genderServices.getGenderJson();
         model.addAttribute("jsonInfo", jsonToSend);

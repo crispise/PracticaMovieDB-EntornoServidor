@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Persons</title>
+    <title>Palabras clave</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -15,21 +15,21 @@
 
 </script>
 
-<h1> Gestión de Personas</h1>
+<h1> Gestión de Palabras Clava</h1>
 <div class="menu">
-    <form action="/persons" method="post">
+    <form action="/keywords" method="post">
         <label for="action-select">Seleccione una acción:</label>
         <select id="action-select" name="actionSelect">
-            <option value="view-all">Obtener todas las personas</option>
+            <option value="view-all">Obtener todas las palabras clave</option>
             <option value="search-by-name">Buscar por nombre</option>
-            <option value="create-new">Crear nueva persona</option>
+            <option value="create-new">Crear nueva palabra</option>
         </select>
         <input type="submit">
     </form>
 </div>
 
 <section th:if="${viewAll}">
-    <h2>Lista de Personas</h2>
+    <h2>Lista de Palabras clave</h2>
     <table>
         <thead>
         <tr>
@@ -39,19 +39,19 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="person : ${persons}">
-            <td th:text="${person.personId}"></td>
-            <td th:text="${person.personName}"></td>
+        <tr th:each="keyword : ${keywords}">
+            <td th:text="${keyword.keywordId}"></td>
+            <td th:text="${keyword.keywordName}"></td>
             <td>
-                <a th:href="@{/updatePerson/{id}(id=${person.personId})}" class="btn btn-update">
+                <a th:href="@{/updateKeyword/{id}(id=${keyword.keywordId})}" class="btn btn-update">
                     Actualizar
                 </a>
 
-                <form class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
-                    <input type="hidden" th:value="${person.personId}" name="personId">
+                <form class="deleteButtonForm" action="/deleteKeyword" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${keyword.keywordId}" name="keywordId">
                     <input type="hidden" th:value="${currentPage}" name="currentPage">
                     <button type="submit" class="btn btn-delete"
-                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta palabra clave?')">
                         Eliminar
                     </button>
                 </form>
@@ -61,16 +61,16 @@
     </table>
     <div>
         <a th:if="${currentPage > 0}"
-           th:href="@{/allPersons(page=0, size=${size})}">Primero</a>
+           th:href="@{/allKeywords(page=0, size=${size})}">Primero</a>
 
         <a th:if="${currentPage > 0}"
-           th:href="@{/allPersons(page=${currentPage - 1}, size=${size})}">Anterior</a>
+           th:href="@{/allKeywords(page=${currentPage - 1}, size=${size})}">Anterior</a>
 
         <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/allPersons(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+           th:href="@{/allKeywords(page=${currentPage + 1}, size=${size})}">Siguiente</a>
 
         <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/allPersons(page=${totalPages - 1}, size=${size})}">Último</a>
+           th:href="@{/allKeywords(page=${totalPages - 1}, size=${size})}">Último</a>
     </div>
 
     <div class="pagination-info">
@@ -79,36 +79,35 @@
 </section>
 
 <section th:if="${searchByName}">
-    <h2>Buscar Persona por Nombre</h2>
+    <h2>Buscar Palabra clave por Nombre</h2>
     <div class="ui-widget">
-        <form action="/searchPersons" method="post">
-            <label for="tags">Nombre de la persona: </label>
-            <input type="text" id="tags" name="personName">
+        <form action="/searchKeywords" method="post">
+            <label for="tags">Nombre de la keyword: </label>
+            <input type="text" id="tags" name="keywordName">
             <input type="submit" value="Buscar">
         </form>
     </div>
-    <table th:if="${peopleFound != null and #lists.size(peopleFound) > 0}">
+    <table th:if="${keywordsFound != null and #lists.size(keywordsFound) > 0}">
         <thead>
         <tr>
             <th>Id</th>
             <th>Nombre</th>
             <th>Opciones</th>
-
         </tr>
         </thead>
         <tbody>
-        <tr th:each="person : ${peopleFound}">
-            <td th:text="${person.personId}"></td>
-            <td th:text="${person.personName}"></td>
+        <tr th:each="keyword : ${keywordsFound}">
+            <td th:text="${keyword.keywordId}"></td>
+            <td th:text="${keyword.keywordName}"></td>
             <td>
-                <a th:href="@{/updatePerson/{id}(id=${person.personId})}" class="btn btn-update">
+                <a th:href="@{/updateKeyword/{id}(id=${keyword.keywordId})}" class="btn btn-update">
                     Actualizar
                 </a>
 
-                <form class="deleteButtonForm" action="/deletePerson" method="post" style="display:inline;">
-                    <input type="hidden" th:value="${person.personId}" name="personId">
+                <form class="deleteButtonForm" action="/deleteKeyword" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${keyword.keywordId}" name="keywordId">
                     <button type="submit" class="btn btn-delete"
-                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta persona?')">
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta palabra clave?')">
                         Eliminar
                     </button>
                 </form>
@@ -119,16 +118,16 @@
 </section>
 
 <section th:if="${createNew}">
-    <h2>Crear Nueva Persona</h2>
-    <form action="/createPerson" method="post">
-        <label for="personName">Nombre:</label>
-        <input type="text" id="personName" name="personName">
+    <h2>Crear Nueva Palabra Clave</h2>
+    <form action="/createKeyword" method="post">
+        <label for="keywordName">Nombre:</label>
+        <input type="text" id="keywordName" name="keywordName">
         <input type="submit" value="Crear">
     </form>
 </section>
 
 <section th:if="${update}">
-    <h2>Actualizar persona</h2>
+    <h2>Actualizar keyword</h2>
     <table>
         <thead>
         <tr>
@@ -138,16 +137,16 @@
         </thead>
         <tbody>
         <tr>
-            <td th:text="${person.personId}"></td>
-            <td th:text="${person.personName}"></td>
+            <td th:text="${keyword.keywordId}"></td>
+            <td th:text="${keyword.keywordName}"></td>
         </tr>
         </tbody>
     </table>
     <div th:if="${updateForm}">
-        <form action="/updatePerson" method="post">
-            <input type="hidden" th:value="${person.personId}" name="personId">
+        <form action="/updateKeyword" method="post">
+            <input type="hidden" th:value="${keyword.keywordId}" name="keywordId">
             <label for="nameChanged">Nombre:</label>
-            <input type="text" id="nameChanged" name="personName">
+            <input type="text" id="nameChanged" name="keywordName">
             <input type="submit" value="Actualizar">
         </form>
     </div>

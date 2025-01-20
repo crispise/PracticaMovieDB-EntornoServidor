@@ -55,7 +55,7 @@ public class PersonController {
     }
 
     @GetMapping("/searchPersons")
-    public String searchPersons(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
+    public String searchPersons(Model model) {
         model.addAttribute("searchByName", true);
         String jsonToSend = personServices.getPersonJson();
         model.addAttribute("jsonInfo", jsonToSend);
@@ -86,9 +86,9 @@ public class PersonController {
        model.addAttribute("createNew", true);
         String resultMessage =personServices.savePerson(personName);
         if (resultMessage == null) {
-            model.addAttribute("successMessage", "¡Persona creada exitosamente!");
+            model.addAttribute("successMessage", "¡Persona creada correctamente!");
         } else {
-            model.addAttribute("errorMessage", resultMessage); // El mensaje de error es proporcionado por el servicio
+            model.addAttribute("errorMessage", resultMessage);
         }
         return "persons";
     }
