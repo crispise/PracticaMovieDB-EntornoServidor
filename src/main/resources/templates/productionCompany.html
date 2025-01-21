@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script src="/js/crud.js" defer></script>
-    <link rel="stylesheet" href="/css/persons.css">
+    <link rel="stylesheet" href="/css/crud.css">
 </head>
 <body>
 <script th:inline="javascript">
@@ -143,16 +143,14 @@
         </tr>
         </tbody>
     </table>
-    <div th:if="${updateForm}">
-        <form action="/updateCompany" method="post">
+    <div>
+        <form th:action="@{/updateCompany/{companyId}(companyId=${company.companyId})}" method="post">
             <input type="hidden" th:value="${company.companyId}" name="companyId">
             <label for="nameChanged">Nombre:</label>
             <input type="text" id="nameChanged" name="companyName">
             <input type="submit" value="Actualizar">
         </form>
     </div>
-
-
 </section>
 
 <div th:if="${successMessage}" class="success-message">

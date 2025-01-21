@@ -115,7 +115,6 @@ public class GenderController {
         if (gender != null) {
             model.addAttribute("gender", gender);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "genders";
         } else {
             model.addAttribute("errorMessage", "EL género no fue encontrado");
@@ -123,7 +122,7 @@ public class GenderController {
         }
     }
 
-   @PostMapping("/updateGender")
+   @PostMapping("/updateGender/{genderId}")
     public String updateGender(@RequestParam Integer genderId, @RequestParam String gender, Model model){
         Gender genderUpdate = genderServices.updateGender(genderId, gender);
         model.addAttribute("gender", genderUpdate);

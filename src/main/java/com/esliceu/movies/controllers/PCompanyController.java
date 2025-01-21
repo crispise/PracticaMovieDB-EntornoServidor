@@ -113,7 +113,6 @@ public class PCompanyController {
         if (company != null) {
             model.addAttribute("company", company);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "productionCompany";
         } else {
             model.addAttribute("errorMessage", "La compañia no fue encontrada");
@@ -121,7 +120,7 @@ public class PCompanyController {
         }
     }
 
-   @PostMapping("/updateCompany")
+   @PostMapping("/updateCompany/{companyId}")
     public String updateCompany(@RequestParam Integer companyId, @RequestParam String companyName, Model model){
         ProductionCompany companyUpdate = pCompanyServices.updateCompany(companyId, companyName);
         model.addAttribute("company", companyUpdate);

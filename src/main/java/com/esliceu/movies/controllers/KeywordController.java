@@ -116,7 +116,6 @@ public class KeywordController {
         if (keyword != null) {
             model.addAttribute("keyword", keyword);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "keywords";
         } else {
             model.addAttribute("errorMessage", "La keyword no fue encontrada");
@@ -124,7 +123,7 @@ public class KeywordController {
         }
     }
 
-   @PostMapping("/updateKeyword")
+   @PostMapping("/updateKeyword/{keywordId}")
     public String updateKeyword(@RequestParam Integer keywordId, @RequestParam String keywordName, Model model){
         Keyword keywordUpdate = keywordServices.updateKeyword(keywordId, keywordName);
         model.addAttribute("keyword", keywordUpdate);

@@ -1,7 +1,6 @@
 var datos = JSON.parse(jsonInfo);
 
 $(function() {
-    // Inicia el autocompletado
     $("#tags").autocomplete({
         source: function(request, response) {
             // Filtro personalizado: buscar por letras que comienzan con la entrada del usuario

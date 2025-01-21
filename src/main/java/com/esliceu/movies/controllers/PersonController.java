@@ -115,7 +115,6 @@ public class PersonController {
         if (person != null) {
             model.addAttribute("person", person);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "persons";
         } else {
             model.addAttribute("errorMessage", "La persona no fue encontrada");
@@ -123,7 +122,7 @@ public class PersonController {
         }
     }
 
-   @PostMapping("/updatePerson")
+   @PostMapping("/updatePerson/{personId}")
     public String updatePerson(@RequestParam Integer personId, @RequestParam String personName, Model model){
         Person personUpdate = personServices.updatePerson(personId, personName);
         model.addAttribute("person", personUpdate);

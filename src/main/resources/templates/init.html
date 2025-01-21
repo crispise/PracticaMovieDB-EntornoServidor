@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Opciones</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Estilo del título */
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Estilo del formulario */
+        form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Estilo de la etiqueta */
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+        }
+
+        /* Estilo del select */
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        select:focus {
+            border-color: #007BFF;
+            background-color: #ffffff;
+            outline: none;
+        }
+
+        /* Estilo del botón de enviar */
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Gestión de Opciones</h1>
+<form method="post">
+    <label for="managment">Seleccione la categoria que desea gestionar:</label>
+    <select id="managment" name="entityManagment">
+        <option value="production_company">Compañía de Producción</option>
+        <option value="departments">Departamentos</option>
+        <option value="gender">Géneros</option>
+        <option value="movie_genres">Géneros de Película</option>
+        <option value="languages">Lenguajes</option>
+        <option value="countries">Países</option>
+        <option value="keywords">Palabras Clave</option>
+        <option value="people">Personas</option>
+        <option value="language_roles">Roles del Lenguaje</option>
+    </select>
+    <input type="submit">
+</form>
+</body>
+</html>

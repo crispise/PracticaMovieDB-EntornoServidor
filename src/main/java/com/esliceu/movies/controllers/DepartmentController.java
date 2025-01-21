@@ -115,7 +115,6 @@ public class DepartmentController {
         if (department != null) {
             model.addAttribute("department", department);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "departments";
         } else {
             model.addAttribute("errorMessage", "El departamento no fue encontrado");
@@ -123,7 +122,7 @@ public class DepartmentController {
         }
     }
 
-    @PostMapping("/updateDepartment")
+    @PostMapping("/updateDepartment/{departmentId}")
     public String updateDepartment(@RequestParam Integer departmentId, @RequestParam String departmentName, Model model) {
         Department departmentUpdate = departmentServices.updateDeparment(departmentId, departmentName);
         model.addAttribute("department", departmentUpdate);

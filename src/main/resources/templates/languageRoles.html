@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script src="/js/crud.js" defer></script>
-    <link rel="stylesheet" href="/css/persons.css">
+    <link rel="stylesheet" href="/css/crud.css">
 </head>
 <body>
 <script th:inline="javascript">
@@ -64,13 +64,13 @@
            th:href="@{/allLanguageRoles(page=0, size=${size})}">Primero</a>
 
         <a th:if="${currentPage > 0}"
-           th:href="@{/allLanguageRoles((page=${currentPage - 1}, size=${size})}">Anterior</a>
+           th:href="@{/allLanguageRoles(page=${currentPage - 1}, size=${size})}">Anterior</a>
 
         <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/allLanguageRoles((page=${currentPage + 1}, size=${size})}">Siguiente</a>
+           th:href="@{/allLanguageRoles(page=${currentPage + 1}, size=${size})}">Siguiente</a>
 
         <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/allLanguageRoles((page=${totalPages - 1}, size=${size})}">Último</a>
+           th:href="@{/allLanguageRoles(page=${totalPages - 1}, size=${size})}">Último</a>
     </div>
 
     <div class="pagination-info">
@@ -142,8 +142,8 @@
         </tr>
         </tbody>
     </table>
-    <div th:if="${updateForm}">
-        <form action="/updateLanguageRole" method="post">
+    <div>
+        <form th:action="@{/updateLanguageRole/{roleId}(roleId=${languageRole.roleId})}" method="post">
             <input type="hidden" th:value="${languageRole.roleId}" name="roleId">
             <label for="nameChanged">Nombre:</label>
             <input type="text" id="nameChanged" name="languageRole">

@@ -115,7 +115,6 @@ public class GenreController {
         if (genre != null) {
             model.addAttribute("genre", genre);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "genres";
         } else {
             model.addAttribute("errorMessage", "El género no fue encontrado");
@@ -123,7 +122,7 @@ public class GenreController {
         }
     }
 
-   @PostMapping("/updateGenre")
+   @PostMapping("/updateGenre/{genreId}")
     public String updateGenre(@RequestParam Integer genreId, @RequestParam String genreName, Model model){
         Genre genreUpdate = genreServices.updateGenre(genreId, genreName);
         model.addAttribute("genre", genreUpdate);

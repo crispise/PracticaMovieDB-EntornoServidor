@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Roles del lenguaje</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/crud.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+
+</script>
+
+<h1> Gestión de los LenguajeS</h1>
+<div class="menu">
+    <form action="/languages" method="post">
+        <label for="action-select">Seleccione una acción:</label>
+        <select id="action-select" name="actionSelect">
+            <option value="view-all">Obtener todos los lenguajes</option>
+            <option value="search-by-name">Buscar por nombre</option>
+            <option value="create-new">Crear nuevo lenguaje</option>
+        </select>
+        <input type="submit">
+    </form>
+</div>
+
+<section th:if="${viewAll}">
+    <h2>Lista de Lenguajes</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="language : ${languages}">
+            <td th:text="${language.languageId}"></td>
+            <td th:text="${language.languageCode}"></td>
+            <td th:text="${language.languageName}"></td>
+            <td>
+                <a th:href="@{/updateLanguage/{id}(id=${language.languageId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteLanguage" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${language.languageId}" name="languageId">
+                    <input type="hidden" th:value="${currentPage}" name="currentPage">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este lenguaje?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allLanguages(page=0, size=${size})}">Primero</a>
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/allLanguages(page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allLanguages(page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/allLanguages(page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
+
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+</section>
+
+<section th:if="${searchByName}">
+    <h2>Buscar Lenguaje por Nombre</h2>
+    <div class="ui-widget">
+        <form action="/searchLanguages" method="post">
+            <label for="tags">Nombre del lenguaje: </label>
+            <input type="text" id="tags" name="languageName">
+            <input type="submit" value="Buscar">
+        </form>
+    </div>
+    <table th:if="${languagesFound != null and #lists.size(languagesFound) > 0}">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="language : ${languagesFound}">
+            <td th:text="${language.languageId}"></td>
+            <td th:text="${language.languageCode}"></td>
+            <td th:text="${language.languageName}"></td>
+            <td>
+                <a th:href="@{/updateLanguage/{id}(id=${language.languageId})}" class="btn btn-update">
+                    Actualizar
+                </a>
+
+                <form class="deleteButtonForm" action="/deleteLanguage" method="post" style="display:inline;">
+                    <input type="hidden" th:value="${language.languageId}" name="languageId">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este lenguaje?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section th:if="${createNew}">
+    <h2>Crear Nuevo Lenguaje</h2>
+    <form action="/createLanguage" method="post">
+        <label for="code">Código:</label>
+        <input type="text" id="code" name="languageCode" required>
+        <label for="language">Nombre:</label>
+        <input type="text" id="language" name="languageName" required>
+        <input type="submit" value="Crear">
+    </form>
+</section>
+
+<section th:if="${update}">
+    <h2>Actualizar Lenguaje</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Código</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${language.languageId}"></td>
+            <td th:text="${language.languageCode}"></td>
+            <td th:text="${language.languageName}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <form th:action="@{/updateLanguage/{languageId}(languageId=${language.languageId})}" method="post">
+            <input type="hidden" th:value="${language.languageId}" name="languageId">
+            <label for="codeChanged">Código:</label>
+            <input type="text" id="codeChanged" name="languageCode">
+            <label for="nameChanged">Nombre:</label>
+            <input type="text" id="nameChanged" name="languageName">
+            <input type="submit" value="Actualizar">
+        </form>
+    </div>
+
+
+</section>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<script src="/js/crud.js"></script>
+
+</body>
+</html>

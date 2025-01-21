@@ -73,8 +73,6 @@ public class LanguageRoleController {
         return "languageRoles";
     }
 
-
-
     @GetMapping("/createLanguageRole")
     public String createLanguageRole(Model model) {
         model.addAttribute("createNew", true);
@@ -116,7 +114,6 @@ public class LanguageRoleController {
         if (languageRole != null) {
             model.addAttribute("languageRole", languageRole);
             model.addAttribute("update", true);
-            model.addAttribute("updateForm", true);
             return "languageRoles";
         } else {
             model.addAttribute("errorMessage", "El rol del lenguaje no fue encontrada");
@@ -124,7 +121,7 @@ public class LanguageRoleController {
         }
     }
 
-   @PostMapping("/updateLanguageRole")
+   @PostMapping("/updateLanguageRole/{roleId}")
     public String updateLanguageRole(@RequestParam Integer roleId, @RequestParam String languageRole, Model model){
         LanguageRole languageRoleUpdate = languageRoleServices.updateLanguageRole(roleId, languageRole);
         model.addAttribute("languageRole", languageRoleUpdate);
