@@ -93,18 +93,14 @@ public class PCompanyController {
     }
 
     @PostMapping("/deleteCompany")
-    public String deleteCompany(@RequestParam Integer companyId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteCompany(@RequestParam Integer companyId, Model model){
         String message = pCompanyServices.deleteCompany(companyId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "La compañia se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar a la compañia");
         }
-        if (currentPage != null){
-            return "redirect:/allCompanies?page=" + currentPage + "&size=" + 20;
-        }else {
-            return "productionCompany";
-        }
+        return "productionCompany";
     }
 
     @GetMapping("/updateCompany/{id}")

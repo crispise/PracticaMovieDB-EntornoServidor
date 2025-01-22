@@ -94,18 +94,16 @@ public class GenreController {
     }
 
     @PostMapping("/deleteGenre")
-    public String deleteGenre(@RequestParam Integer genreId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteGenre(@RequestParam Integer genreId, Model model){
         String message = genreServices.deleteGenre(genreId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "El género se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el género");
         }
-        if (currentPage != null){
-            return "redirect:/allGenres?page=" + currentPage + "&size=" + 20;
-        }else {
+
             return "genres";
-        }
+
 
     }
 

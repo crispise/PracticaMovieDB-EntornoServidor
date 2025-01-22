@@ -94,19 +94,14 @@ public class DepartmentController {
     }
 
     @PostMapping("/deleteDepartment")
-    public String deleteDepartment(@RequestParam Integer departmentId, @RequestParam(required = false) Integer currentPage, Model model) {
+    public String deleteDepartment(@RequestParam Integer departmentId, Model model) {
         String message = departmentServices.deleteDepartment(departmentId);
         if (message.equals("Ok")) {
             model.addAttribute("successMessage", "El departamento se ha eliminado correctamente");
         } else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el departamento");
         }
-        if (currentPage != null) {
-            return "redirect:/allDepartments?page=" + currentPage + "&size=" + 20;
-        } else {
-            return "departments";
-        }
-
+         return "departments";
     }
 
     @GetMapping("/updateDepartment/{id}")

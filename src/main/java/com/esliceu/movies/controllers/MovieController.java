@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,14 +27,14 @@ public class MovieController {
 
     @GetMapping("/movies")
     public String getMovies() {
-           return "movies";
+        return "movies";
     }
 
     @PostMapping("/movies")
-    public String newMovie(@RequestParam String actionSelect, Model model){
+    public String newMovie(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allMovies";
+                return "redirect:/allMovies";
             case "search-by-name":
                 return "redirect:/searchMovies";
             case "create-new":
@@ -95,7 +96,7 @@ public class MovieController {
                             @RequestParam String tagline,
                             @RequestParam BigDecimal voteAverage,
                             Model model) {
-       model.addAttribute("createNew", true);
+        model.addAttribute("createNew", true);
         String resultMessage = movieServices.saveMovie(title, budget, homepage, overview, popularity,
                 releaseDate, revenue, runtime, movieStatus,
                 tagline, voteAverage);
@@ -108,19 +109,43 @@ public class MovieController {
     }
 
     @PostMapping("/deleteMovie")
-    public String deleteMovie(@RequestParam Integer movieId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteMovie(@RequestParam Integer movieId, Model model) {
         String message = movieServices.deleteMovie(movieId);
-        if (message.equals("Ok")){
+        if (message.equals("Ok")) {
             model.addAttribute("successMessage", "La película se ha eliminado correctamente");
-        }else {
+        } else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar la película");
         }
-        if (currentPage != null){
-            return "redirect:/allMovies?page=" + currentPage + "&size=" + 20;
-        }else {
-            return "movies";
-        }
+        return "movies";
+    }
 
+    @PostMapping("/selectedEntity")
+    public String selectedEntity(@RequestParam Integer movieId, @RequestParam String selectedEntity,  RedirectAttributes redirectAttributes) {
+        System.out.println("la entidad selecionada es");
+        System.out.println(selectedEntity);
+        switch (selectedEntity) {
+            case "movieInfo":
+                redirectAttributes.addFlashAttribute("updateForm", true);
+                return "redirect:/updateMovie/" + movieId;
+            case "movieCast":
+                return "redirect:/movieCast";
+            case "movieCrew":
+                return "redirect:/movieCrew";
+            case "movieCompany":
+                return "redirect:movieCompany/"+movieId;
+            case "movieKeyword":
+                return "redirect:/movieKeyword";
+            case "movieGenre":
+                return "redirect:/movieGenre";
+            case "movieLanguageRole":
+                return "redirect:/movieLanguageRole";
+            case "movieLanguage":
+                return "redirect:/movieLanguage";
+            case "movieCountry":
+                return "redirect:/movieCountry";
+
+        }
+        return "movies";
     }
 
     @GetMapping("/updateMovie/{id}")
@@ -136,7 +161,7 @@ public class MovieController {
         }
     }
 
-   @PostMapping("/updateMovie/{movieId}")
+    @PostMapping("/updateMovie/{movieId}")
     public String updateMovie(@RequestParam Integer movieId,
                               @RequestParam String title,
                               @RequestParam Integer budget,
@@ -148,14 +173,16 @@ public class MovieController {
                               @RequestParam Integer runtime,
                               @RequestParam String movieStatus,
                               @RequestParam String tagline,
-                              @RequestParam BigDecimal voteAverage, Model model){
+                              @RequestParam BigDecimal voteAverage, Model model) {
         Movie movieUpdate = movieServices.updateMovie(movieId, title, budget, homepage, overview, popularity,
                 releaseDate, revenue, runtime, movieStatus,
                 tagline, voteAverage);
         model.addAttribute("movie", movieUpdate);
         model.addAttribute("update", true);
         return "movies";
-   }
+    }
+
+
 
 
 }

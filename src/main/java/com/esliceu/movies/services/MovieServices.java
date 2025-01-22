@@ -1,6 +1,12 @@
 package com.esliceu.movies.services;
+
 import com.esliceu.movies.models.Movie;
+import com.esliceu.movies.models.MovieCompany;
+import com.esliceu.movies.models.MovieCompanyId;
+import com.esliceu.movies.models.ProductionCompany;
+import com.esliceu.movies.repos.MovieCompanyRepo;
 import com.esliceu.movies.repos.MovieRepo;
+import com.esliceu.movies.repos.PCompaniesRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +23,10 @@ import java.util.stream.Collectors;
 public class MovieServices {
     @Autowired
     MovieRepo movieRepo;
+    @Autowired
+    PCompaniesRepo pCompaniesRepo;
+    @Autowired
+    MovieCompanyRepo movieCompanyRepo;
 
     public Page<Movie> findAllMovies(Pageable pageable) {
         return movieRepo.findAll(pageable);
@@ -50,8 +60,8 @@ public class MovieServices {
     }
 
     public String validateMovieParams(String title, Integer budget, String homepage, String overview, BigDecimal popularity,
-                                                       LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
-                                                       BigDecimal voteAverage) {
+                                      LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
+                                      BigDecimal voteAverage) {
         if (title == null || title.trim().isEmpty() ||
                 budget == null ||
                 homepage == null || homepage.trim().isEmpty() ||
@@ -98,11 +108,12 @@ public class MovieServices {
         try {
             movieRepo.deleteById(id);
             return "Ok";
-        }catch (Exception e) {
+        } catch (Exception e) {
             return "Error";
         }
 
     }
+
     public Movie updateMovie(Integer id, String title, Integer budget, String homepage, String overview, BigDecimal popularity,
                              LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
                              BigDecimal voteAverage) {
@@ -193,4 +204,42 @@ public class MovieServices {
         }
     }
 
+    public List<ProductionCompany> getMovieCompanies(Movie movie) {
+        List<ProductionCompany> productionCompanies = movie.getMovieCompanies().stream()
+                .map(movieCompany -> movieCompany.getProductionCompany())
+                .toList();
+        return productionCompanies;
+    }
+
+    public String addMovieCompany(String companyName, Movie movie) {
+        List<ProductionCompany> productionCompanies = pCompaniesRepo.findProductionCompanyByCompanyName(companyName);
+        if (productionCompanies.size() == 1) {
+            ProductionCompany productionCompany = productionCompanies.get(0);
+
+            boolean exists = false;
+            if (movie.getMovieCompanies() != null) {
+                for (MovieCompany mc : movie.getMovieCompanies()) {
+                    ProductionCompany company= mc.getProductionCompany();
+                    if (company != null && company.getCompanyId().equals(productionCompany.getCompanyId())) {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
+            if (exists) {
+                return "Esta compañia ya está añadida";
+            }
+
+            MovieCompany movieCompany = new MovieCompany();
+            movieCompany.setMovie(movie);
+            movieCompany.setProductionCompany(productionCompany);
+            MovieCompanyId mci = new MovieCompanyId();
+            mci.setCompanyId(productionCompany.getCompanyId());
+            mci.setMovieId(movie.getMovieId());
+            movieCompany.setId(mci);
+            movieCompanyRepo.save(movieCompany);
+            return null;
+        }
+        return "Hay más de una compañia con ese nombre";
+    }
 }

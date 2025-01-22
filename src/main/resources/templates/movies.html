@@ -88,14 +88,13 @@
             <td th:text="${movie.movieStatus}"></td>
             <td th:text="${movie.tagline}"></td>
             <td th:text="${movie.voteAverage}"></td>
-            <td>
+            <td class="buttons">
                 <a th:href="@{/updateMovie/{id}(id=${movie.movieId})}" class="btn btn-update">
                     Actualizar
                 </a>
 
                 <form class="deleteButtonForm" action="/deleteMovie" method="post" style="display:inline;">
                     <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                    <input type="hidden" th:value="${currentPage}" name="currentPage">
                     <button type="submit" class="btn btn-delete"
                             onclick="return confirm('¿Estás seguro de que deseas eliminar esta película?')">
                         Eliminar
@@ -136,20 +135,19 @@
     <table th:if="${moviesFound != null and #lists.size(moviesFound) > 0}">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Título</th>
+            <th style="width: 3%;">Id</th>
+            <th style="width: 4%;">Título</th>
             <th>Presupuesto</th>
-            <th>Enlace</th>
-            <th>Resumen</th>
+            <th style="width: 6%;">Enlace</th>
+            <th style="width: 15%;">Resumen</th>
             <th>Popularidad</th>
-            <th>Fecha de estreno</th>
+            <th>Estreno</th>
             <th>Ingresos</th>
             <th>Duración</th>
             <th>Estado</th>
-            <th>Tagline</th>
-            <th>Promedio de votos</th>
-            <th>Opciones</th>
-
+            <th style="width: 13%;">Tagline</th>
+            <th style="width: 3%;">Votos</th>
+            <th th style="width: 13%;">Opciones</th>
         </tr>
         </thead>
         <tbody>
@@ -170,7 +168,6 @@
                 <a th:href="@{/updateMovie/{id}(id=${movie.movieId})}" class="btn btn-update">
                     Actualizar
                 </a>
-
                 <form class="deleteButtonForm" action="/deleteMovie" method="post" style="display:inline;">
                     <input type="hidden" th:value="${movie.movieId}" name="movieId">
                     <button type="submit" class="btn btn-delete"
@@ -189,35 +186,46 @@
     <form action="/createMovie" method="post">
         <label for="title">Título:</label>
         <input type="text" id="title" name="title">
+        <br>
         <label for="budget">Presupuesto:</label>
         <input type="number" id="budget" name="budget" required>
+        <br>
 
         <label for="homepage">Enlace:</label>
         <input type="text" id="homepage" name="homepage" required>
+        <br>
 
         <label for="overview">Resumen:</label>
         <input type="text" id="overview" name="overview" required>
+        <br>
 
         <label for="popularity">Popularidad:</label>
         <input type="number" step="0.01" id="popularity" name="popularity" required>
+        <br>
 
         <label for="releaseDate">Fecha de estreno:</label>
         <input type="date" id="releaseDate" name="releaseDate" required>
+        <br>
 
         <label for="revenue">Ingresos:</label>
         <input type="number" id="revenue" name="revenue" required>
+        <br>
 
         <label for="runtime">Duración:</label>
         <input type="number" id="runtime" name="runtime" required>
+        <br>
 
         <label for="movieStatus">Estado:</label>
         <input type="text" id="movieStatus" name="movieStatus" required>
+        <br>
 
         <label for="tagline">Tagline:</label>
         <input type="text" id="tagline" name="tagline" required>
+        <br>
 
         <label for="voteAverage">Promedio de votos:</label>
         <input type="number" step="0.01" id="voteAverage" name="voteAverage" required>
+        <br>
 
         <input type="submit" value="Crear Película">
     </form>
@@ -228,19 +236,18 @@
     <table>
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Título</th>
+            <th style="width: 3%;">Id</th>
+            <th style="width: 4%;">Título</th>
             <th>Presupuesto</th>
-            <th>Enlace</th>
-            <th>Resumen</th>
+            <th style="width: 6%;">Enlace</th>
+            <th style="width: 15%;">Resumen</th>
             <th>Popularidad</th>
-            <th>Fecha de estreno</th>
+            <th>Estreno</th>
             <th>Ingresos</th>
             <th>Duración</th>
             <th>Estado</th>
-            <th>Tagline</th>
-            <th>Promedio de votos</th>
-            <th>Opciones</th>
+            <th style="width: 13%;">Tagline</th>
+            <th style="width: 3%;">Votos</th>
         </tr>
         </thead>
         <tbody>
@@ -260,7 +267,25 @@
         </tr>
         </tbody>
     </table>
-    <div>
+    <div class="menu">
+        <form action="/selectedEntity" method="post">
+            <input type="hidden" th:value="${movie.movieId}" name="movieId">
+            <label for="action-select">Seleccione que desee gestionar:</label>
+            <select id="action" name="selectedEntity">
+                <option value="movieInfo">Datos de la película</option>
+                <option value="movieCast">Elenco</option>
+                <option value="movieCrew">Equipo de producción</option>
+                <option value="movieCompany">Productoras</option>
+                <option value="movieKeyword">Palábras clave</option>
+                <option value="movieGenre">Género de película</option>
+                <option value="movieLanguageRole">Roles del lenguaje</option>
+                <option value="movieLanguage">Idiomas de la película</option>
+                <option value="movieCountry">Paises</option>
+            </select>
+            <input type="submit">
+        </form>
+    </div>
+    <div th:if="${updateForm}">
         <form th:action="@{/updateMovie/{movieId}(movieId=${movie.movieId})}" method="post">
             <input type="hidden" th:value="${movie.movieId}" name="movieId">
 

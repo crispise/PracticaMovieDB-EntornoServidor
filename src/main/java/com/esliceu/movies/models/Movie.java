@@ -1,11 +1,10 @@
 package com.esliceu.movies.models;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Movie {
@@ -43,6 +42,17 @@ public class Movie {
     private BigDecimal voteAverage;
 
     private Integer voteCount;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieCompany> movieCompanies = new ArrayList<>();
+
+    public List<MovieCompany> getMovieCompanies() {
+        return movieCompanies;
+    }
+
+    public void setMovieCompanies(List<MovieCompany> movieCompanies) {
+        this.movieCompanies = movieCompanies;
+    }
 
     public Integer getMovieId() {
         return movieId;
@@ -146,5 +156,13 @@ public class Movie {
 
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "movieId=" + movieId +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

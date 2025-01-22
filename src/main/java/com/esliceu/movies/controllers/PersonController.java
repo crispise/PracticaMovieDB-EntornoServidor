@@ -94,18 +94,15 @@ public class PersonController {
     }
 
     @PostMapping("/deletePerson")
-    public String deletePerson(@RequestParam Integer personId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deletePerson(@RequestParam Integer personId, Model model){
         String message = personServices.deletePerson(personId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "La persona se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar a la persona");
         }
-        if (currentPage != null){
-            return "redirect:/allPersons?page=" + currentPage + "&size=" + 20;
-        }else {
-            return "persons";
-        }
+        return "persons";
+
 
     }
 

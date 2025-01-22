@@ -49,7 +49,6 @@
 
                 <form class="deleteButtonForm" action="/deleteKeyword" method="post" style="display:inline;">
                     <input type="hidden" th:value="${keyword.keywordId}" name="keywordId">
-                    <input type="hidden" th:value="${currentPage}" name="currentPage">
                     <button type="submit" class="btn btn-delete"
                             onclick="return confirm('¿Estás seguro de que deseas eliminar esta palabra clave?')">
                         Eliminar

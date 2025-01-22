@@ -93,18 +93,16 @@ public class LanguageController {
     }
 
     @PostMapping("/deleteLanguage")
-    public String deleteLanguage(@RequestParam Integer languageId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteLanguage(@RequestParam Integer languageId, Model model){
         String message = languageServices.deleteLanguage(languageId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "El lenguaje se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el lenguaje del lenguaje");
         }
-        if (currentPage != null){
-            return "redirect:/allLanguages?page=" + currentPage + "&size=" + 20;
-        }else {
+
             return "languages";
-        }
+
 
     }
 

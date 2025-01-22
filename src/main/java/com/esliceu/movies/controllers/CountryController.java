@@ -90,19 +90,14 @@ public class CountryController {
     }
 
     @PostMapping("/deleteCountry")
-    public String deleteCountry(@RequestParam Integer countryId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteCountry(@RequestParam Integer countryId, Model model){
         String message = countryServices.deleteCountry(countryId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "El país se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el país");
         }
-        if (currentPage != null){
-            return "redirect:/allCountries?page=" + currentPage + "&size=" + 20;
-        }else {
-            return "countries";
-        }
-
+        return "countries";
     }
 
     @GetMapping("/updateCountry/{id}")

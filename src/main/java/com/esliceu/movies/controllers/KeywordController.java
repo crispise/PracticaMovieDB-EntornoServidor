@@ -95,18 +95,17 @@ public class KeywordController {
     }
 
     @PostMapping("/deleteKeyword")
-    public String deleteKeyword(@RequestParam Integer keywordId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteKeyword(@RequestParam Integer keywordId,  Model model){
         String message = keywordServices.deleteKeyword(keywordId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "La keyword se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar la keyword");
         }
-        if (currentPage != null){
-            return "redirect:/allKeywords?page=" + currentPage + "&size=" + 20;
-        }else {
+
+
             return "keywords";
-        }
+
 
     }
 

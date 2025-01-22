@@ -94,18 +94,16 @@ public class GenderController {
     }
 
     @PostMapping("/deleteGender")
-    public String deleteGender(@RequestParam Integer genderId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteGender(@RequestParam Integer genderId, Model model){
         String message = genderServices.deleteGender(genderId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "El género se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el género");
         }
-        if (currentPage != null){
-            return "redirect:/allGenders?page=" + currentPage + "&size=" + 20;
-        }else {
+
             return "genders";
-        }
+
 
     }
 

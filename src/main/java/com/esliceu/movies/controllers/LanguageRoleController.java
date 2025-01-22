@@ -93,18 +93,15 @@ public class LanguageRoleController {
     }
 
     @PostMapping("/deleteLanguageRole")
-    public String deleteLanguageRole(@RequestParam Integer roleId, @RequestParam(required = false) Integer currentPage, Model model){
+    public String deleteLanguageRole(@RequestParam Integer roleId,Model model){
         String message = languageRoleServices.deleteLanguageRole(roleId);
         if (message.equals("Ok")){
             model.addAttribute("successMessage", "El rol del lenguaje se ha eliminado correctamente");
         }else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el rol del lenguaje");
         }
-        if (currentPage != null){
-            return "redirect:/allLanguageRoles?page=" + currentPage + "&size=" + 20;
-        }else {
-            return "languageRoles";
-        }
+
+        return "languageRoles";
 
     }
 

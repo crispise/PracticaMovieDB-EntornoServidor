@@ -51,7 +51,6 @@
 
                 <form class="deleteButtonForm" action="/deleteLanguage" method="post" style="display:inline;">
                     <input type="hidden" th:value="${language.languageId}" name="languageId">
-                    <input type="hidden" th:value="${currentPage}" name="currentPage">
                     <button type="submit" class="btn btn-delete"
                             onclick="return confirm('¿Estás seguro de que deseas eliminar este lenguaje?')">
                         Eliminar
