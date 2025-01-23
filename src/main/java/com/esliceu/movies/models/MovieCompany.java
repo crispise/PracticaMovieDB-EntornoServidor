@@ -8,7 +8,7 @@ public class MovieCompany {
     private MovieCompanyId id;
 
     @ManyToOne
-    @MapsId("movieId") // Mapea el atributo movieId de MovieCompanyId
+    @MapsId("movieId")
     @JoinColumn(name = "movie_id")
     private Movie movie;
 

@@ -134,9 +134,9 @@ public class MovieController {
             case "movieCompany":
                 return "redirect:movieCompany/"+movieId;
             case "movieKeyword":
-                return "redirect:/movieKeyword";
+                return "redirect:/movieKeyword/"+movieId;
             case "movieGenre":
-                return "redirect:/movieGenre";
+                return "redirect:/movieGenre/"+movieId;
             case "movieLanguageRole":
                 return "redirect:/movieLanguageRole";
             case "movieLanguage":

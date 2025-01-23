@@ -1,5 +1,6 @@
 package com.esliceu.movies.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -45,6 +46,32 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieCompany> movieCompanies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieGenres> movieGenres = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference  // Marca la relación como "administrada" (serializable)
+    private List<MovieKeywords> movieKeywords = new ArrayList<>();
+
+    public List<MovieGenres> getMovieGenres() {
+        return movieGenres;
+    }
+
+    public void setMovieGenres(List<MovieGenres> movieGenres) {
+        this.movieGenres = movieGenres;
+    }
+
+
+
+    public List<MovieKeywords> getMovieKeywords() {
+        return movieKeywords;
+    }
+
+    public void setMovieKeywords(List<MovieKeywords> movieKeywords) {
+        this.movieKeywords = movieKeywords;
+    }
+
 
     public List<MovieCompany> getMovieCompanies() {
         return movieCompanies;

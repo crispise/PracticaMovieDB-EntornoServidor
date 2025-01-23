@@ -1,9 +1,8 @@
 package com.esliceu.movies.controllers;
 
+import com.esliceu.movies.models.Genre;
 import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.models.ProductionCompany;
-import com.esliceu.movies.services.MovieServices;
-import com.esliceu.movies.services.PCompanyServices;
+import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,60 +14,61 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-public class NNController {
+public class MovieGenresController {
     @Autowired
     MovieServices movieServices;
     @Autowired
-    PCompanyServices pCompanyServices;
+    MovieGenresServices movieGenresServices;
+    @Autowired
+    GenreServices genreServices;
 
-    @GetMapping("/movieCompany/{movieId}")
-    public String getMovieCompany(@PathVariable("movieId") Integer movieId, Model model) {
-        String jsonToSend = pCompanyServices.getCompaniesJson();
+    @GetMapping("/movieGenre/{movieId}")
+    public String getMovieGenre(@PathVariable("movieId") Integer movieId, Model model) {
+        String jsonToSend = genreServices.getGenreJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieServices.getMovieCompanies(movie);
-        model.addAttribute("movieCompanies", movieCompanies);
-        return "movieCompanies";
+        List<Genre> movieGenres = movieGenresServices.getMovieGenres(movie);
+        model.addAttribute("movieGenres", movieGenres);
+        return "movieGenres";
     }
 
-    @PostMapping("/addMovieCompany")
-    public String addMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam String companyName, Model model) {
-        String jsonToSend = pCompanyServices.getCompaniesJson();
+    @PostMapping("/addMovieGenre")
+    public String addMovieGenre(@RequestParam Integer movieId,
+                                  @RequestParam String genreName, Model model) {
+        String jsonToSend = genreServices.getGenreJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieServices.getMovieCompanies(movie);
-        model.addAttribute("movieCompanies", movieCompanies);
+        List<Genre> movieGenres = movieGenresServices.getMovieGenres(movie);
+        model.addAttribute("movieGenres", movieGenres);
 
-        String message = movieServices.addMovieCompany(companyName, movie);
+        String message = movieGenresServices.addMovieGenre(genreName, movie);
         if (message == null) {
-            model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El género se ha añadido correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieCompany/"+movieId;
+        return "redirect:movieGenre/"+ movieId;
     }
 
-    @PostMapping("/deleteMovieCompany")
+    /*@PostMapping("/deleteMovieCompany")
     public String deleteMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam String companyName, Model model) {
+                                  @RequestParam Integer companyId, Model model) {
         String jsonToSend = pCompanyServices.getCompaniesJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieServices.getMovieCompanies(movie);
+        List<ProductionCompany> movieCompanies = movieCompanyServices.getMovieCompanies(movie);
         model.addAttribute("movieCompanies", movieCompanies);
-
-        String message = movieServices.addMovieCompany(companyName, movie);
+        String message = movieCompanyServices.deleteMovieCompany(companyId, movieId);
         if (message == null) {
             model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
         return "redirect:movieCompany/"+movieId;
-    }
+    }*/
 
 
 

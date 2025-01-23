@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>MovieGenres</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/crud.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+
+</script>
+<h1> Gestión de Géneros de peliculas</h1>
+<div class="ui-widget">
+    <form action="/addMovieGenre" method="post">
+        <input type="hidden" th:value="${movie.movieId}" name="movieId">
+        <label for="tags">Añadir Género: </label>
+        <input type="text" id="tags" name="genreName">
+        <input type="submit" value="Añadir">
+    </form>
+</div>
+<section th:if="${movie}">
+    <h2>Lista de Géneros de la Película</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="genre : ${movieGenres}">
+            <td th:text="${genre.genreId}"></td>
+            <td th:text="${genre.genreName}"></td>
+            <td>
+            <form class="deleteButtonForm" action="/deleteMovieGenre" method="post" style="display:inline;">
+                <input type="hidden" th:value="${movie.movieId}" name="movieId">
+                <input type="hidden" th:value="${genre.genreId}" name="genreId">
+                <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar este género?')">
+                    Eliminar
+                </button>
+            </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+</body>
+</html>

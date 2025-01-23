@@ -204,42 +204,4 @@ public class MovieServices {
         }
     }
 
-    public List<ProductionCompany> getMovieCompanies(Movie movie) {
-        List<ProductionCompany> productionCompanies = movie.getMovieCompanies().stream()
-                .map(movieCompany -> movieCompany.getProductionCompany())
-                .toList();
-        return productionCompanies;
-    }
-
-    public String addMovieCompany(String companyName, Movie movie) {
-        List<ProductionCompany> productionCompanies = pCompaniesRepo.findProductionCompanyByCompanyName(companyName);
-        if (productionCompanies.size() == 1) {
-            ProductionCompany productionCompany = productionCompanies.get(0);
-
-            boolean exists = false;
-            if (movie.getMovieCompanies() != null) {
-                for (MovieCompany mc : movie.getMovieCompanies()) {
-                    ProductionCompany company= mc.getProductionCompany();
-                    if (company != null && company.getCompanyId().equals(productionCompany.getCompanyId())) {
-                        exists = true;
-                        break;
-                    }
-                }
-            }
-            if (exists) {
-                return "Esta compañia ya está añadida";
-            }
-
-            MovieCompany movieCompany = new MovieCompany();
-            movieCompany.setMovie(movie);
-            movieCompany.setProductionCompany(productionCompany);
-            MovieCompanyId mci = new MovieCompanyId();
-            mci.setCompanyId(productionCompany.getCompanyId());
-            mci.setMovieId(movie.getMovieId());
-            movieCompany.setId(mci);
-            movieCompanyRepo.save(movieCompany);
-            return null;
-        }
-        return "Hay más de una compañia con ese nombre";
-    }
 }

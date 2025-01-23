@@ -1,13 +1,15 @@
 package com.esliceu.movies.models;
+
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class MovieCompanyId implements Serializable {
+public class MovieGenresId implements Serializable {
 
     private Integer movieId;
-    private Integer companyId;
+    private Integer genreId;
 
     public Integer getMovieId() {
         return movieId;
@@ -17,33 +19,32 @@ public class MovieCompanyId implements Serializable {
         this.movieId = movieId;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
+    public Integer getGenreId() {
+        return genreId;
     }
 
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setGenreId(Integer genreId) {
+        this.genreId = genreId;
     }
 
-    // hashCode y equals (requeridos para las claves compuestas)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MovieCompanyId that = (MovieCompanyId) o;
-        return Objects.equals(movieId, that.movieId) && Objects.equals(companyId, that.companyId);
+        MovieGenresId that = (MovieGenresId) o;
+        return Objects.equals(movieId, that.movieId) && Objects.equals(genreId, that.genreId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(movieId, companyId);
+        return Objects.hash(movieId, genreId);
     }
 
     @Override
     public String toString() {
-        return "MovieCompanyId{" +
+        return "MovieGenreId{" +
                 "movieId=" + movieId +
-                ", companyId=" + companyId +
+                ", genreId=" + genreId +
                 '}';
     }
 }
