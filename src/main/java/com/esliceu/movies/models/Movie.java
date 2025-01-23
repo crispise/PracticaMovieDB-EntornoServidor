@@ -48,11 +48,54 @@ public class Movie {
     private List<MovieCompany> movieCompanies = new ArrayList<>();
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieKeywords> movieKeywords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieGenres> movieGenres = new ArrayList<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference  // Marca la relación como "administrada" (serializable)
-    private List<MovieKeywords> movieKeywords = new ArrayList<>();
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieLanguages> movieLanguages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductionCountry> productionCountries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieCast> movieCast = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieCrew> movieCrew = new ArrayList<>();
+
+    public List<MovieCrew> getMovieCrew() {
+        return movieCrew;
+    }
+
+    public void setMovieCrew(List<MovieCrew> movieCrew) {
+        this.movieCrew = movieCrew;
+    }
+
+    public List<MovieCast> getMovieCast() {
+        return movieCast;
+    }
+
+    public void setMovieCast(List<MovieCast> movieCast) {
+        this.movieCast = movieCast;
+    }
+
+    public List<ProductionCountry> getProductionCountries() {
+        return productionCountries;
+    }
+
+    public void setProductionCountries(List<ProductionCountry> productionCountries) {
+        this.productionCountries = productionCountries;
+    }
+
+    public List<MovieLanguages> getMovieLanguages() {
+        return movieLanguages;
+    }
+
+    public void setMovieLanguages(List<MovieLanguages> movieLanguages) {
+        this.movieLanguages = movieLanguages;
+    }
 
     public List<MovieGenres> getMovieGenres() {
         return movieGenres;
@@ -61,7 +104,6 @@ public class Movie {
     public void setMovieGenres(List<MovieGenres> movieGenres) {
         this.movieGenres = movieGenres;
     }
-
 
 
     public List<MovieKeywords> getMovieKeywords() {

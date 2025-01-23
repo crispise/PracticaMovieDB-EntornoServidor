@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco de la película</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/crud.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+    var jsonInfo2 = /*[[${jsonInfo2}]]*/ {};
+
+</script>
+<h1> Gestión de Personajes de la película</h1>
+<div class="ui-widget">
+    <form action="/addMovieCast" method="post">
+        <input type="hidden" th:value="${movie.movieId}" name="movieId">
+        <div>
+            <label for="tags">Actor/a: </label>
+            <input type="text" id="tags" name="personName">
+        </div>
+        <div class="input-group2">
+            <label for="tags2">Género del personaje: </label>
+            <input type="text" id="tags2" name="gender">
+        </div>
+        <div class="input-group2">
+        <label for="character">Personaje: </label>
+        <input type="text" id="character" name="characterName">
+        </div>
+        <div class="input-group2">
+        <label for="castOrder">Orden en el elenco: </label>
+        <input type="number" th:attr="min=${minCastOrder}" id="castOrder" name="castOrder">
+        </div>
+        <input type="submit" value="Añadir">
+    </form>
+</div>
+<section th:if="${movie}">
+    <h2>Lista de Personajes de la Película</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Actor-Actriz</th>
+            <th>Personaje</th>
+            <th>Género del personaje</th>
+            <th>Orden en el elenco</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cast : ${movieCast}">
+            <td th:text="${cast.person.personName}"></td>
+            <td th:text="${cast.characterName}"></td>
+            <td th:text="${cast.gender.gender}"></td>
+            <td th:text="${cast.castOrder}"></td>
+            <td>
+            <form class="deleteButtonForm" action="/deleteMovieCast" method="post" style="display:inline;">
+                <input type="hidden" th:value="${movie.movieId}" name="movieId">
+                <input type="hidden" th:value="${cast.id}" name="id">
+                <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar este personaje?')">
+                    Eliminar
+                </button>
+            </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+</body>
+</html>

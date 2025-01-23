@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>MovieKeywords</title>
+    <title>Paises de producción</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -14,33 +14,35 @@
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
-<h1> Gestión de Palabras clave de películas</h1>
+<h1> Gestión de Países de prouducción</h1>
 <div class="ui-widget">
-    <form action="/addMovieKeyword" method="post">
+    <form action="/addProductionCountry" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
-        <label for="tags">Añadir Palabra Clave: </label>
-        <input type="text" id="tags" name="keywordName">
+        <label for="tags">Añadir País: </label>
+        <input type="text" id="tags" name="countryName">
         <input type="submit" value="Añadir">
     </form>
 </div>
 <section th:if="${movie}">
-    <h2>Lista de Palabras clave de la Película</h2>
+    <h2>Lista de Países de la Película</h2>
     <table>
         <thead>
         <tr>
             <th>Nombre</th>
+            <th>Código Iso</th>
             <th>Opciones</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="movieKeyword : ${movieKeywords}">
-            <td th:text="${movieKeyword.keyword.keywordName}"></td>
+        <tr th:each="pc : ${productionCountries}">
+            <td th:text="${pc.country.countryName}"></td>
+            <td th:text="${pc.country.countryIsoCode}"></td>
             <td>
-            <form class="deleteButtonForm" action="/deleteMovieKeyword" method="post" style="display:inline;">
+            <form class="deleteButtonForm" action="/deleteMovieGenre" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${movieKeyword.id}" name="id">
+                <input type="hidden" th:value="${pc.id}" name="id">
                 <button type="submit" class="btn btn-delete"
-                        onclick="return confirm('¿Estás seguro de que deseas eliminar está palabra clave?')">
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar este país?')">
                     Eliminar
                 </button>
             </form>

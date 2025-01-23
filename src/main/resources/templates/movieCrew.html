@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco de la película</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="/js/crud.js" defer></script>
+    <link rel="stylesheet" href="/css/crud.css">
+</head>
+<body>
+<script th:inline="javascript">
+    var jsonInfo = /*[[${jsonInfo}]]*/ {};
+    var jsonInfo2 = /*[[${jsonInfo2}]]*/ {};
+
+</script>
+<h1> Gestión del Equipo de la película</h1>
+<div class="ui-widget">
+    <form action="/addMovieCrew" method="post">
+        <input type="hidden" th:value="${movie.movieId}" name="movieId">
+        <div>
+            <label for="tags">Nombre del empleado: </label>
+            <input type="text" id="tags" name="personName">
+        </div>
+        <div class="input-group2">
+            <label for="tags2">Departamento: </label>
+            <input type="text" id="tags2" name="departmentName">
+        </div>
+        <div class="input-group2">
+        <label for="character">Puesto </label>
+        <input type="text" id="character" name="job">
+        </div>
+        <input type="submit" value="Añadir">
+    </form>
+</div>
+<section th:if="${movie}">
+    <h2>Lista de Miembros del Equipo de la Película</h2>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=0, size=${size})}">Primero</a>
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
+
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Empleado/a</th>
+            <th>Departamento</th>
+            <th>Puesto</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="crew : ${movieCrew}">
+            <td th:text="${crew.person.personName}"></td>
+            <td th:text="${crew.department.departmentName}"></td>
+            <td th:text="${crew.job}"></td>
+            <td>
+            <form class="deleteButtonForm" action="/deleteMovieCrew" method="post" style="display:inline;">
+                <input type="hidden" th:value="${movie.movieId}" name="movieId">
+                <input type="hidden" th:value="${crew.id}" name="id">
+                <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar a este miembro del equipo?')">
+                    Eliminar
+                </button>
+            </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+</body>
+</html>

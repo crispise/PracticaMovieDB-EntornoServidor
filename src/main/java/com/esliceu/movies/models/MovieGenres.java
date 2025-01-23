@@ -42,12 +42,4 @@ public class MovieGenres {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "MovieGenres{" +
-                "id=" + id +
-                ", movie=" + movie +
-                ", genre=" + genre +
-                '}';
-    }
 }

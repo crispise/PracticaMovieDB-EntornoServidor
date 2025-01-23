@@ -28,19 +28,17 @@
     <table>
         <thead>
         <tr>
-            <th>Id</th>
             <th>Nombre</th>
             <th>Opciones</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="genre : ${movieGenres}">
-            <td th:text="${genre.genreId}"></td>
-            <td th:text="${genre.genreName}"></td>
+        <tr th:each="movieGenre : ${movieGenres}">
+            <td th:text="${movieGenre.genre.genreName}"></td>
             <td>
             <form class="deleteButtonForm" action="/deleteMovieGenre" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${genre.genreId}" name="genreId">
+                <input type="hidden" th:value="${movieGenre.id}" name="id">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar este género?')">
                     Eliminar

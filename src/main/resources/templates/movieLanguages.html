@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>MovieKeywords</title>
+    <title>MovieLanguages</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -12,35 +12,44 @@
 <body>
 <script th:inline="javascript">
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
+    var jsonInfo2 = /*[[${jsonInfo2}]]*/ {};
 
 </script>
-<h1> Gestión de Palabras clave de películas</h1>
+<h1> Gestión de Idiomas de películas</h1>
 <div class="ui-widget">
-    <form action="/addMovieKeyword" method="post">
+    <form action="/addMovieLanguage" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
-        <label for="tags">Añadir Palabra Clave: </label>
-        <input type="text" id="tags" name="keywordName">
+        <div class="input-group">
+            <label for="tags">Añadir Idioma: </label>
+            <input type="text" id="tags" name="languageName">
+        </div>
+        <div class="input-group2">
+            <label for="tags2">Añadir Rol: </label>
+            <input type="text" id="tags2" name="languageRole">
+        </div>
         <input type="submit" value="Añadir">
     </form>
 </div>
 <section th:if="${movie}">
-    <h2>Lista de Palabras clave de la Película</h2>
+    <h2>Lista de Idiomas de la Película</h2>
     <table>
         <thead>
         <tr>
-            <th>Nombre</th>
+            <th>Idioma</th>
+            <th>Rol en la película</th>
             <th>Opciones</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="movieKeyword : ${movieKeywords}">
-            <td th:text="${movieKeyword.keyword.keywordName}"></td>
+        <tr th:each="movieLanguage : ${movieLanguages}">
+            <td th:text="${movieLanguage.language.languageName}"></td>
+            <td th:text="${movieLanguage.languageRole.languageRole}"></td>
             <td>
-            <form class="deleteButtonForm" action="/deleteMovieKeyword" method="post" style="display:inline;">
+            <form class="deleteButtonForm" action="/deleteMovieLanguage" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${movieKeyword.id}" name="id">
+                <input type="hidden" th:value="${movieLanguage.id}" name="id">
                 <button type="submit" class="btn btn-delete"
-                        onclick="return confirm('¿Estás seguro de que deseas eliminar está palabra clave?')">
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar este idioma?')">
                     Eliminar
                 </button>
             </form>

@@ -15,8 +15,7 @@ public class Keyword {
     @Column(length = 100)
     private String keywordName;
 
-    @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference  // Marca la relación inversa para que no se serialice
+    @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieKeywords> movieKeywords = new ArrayList<>();
 
     public Integer getKeywordId() {

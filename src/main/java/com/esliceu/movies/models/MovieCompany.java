@@ -13,7 +13,7 @@ public class MovieCompany {
     private Movie movie;
 
     @ManyToOne
-    @MapsId("companyId") // Mapea el atributo companyId de MovieCompanyId
+    @MapsId("companyId")
     @JoinColumn(name = "company_id")
     private ProductionCompany productionCompany;
 
@@ -42,12 +42,4 @@ public class MovieCompany {
         this.productionCompany = productionCompany;
     }
 
-    @Override
-    public String toString() {
-        return "MovieCompany{" +
-                "id=" + id +
-                ", movie=" + movie +
-                ", productionCompany=" + productionCompany +
-                '}';
-    }
 }

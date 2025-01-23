@@ -16,9 +16,9 @@ public class MovieKeywordsServices {
     MovieKeywordRepo movieKeywordRepo;
 
 
-    public List<Keyword> getMovieKeywords(Movie movie) {
-        System.out.println(movie.getMovieKeywords());
-        return null;
+    public List<MovieKeywords> getMovieKeywords(Movie movie) {
+        List<MovieKeywords> movieKeywords = movie.getMovieKeywords();
+        return movieKeywords;
     }
 
     public String addMovieKeyword(String keywordName, Movie movie) {

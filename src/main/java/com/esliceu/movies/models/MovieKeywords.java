@@ -41,12 +41,5 @@ public class MovieKeywords {
         this.keyword = keyword;
     }
 
-    @Override
-    public String toString() {
-        return "MovieKeyword{" +
-                "id=" + id +
-                ", movie=" + movie +
-                ", keyword=" + keyword +
-                '}';
-    }
+
 }

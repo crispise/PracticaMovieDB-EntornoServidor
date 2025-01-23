@@ -17,11 +17,9 @@ public class MovieGenresServices {
     MovieGenresRepo movieGenreRepo;
 
 
-    public List<Genre> getMovieGenres(Movie movie) {
-        List<Genre> genres = movie.getMovieGenres().stream()
-                .map(movieGenres -> movieGenres.getGenre())
-                .toList();
-        return genres;
+    public List<MovieGenres> getMovieGenres(Movie movie) {
+        List<MovieGenres> movieGenres = movie.getMovieGenres();
+        return movieGenres;
     }
 
     public String addMovieGenre (String genreName, Movie movie) {

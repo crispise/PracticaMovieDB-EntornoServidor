@@ -2,6 +2,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Keyword;
 import com.esliceu.movies.models.Movie;
+import com.esliceu.movies.models.MovieKeywords;
 import com.esliceu.movies.models.ProductionCompany;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,7 @@ public class MovieKeywordController {
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<Keyword> movieKeywords = movieKeywordsServices.getMovieKeywords(movie);
-        System.out.println(movieKeywords);
+        List<MovieKeywords> movieKeywords = movieKeywordsServices.getMovieKeywords(movie);
         model.addAttribute("movieKeywords", movieKeywords);
         return "movieKeywords";
     }
@@ -42,7 +42,7 @@ public class MovieKeywordController {
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<Keyword> movieKeywords = movieKeywordsServices.getMovieKeywords(movie);
+        List<MovieKeywords> movieKeywords = movieKeywordsServices.getMovieKeywords(movie);
         model.addAttribute("movieKeywords", movieKeywords);
 
         String message = movieKeywordsServices.addMovieKeyword(keywordName, movie);

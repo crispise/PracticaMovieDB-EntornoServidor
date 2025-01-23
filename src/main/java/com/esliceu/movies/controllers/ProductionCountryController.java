@@ -1,8 +1,9 @@
 package com.esliceu.movies.controllers;
 
-import com.esliceu.movies.models.Genre;
+import com.esliceu.movies.models.Country;
 import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.models.MovieGenres;
+import com.esliceu.movies.models.MovieCompany;
+import com.esliceu.movies.models.ProductionCountry;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,45 +16,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-public class MovieGenresController {
+public class ProductionCountryController {
     @Autowired
     MovieServices movieServices;
     @Autowired
-    MovieGenresServices movieGenresServices;
+    ProductionCountryServices productionCountryServices;
     @Autowired
-    GenreServices genreServices;
+    CountryServices countryServices;
 
-    @GetMapping("/movieGenre/{movieId}")
-    public String getMovieGenre(@PathVariable("movieId") Integer movieId, Model model) {
-        String jsonToSend = genreServices.getGenreJson();
+    @GetMapping("/productionCountry/{movieId}")
+    public String getProductionCountry(@PathVariable("movieId") Integer movieId, Model model) {
+        String jsonToSend = countryServices.getCountryJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
-        model.addAttribute("movieGenres", movieGenres);
-        return "movieGenres";
+        List<ProductionCountry> productionCountries = productionCountryServices.getProductionCountries(movie);
+        model.addAttribute("productionCountries", productionCountries);
+        return "productionCountries";
     }
 
-    @PostMapping("/addMovieGenre")
-    public String addMovieGenre(@RequestParam Integer movieId,
-                                  @RequestParam String genreName, Model model) {
-        String jsonToSend = genreServices.getGenreJson();
+    @PostMapping("/addProductionCountry")
+    public String addMovieCompany(@RequestParam Integer movieId,
+                                  @RequestParam String countryName, Model model) {
+        String jsonToSend = countryServices.getCountryJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
-        model.addAttribute("movieGenres", movieGenres);
+        List<ProductionCountry> productionCountries = productionCountryServices.getProductionCountries(movie);
+        model.addAttribute("productionCountries", productionCountries);
 
-        String message = movieGenresServices.addMovieGenre(genreName, movie);
+        String message = productionCountryServices.addProductionCountry(countryName, movie);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El género se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El país se ha añadido correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieGenre/"+ movieId;
+        return "redirect:productionCountry/"+movieId;
     }
 
-    /*@PostMapping("/deleteMovieCompany")
+    /*
+    @PostMapping("/deleteMovieCompany")
     public String deleteMovieCompany(@RequestParam Integer movieId,
                                   @RequestParam Integer companyId, Model model) {
         String jsonToSend = pCompanyServices.getCompaniesJson();
@@ -69,8 +71,8 @@ public class MovieGenresController {
             model.addAttribute("errorMessage", message);
         }
         return "redirect:movieCompany/"+movieId;
-    }*/
+    }
 
-
+*/
 
 }

@@ -1,13 +1,15 @@
 package com.esliceu.movies.models;
 
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class MovieKeywordId implements Serializable {
+public class ProductionCountryId implements Serializable {
+
     private Integer movieId;
-    private Integer keywordId;
+    private Integer countryId;
 
     public Integer getMovieId() {
         return movieId;
@@ -17,24 +19,27 @@ public class MovieKeywordId implements Serializable {
         this.movieId = movieId;
     }
 
-    public Integer getKeywordId() {
-        return keywordId;
+    public Integer getCountryId() {
+        return countryId;
     }
 
-    public void setKeywordId(Integer keywordId) {
-        this.keywordId = keywordId;
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MovieKeywordId that = (MovieKeywordId) o;
-        return Objects.equals(movieId, that.movieId) && Objects.equals(keywordId, that.keywordId);
+        ProductionCountryId that = (ProductionCountryId) o;
+        return Objects.equals(movieId, that.movieId) && Objects.equals(countryId, that.countryId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(movieId, keywordId);
+        return Objects.hash(movieId, countryId);
     }
+
+
 }
+

@@ -28,19 +28,18 @@
     <table>
         <thead>
         <tr>
-            <th>Id</th>
             <th>Nombre</th>
             <th>Opciones</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="company : ${movieCompanies}">
-            <td th:text="${company.companyId}"></td>
-            <td th:text="${company.companyName}"></td>
+        <tr th:each="movieCompany : ${movieCompanies}">
+            <td th:text="${movieCompany. productionCompany.companyId}"></td>
+            <td th:text="${movieCompany. productionCompany.companyName}"></td>
             <td>
             <form class="deleteButtonForm" action="/deleteMovieCompany" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${company.companyId}" name="companyId">
+                <input type="hidden" th:value="${movieCompany.id}" name="id">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar está compañia?')">
                     Eliminar

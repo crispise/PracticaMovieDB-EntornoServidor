@@ -27,11 +27,9 @@ public class MovieCompanyServices {
     MovieCompanyRepo movieCompanyRepo;
 
 
-    public List<ProductionCompany> getMovieCompanies(Movie movie) {
-        List<ProductionCompany> productionCompanies = movie.getMovieCompanies().stream()
-                .map(movieCompany -> movieCompany.getProductionCompany())
-                .toList();
-        return productionCompanies;
+    public List<MovieCompany> getMovieCompanies(Movie movie) {
+        List<MovieCompany> movieCompanies = movie.getMovieCompanies();
+        return movieCompanies;
     }
 
     public String addMovieCompany(String companyName, Movie movie) {

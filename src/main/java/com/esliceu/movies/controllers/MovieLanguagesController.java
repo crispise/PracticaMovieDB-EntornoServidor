@@ -1,8 +1,7 @@
 package com.esliceu.movies.controllers;
-
-import com.esliceu.movies.models.Genre;
+import com.esliceu.movies.models.LanguageRole;
 import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.models.MovieGenres;
+import com.esliceu.movies.models.MovieLanguages;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,42 +14,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-public class MovieGenresController {
+public class MovieLanguagesController {
     @Autowired
     MovieServices movieServices;
     @Autowired
-    MovieGenresServices movieGenresServices;
+    MovieLanguagesServices movieLanguagesServices;
     @Autowired
-    GenreServices genreServices;
+    LanguageServices languageServices;
+    @Autowired
+    LanguageRoleServices languageRoleServices;
 
-    @GetMapping("/movieGenre/{movieId}")
-    public String getMovieGenre(@PathVariable("movieId") Integer movieId, Model model) {
-        String jsonToSend = genreServices.getGenreJson();
-        model.addAttribute("jsonInfo", jsonToSend);
+    @GetMapping("/movieLanguage/{movieId}")
+    public String getMovieLanguages (@PathVariable("movieId") Integer movieId, Model model) {
+        String languageJsonToSend = languageServices.getLanguageJson();
+        model.addAttribute("jsonInfo", languageJsonToSend);
+        String languageRoleJsondToSend = languageRoleServices.getLanguageRoleJson();
+        model.addAttribute("jsonInfo2", languageRoleJsondToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
-        model.addAttribute("movieGenres", movieGenres);
-        return "movieGenres";
+        List<MovieLanguages> movieLanguages = movieLanguagesServices.getMovieLanguages(movie);
+        model.addAttribute("movieLanguages", movieLanguages);
+        return "movieLanguages";
     }
 
-    @PostMapping("/addMovieGenre")
-    public String addMovieGenre(@RequestParam Integer movieId,
-                                  @RequestParam String genreName, Model model) {
-        String jsonToSend = genreServices.getGenreJson();
+    @PostMapping("/addMovieLanguage")
+    public String addMovieLanguage(@RequestParam Integer movieId,
+                                  @RequestParam String languageName,
+                                  @RequestParam String languageRole, Model model) {
+        String jsonToSend = languageServices.getLanguageJson();
         model.addAttribute("jsonInfo", jsonToSend);
+        String languageRoleJsondToSend = languageRoleServices.getLanguageRoleJson();
+        model.addAttribute("jsonInfo2", languageRoleJsondToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
-        model.addAttribute("movieGenres", movieGenres);
+        List<MovieLanguages> movieLanguages = movieLanguagesServices.getMovieLanguages(movie);
+        model.addAttribute("movieLanguages", movieLanguages);
 
-        String message = movieGenresServices.addMovieGenre(genreName, movie);
+        String message = movieLanguagesServices.addMovieLanguage(languageName, movie, languageRole);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El género se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El idioma se ha añadido correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieGenre/"+ movieId;
+        return "redirect:movieLanguage/"+ movieId;
     }
 
     /*@PostMapping("/deleteMovieCompany")

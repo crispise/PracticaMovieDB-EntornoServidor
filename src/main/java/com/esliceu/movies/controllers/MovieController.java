@@ -128,21 +128,19 @@ public class MovieController {
                 redirectAttributes.addFlashAttribute("updateForm", true);
                 return "redirect:/updateMovie/" + movieId;
             case "movieCast":
-                return "redirect:/movieCast";
+                return "redirect:/movieCast/"+movieId;
             case "movieCrew":
-                return "redirect:/movieCrew";
+                return "redirect:/movieCrew/"+movieId;
             case "movieCompany":
                 return "redirect:movieCompany/"+movieId;
             case "movieKeyword":
                 return "redirect:/movieKeyword/"+movieId;
             case "movieGenre":
                 return "redirect:/movieGenre/"+movieId;
-            case "movieLanguageRole":
-                return "redirect:/movieLanguageRole";
             case "movieLanguage":
-                return "redirect:/movieLanguage";
+                return "redirect:/movieLanguage/"+movieId;
             case "movieCountry":
-                return "redirect:/movieCountry";
+                return "redirect:/productionCountry/"+movieId;
 
         }
         return "movies";

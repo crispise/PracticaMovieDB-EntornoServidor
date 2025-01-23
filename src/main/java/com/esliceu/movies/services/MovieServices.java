@@ -37,7 +37,6 @@ public class MovieServices {
         List<String> names = movies.stream()
                 .map(p -> p.getTitle())
                 .collect(Collectors.toList());
-
         Gson gson = new Gson();
         String result = gson.toJson(names);
         return result;
