@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 import com.esliceu.movies.models.Genre;
 import com.esliceu.movies.models.Movie;
 import com.esliceu.movies.models.MovieGenres;
+import com.esliceu.movies.models.MovieKeywords;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,23 +54,24 @@ public class MovieGenresController {
         return "redirect:movieGenre/"+ movieId;
     }
 
-    /*@PostMapping("/deleteMovieCompany")
-    public String deleteMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam Integer companyId, Model model) {
-        String jsonToSend = pCompanyServices.getCompaniesJson();
+    @PostMapping("/deleteMovieGenre")
+    public String deleteMovieGenre(@RequestParam Integer movieId,
+                                     @RequestParam Integer genreId, Model model) {
+        String jsonToSend = genreServices.getGenreJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieCompanyServices.getMovieCompanies(movie);
-        model.addAttribute("movieCompanies", movieCompanies);
-        String message = movieCompanyServices.deleteMovieCompany(companyId, movieId);
+        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
+        model.addAttribute("movieGenres", movieGenres);
+
+        String message = movieGenresServices.deleteMovieGenre(movieId, genreId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El género se ha eliminado correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieCompany/"+movieId;
-    }*/
+        return "redirect:movieGenre/"+movieId;
+    }
 
 
 

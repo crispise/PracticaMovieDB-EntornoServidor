@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieCrewServices {
@@ -67,6 +68,21 @@ public class MovieCrewServices {
         movieCrew.setId(movieCrewId);
         movieCrewRepo.save(movieCrew);
         return null;
+    }
+
+    public String deleteMovieCrew(Integer movieId, Integer deparmentId, Integer personId) {
+      MovieCrewId movieCrewId = new MovieCrewId();
+      movieCrewId.setPersonId(personId);
+      movieCrewId.setDepartmentId(deparmentId);
+      movieCrewId.setMovieId(movieId);
+
+        Optional<MovieCrew> movieCrew = movieCrewRepo.findById(movieCrewId);
+        if (movieCrew.isPresent()) {
+            movieCrewRepo.deleteById(movieCrewId);
+            return null;
+        } else {
+            return "Ese miembro del equipo no está relacionado con la película";
+        }
     }
 
 }

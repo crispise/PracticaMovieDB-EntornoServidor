@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieLanguagesServices {
@@ -63,6 +64,22 @@ public class MovieLanguagesServices {
         movieLanguagesRepo.save(movieLanguages);
 
         return null;
+    }
+
+
+    public String deleteMovieLanguage(Integer movieId, Integer languageId, Integer languageRoleId) {
+        MovieLanguagesId movieLanguagesId = new MovieLanguagesId();
+        movieLanguagesId.setLanguageRoleId(languageRoleId);
+        movieLanguagesId.setMovieId(movieId);
+        movieLanguagesId.setLanguageId(languageId);
+
+        Optional<MovieLanguages> movieLanguages = movieLanguagesRepo.findById(movieLanguagesId);
+        if (movieLanguages.isPresent()) {
+            movieLanguagesRepo.deleteById(movieLanguagesId);
+            return null;
+        } else {
+            return "Ese idioma no está relacionada con la película";
+        }
     }
 
 }

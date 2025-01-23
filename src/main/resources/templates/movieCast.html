@@ -59,7 +59,8 @@
             <td>
             <form class="deleteButtonForm" action="/deleteMovieCast" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${cast.id}" name="id">
+                <input type="hidden" th:value="${cast.person.personId}" name="personId">
+                <input type="hidden" th:value="${cast.gender.genderId}" name="genderId">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar este personaje?')">
                     Eliminar

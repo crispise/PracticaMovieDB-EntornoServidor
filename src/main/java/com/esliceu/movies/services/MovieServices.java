@@ -108,6 +108,7 @@ public class MovieServices {
             movieRepo.deleteById(id);
             return "Ok";
         } catch (Exception e) {
+            System.out.println(e);
             return "Error";
         }
 

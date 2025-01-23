@@ -1,9 +1,6 @@
 package com.esliceu.movies.controllers;
 
-import com.esliceu.movies.models.Gender;
-import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.models.MovieCast;
-import com.esliceu.movies.models.MovieLanguages;
+import com.esliceu.movies.models.*;
 import com.esliceu.movies.services.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,23 +65,27 @@ public class MovieCastController {
         return "redirect:movieCast/"+ movieId;
     }
 
-    /*@PostMapping("/deleteMovieCompany")
-    public String deleteMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam Integer companyId, Model model) {
-        String jsonToSend = pCompanyServices.getCompaniesJson();
-        model.addAttribute("jsonInfo", jsonToSend);
+    @PostMapping("/deleteMovieCast")
+    public String deleteMovieCast(@RequestParam Integer movieId,
+                                  @RequestParam Integer genderId,
+                                  @RequestParam Integer personId, Model model) {
+        String personJsonToSend = personServices.getPersonJson();
+        model.addAttribute("jsonInfo", personJsonToSend);
+        String genderJsondToSend = genderServices.getGenderJson();
+        model.addAttribute("jsonInfo2", genderJsondToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieCompanyServices.getMovieCompanies(movie);
-        model.addAttribute("movieCompanies", movieCompanies);
-        String message = movieCompanyServices.deleteMovieCompany(companyId, movieId);
+        List<MovieCast> movieCast = movieCastServices.getMovieCast(movie);
+        model.addAttribute("movieCast", movieCast);
+        String message = movieCastServices.deleteMovieCast(movieId, genderId, personId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El personaje se ha eliminado correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieCompany/"+movieId;
-    }*/
+        return "redirect:movieCast/"+ movieId;
+    }
+
 
 
 

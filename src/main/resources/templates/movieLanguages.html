@@ -47,7 +47,8 @@
             <td>
             <form class="deleteButtonForm" action="/deleteMovieLanguage" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${movieLanguage.id}" name="id">
+                <input type="hidden" th:value="${movieLanguage.language.languageId}" name="languageId">
+                <input type="hidden" th:value="${movieLanguage.languageRole.roleId}" name="roleId">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar este idioma?')">
                     Eliminar

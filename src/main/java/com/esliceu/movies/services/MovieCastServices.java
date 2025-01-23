@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieCastServices {
@@ -75,5 +76,20 @@ public class MovieCastServices {
                 .max(Integer::compareTo).orElse(null);
         min = min + 1;
         return min;
+    }
+
+    public String deleteMovieCast(Integer movieId, Integer genderId, Integer personId) {
+       MovieCastId movieCastId = new MovieCastId();
+       movieCastId.setPersonId(personId);
+       movieCastId.setGenderId(genderId);
+       movieCastId.setMovieId(movieId);
+
+        Optional<MovieCast> movieCast = movieCastRepo.findById(movieCastId);
+        if (movieCast.isPresent()) {
+            movieCastRepo.deleteById(movieCastId);
+            return null;
+        } else {
+            return "Ese personaje no está relacionada con la película";
+        }
     }
 }

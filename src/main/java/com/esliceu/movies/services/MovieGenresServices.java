@@ -57,5 +57,19 @@ public class MovieGenresServices {
         return null;
     }
 
+    public String deleteMovieGenre(Integer movieId, Integer genreId) {
+        MovieGenresId movieGenresId = new MovieGenresId();
+        movieGenresId.setGenreId(genreId);
+        movieGenresId.setMovieId(movieId);
+        Optional<MovieGenres> movieGenre = movieGenreRepo.findById(movieGenresId);
+        if (movieGenre.isPresent()) {
+            movieGenreRepo.deleteById(movieGenresId);
+            return null;
+        } else {
+            return "Ese género no está relacionada con la película";
+        }
+    }
+
+
 
 }

@@ -1,9 +1,6 @@
 package com.esliceu.movies.controllers;
 
-import com.esliceu.movies.models.Keyword;
-import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.models.MovieKeywords;
-import com.esliceu.movies.models.ProductionCompany;
+import com.esliceu.movies.models.*;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,23 +51,24 @@ public class MovieKeywordController {
         return "redirect:movieKeyword/"+movieId;
     }
 
-    /*@PostMapping("/deleteMovieKeyword")
-    public String deleteMovieKeyword(@RequestParam Integer movieId,
-                                  @RequestParam Integer keywordId, Model model) {
+    @PostMapping("/deleteMovieKeyword")
+    public String deleteMovieCompany(@RequestParam Integer movieId,
+                                     @RequestParam Integer keywordId, Model model) {
         String jsonToSend = keywordServices.getKeywordJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<Keyword> movieKeywords = movieKeywordsServices.getMovieKeywords(movie);
+        List<MovieKeywords> movieKeywords = movieKeywordsServices.getMovieKeywords(movie);
         model.addAttribute("movieKeywords", movieKeywords);
 
-        String message = movieKeywordsServices.deleteMovieKey(keywordId, movieId);
+        String message = movieKeywordsServices.deleteMovieKeyword(movieId, keywordId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡La palabra clave se ha eliminado correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieCompany/"+movieId;
-    }*/
+        return "redirect:movieKeyword/"+movieId;
+    }
+
 
 }

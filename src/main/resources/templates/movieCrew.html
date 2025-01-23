@@ -70,7 +70,8 @@
             <td>
             <form class="deleteButtonForm" action="/deleteMovieCrew" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${crew.id}" name="id">
+                <input type="hidden" th:value="${crew.person.personId}" name="personId">
+                <input type="hidden" th:value="${crew.department.departmentId}" name="departmentId">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar a este miembro del equipo?')">
                     Eliminar

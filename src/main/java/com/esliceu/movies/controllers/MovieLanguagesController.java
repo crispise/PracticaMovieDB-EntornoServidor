@@ -1,6 +1,7 @@
 package com.esliceu.movies.controllers;
 import com.esliceu.movies.models.LanguageRole;
 import com.esliceu.movies.models.Movie;
+import com.esliceu.movies.models.MovieGenres;
 import com.esliceu.movies.models.MovieLanguages;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,23 +60,27 @@ public class MovieLanguagesController {
         return "redirect:movieLanguage/"+ movieId;
     }
 
-    /*@PostMapping("/deleteMovieCompany")
-    public String deleteMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam Integer companyId, Model model) {
-        String jsonToSend = pCompanyServices.getCompaniesJson();
+    @PostMapping("/deleteMovieLanguage")
+    public String deleteMovieLanguage(@RequestParam Integer movieId,
+                                   @RequestParam Integer languageId,
+                                   @RequestParam Integer roleId, Model model) {
+        String jsonToSend = languageServices.getLanguageJson();
         model.addAttribute("jsonInfo", jsonToSend);
+        String languageRoleJsondToSend = languageRoleServices.getLanguageRoleJson();
+        model.addAttribute("jsonInfo2", languageRoleJsondToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieCompanyServices.getMovieCompanies(movie);
-        model.addAttribute("movieCompanies", movieCompanies);
-        String message = movieCompanyServices.deleteMovieCompany(companyId, movieId);
+        List<MovieLanguages> movieLanguages = movieLanguagesServices.getMovieLanguages(movie);
+        model.addAttribute("movieLanguages", movieLanguages);
+
+        String message = movieLanguagesServices.deleteMovieLanguage(movieId, languageId, roleId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El idioma se ha eliminado correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieCompany/"+movieId;
-    }*/
+        return "redirect:movieLanguage/"+ movieId;
+    }
 
 
 

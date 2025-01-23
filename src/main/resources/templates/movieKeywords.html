@@ -38,7 +38,7 @@
             <td>
             <form class="deleteButtonForm" action="/deleteMovieKeyword" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${movieKeyword.id}" name="id">
+                <input type="hidden" th:value="${movieKeyword.keyword.keywordId}" name="keywordId">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar está palabra clave?')">
                     Eliminar

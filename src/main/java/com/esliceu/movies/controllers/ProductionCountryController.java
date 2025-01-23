@@ -1,9 +1,6 @@
 package com.esliceu.movies.controllers;
 
-import com.esliceu.movies.models.Country;
-import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.models.MovieCompany;
-import com.esliceu.movies.models.ProductionCountry;
+import com.esliceu.movies.models.*;
 import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,25 +51,23 @@ public class ProductionCountryController {
         return "redirect:productionCountry/"+movieId;
     }
 
-    /*
-    @PostMapping("/deleteMovieCompany")
-    public String deleteMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam Integer companyId, Model model) {
-        String jsonToSend = pCompanyServices.getCompaniesJson();
+    @PostMapping("/deleteProductionCountry")
+    public String deleteProductionCountry(@RequestParam Integer movieId,
+                                   @RequestParam Integer countryId, Model model) {
+        String jsonToSend = countryServices.getCountryJson();
         model.addAttribute("jsonInfo", jsonToSend);
         Movie movie = movieServices.findMovieById(movieId);
         model.addAttribute("movie", movie);
-        List<ProductionCompany> movieCompanies = movieCompanyServices.getMovieCompanies(movie);
-        model.addAttribute("movieCompanies", movieCompanies);
-        String message = movieCompanyServices.deleteMovieCompany(companyId, movieId);
+        List<ProductionCountry> productionCountries = productionCountryServices.getProductionCountries(movie);
+        model.addAttribute("productionCountries", productionCountries);
+
+        String message = productionCountryServices.deleteProductionCountry(movieId, countryId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡La compañia se ha añadido correctamente!");
+            model.addAttribute("successMessage", "¡El país de producción se ha eliminado correctamente!");
         } else {
             model.addAttribute("errorMessage", message);
         }
-        return "redirect:movieCompany/"+movieId;
+        return "redirect:productionCountry/"+movieId;
     }
-
-*/
 
 }

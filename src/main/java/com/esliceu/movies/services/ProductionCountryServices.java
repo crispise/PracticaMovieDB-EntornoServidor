@@ -53,21 +53,18 @@ public class ProductionCountryServices {
         productionCountryRepo.save(productionCountry);
         return null;
     }
-    /*
 
-    public String deleteMovieCompany(Integer companyId, Integer movieId) {
-        System.out.println("entra en movie company");
-        MovieCompanyId movieCompanyId = new MovieCompanyId();
-        movieCompanyId.setMovieId(movieId);
-        movieCompanyId.setCompanyId(companyId);
-        Optional<MovieCompany> movieCompany = movieCompanyRepo.findById(movieCompanyId);
-        if (movieCompany.isPresent()) {
-            System.out.println("entra en moviCompany present");
-            System.out.println(movieCompany.get());
-            movieCompanyRepo.deleteById(movieCompanyId);
+    public String deleteProductionCountry(Integer movieId, Integer countryId) {
+        ProductionCountryId productionCountryId = new ProductionCountryId();
+        productionCountryId.setMovieId(movieId);
+        productionCountryId.setCountryId(countryId);
+
+        Optional<ProductionCountry> productionCountry = productionCountryRepo.findById(productionCountryId);
+        if (productionCountry.isPresent()) {
+            productionCountryRepo.deleteById(productionCountryId);
             return null;
         } else {
-            return "Esa compañia no está relacionada con la película";
+            return "Ese país de producción no está relacionado con la película";
         }
-    }*/
+    }
 }

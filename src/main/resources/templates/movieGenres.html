@@ -38,7 +38,7 @@
             <td>
             <form class="deleteButtonForm" action="/deleteMovieGenre" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${movieGenre.id}" name="id">
+                <input type="hidden" th:value="${movieGenre.genre.genreId}" name="genreId">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar este género?')">
                     Eliminar

@@ -38,9 +38,9 @@
             <td th:text="${pc.country.countryName}"></td>
             <td th:text="${pc.country.countryIsoCode}"></td>
             <td>
-            <form class="deleteButtonForm" action="/deleteMovieGenre" method="post" style="display:inline;">
+            <form class="deleteButtonForm" action="/deleteProductionCountry" method="post" style="display:inline;">
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
-                <input type="hidden" th:value="${pc.id}" name="id">
+                <input type="hidden" th:value="${pc.country.countryId}" name="countryId">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar este país?')">
                     Eliminar

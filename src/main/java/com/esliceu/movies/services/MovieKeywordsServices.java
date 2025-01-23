@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +51,20 @@ public class MovieKeywordsServices {
         movieKeyword.setId(mKi);
         movieKeywordRepo.save(movieKeyword);
         return null;
+    }
+
+    public String deleteMovieKeyword(Integer movieId, Integer keywordId) {
+        MovieKeywordId movieKeywordId = new MovieKeywordId();
+        movieKeywordId.setMovieId(movieId);
+        movieKeywordId.setKeywordId(keywordId);
+
+        Optional<MovieKeywords> movieKeyword = movieKeywordRepo.findById(movieKeywordId);
+        if (movieKeyword.isPresent()) {
+            movieKeywordRepo.deleteById(movieKeywordId);
+            return null;
+        } else {
+            return "Esa compañia no está relacionada con la película";
+        }
     }
 
 }

@@ -63,15 +63,13 @@ public class MovieCompanyServices {
         return null;
     }
 
-    public String deleteMovieCompany(Integer companyId, Integer movieId) {
-        System.out.println("entra en movie company");
+    public String deleteMovieCompany(Integer movieId, Integer companyId) {
         MovieCompanyId movieCompanyId = new MovieCompanyId();
-        movieCompanyId.setMovieId(movieId);
         movieCompanyId.setCompanyId(companyId);
+        movieCompanyId.setMovieId(movieId);
+
         Optional<MovieCompany> movieCompany = movieCompanyRepo.findById(movieCompanyId);
         if (movieCompany.isPresent()) {
-            System.out.println("entra en moviCompany present");
-            System.out.println(movieCompany.get());
             movieCompanyRepo.deleteById(movieCompanyId);
             return null;
         } else {
