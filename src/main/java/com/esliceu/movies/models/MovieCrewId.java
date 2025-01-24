@@ -1,24 +1,24 @@
 package com.esliceu.movies.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class MovieCrewId implements Serializable {
-
+    @Column(name = "movie_id")
     private Integer movieId;
+
+    @Column(name = "department_id")
     private Integer departmentId;
+
+    @Column(name = "person_id")
     private Integer personId;
 
-    public MovieCrewId() {
-    }
-
-    public MovieCrewId(Integer movieId, Integer departmentId, Integer personId) {
-        this.movieId = movieId;
-        this.departmentId = departmentId;
-        this.personId = personId;
-    }
+    @Column(name = "job", length = 200)
+    private String job;
 
     public Integer getMovieId() {
         return movieId;
@@ -44,18 +44,24 @@ public class MovieCrewId implements Serializable {
         this.personId = personId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MovieCrewId that = (MovieCrewId) o;
-        return (movieId != null && movieId.equals(that.movieId)) &&
-                (departmentId != null && departmentId.equals(that.departmentId)) &&
-                (personId != null && personId.equals(that.personId));
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MovieCrewId that)) return false;
+        return Objects.equals(movieId, that.movieId) && Objects.equals(departmentId, that.departmentId) && Objects.equals(personId, that.personId) && Objects.equals(job, that.job);
+    }
+
+
+    @Override
     public int hashCode() {
-        return 31 * (movieId.hashCode() + departmentId.hashCode() + personId.hashCode());
+        return Objects.hash(movieId, departmentId, personId, job);
     }
 }

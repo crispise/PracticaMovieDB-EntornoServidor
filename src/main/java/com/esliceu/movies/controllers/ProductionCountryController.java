@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -33,41 +34,29 @@ public class ProductionCountryController {
     }
 
     @PostMapping("/addProductionCountry")
-    public String addMovieCompany(@RequestParam Integer movieId,
-                                  @RequestParam String countryName, Model model) {
-        String jsonToSend = countryServices.getCountryJson();
-        model.addAttribute("jsonInfo", jsonToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        List<ProductionCountry> productionCountries = productionCountryServices.getProductionCountries(movie);
-        model.addAttribute("productionCountries", productionCountries);
-
-        String message = productionCountryServices.addProductionCountry(countryName, movie);
+    public String addMovieCompany(@RequestParam Integer movieId, @RequestParam String countryName,
+                                  RedirectAttributes redirectAttributes
+    ) {
+        String message = productionCountryServices.addProductionCountry(countryName, movieId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El país se ha añadido correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El país se ha añadido correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
         }
-        return "redirect:productionCountry/"+movieId;
+        return "redirect:productionCountry/" + movieId;
     }
 
     @PostMapping("/deleteProductionCountry")
     public String deleteProductionCountry(@RequestParam Integer movieId,
-                                   @RequestParam Integer countryId, Model model) {
-        String jsonToSend = countryServices.getCountryJson();
-        model.addAttribute("jsonInfo", jsonToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        List<ProductionCountry> productionCountries = productionCountryServices.getProductionCountries(movie);
-        model.addAttribute("productionCountries", productionCountries);
-
-        String message = productionCountryServices.deleteProductionCountry(movieId, countryId);
+                                          @RequestParam Integer countryId,
+                                          RedirectAttributes redirectAttributes) {
+                String message = productionCountryServices.deleteProductionCountry(movieId, countryId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El país de producción se ha eliminado correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El país de producción se ha eliminado correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
         }
-        return "redirect:productionCountry/"+movieId;
+        return "redirect:productionCountry/" + movieId;
     }
 
 }

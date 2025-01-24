@@ -16,6 +16,8 @@ public class MovieLanguagesServices {
     MovieLanguagesRepo movieLanguagesRepo;
     @Autowired
     LanguageRoleRepo languageRoleRepo;
+    @Autowired
+    MovieRepo movieRepo;
 
 
     public List<MovieLanguages> getMovieLanguages(Movie movie) {
@@ -24,46 +26,42 @@ public class MovieLanguagesServices {
     }
 
 
-    public String addMovieLanguage(String languageName, Movie movie, String languageRole) {
+    public String addMovieLanguage(String languageName, Integer movieId, String languageRole) {
+        if (languageName.isEmpty() || languageRole.isEmpty())return "Falta rellenar un campo";
+        Movie movie = movieRepo.findById(movieId).get();
         List<Language> languages = languageRepo.findLanguageByLanguageName(languageName);
+        if (languages.size() > 1) {
+            return "Hay más de un lenguaje con ese nombre";
+        } else if (languages.isEmpty()) {
+            return "No hay ningún lenguaje con ese nombre";
+        }
         List<LanguageRole> languageRoles = languageRoleRepo.findLanguageRoleByLanguageRole(languageRole);
-        if (languages.size() == 1) {
-            Language language = languages.get(0);
-            boolean exists = checkIfMovieLanguageAlredyExists(movie, language, languageRoles);
-            if (exists) {
-                return "Este lenguaje y rol ya están añadidos";
-            }
-            return createAndSaveMovieKeyword(movie, language, languageRoles.get(0));
-        }
-        return "Hay más de un lenguaje con ese nombre";
+        if (languageRoles.isEmpty()) return "No hay ningún rol con ese nombre";
+        Language language = languages.get(0);
+        return createKeyAndMovieKeyword(movie, language, languageRoles.get(0));
+
     }
 
-    private static boolean checkIfMovieLanguageAlredyExists(Movie movie, Language language, List<LanguageRole> languageRoles) {
-        for (MovieLanguages ml : movie.getMovieLanguages()) {
-            if (ml.getLanguage().getLanguageId().equals(language.getLanguageId())) {
-                for (LanguageRole lr : languageRoles) {
-                    if (ml.getLanguageRole().getRoleId().equals(lr.getRoleId())) {
-                       return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private String createAndSaveMovieKeyword(Movie movie, Language language, LanguageRole languageRole) {
-        MovieLanguages movieLanguages = new MovieLanguages();
-        movieLanguages.setLanguage(language);
-        movieLanguages.setMovie(movie);
-        movieLanguages.setLanguageRole(languageRole);
+    private String createKeyAndMovieKeyword(Movie movie, Language language, LanguageRole languageRole) {
         MovieLanguagesId movieLanguagesId = new MovieLanguagesId();
         movieLanguagesId.setLanguageId(language.getLanguageId());
         movieLanguagesId.setMovieId(movie.getMovieId());
         movieLanguagesId.setLanguageRoleId(languageRole.getRoleId());
+        Optional<MovieLanguages> movieLanguagesSearch = movieLanguagesRepo.findById(movieLanguagesId);
+        if (movieLanguagesSearch.isPresent()){
+            return "Este registro ya está en la lista";
+        }
+        saveMovieLanguages(movie, language, languageRole, movieLanguagesId);
+        return null;
+    }
+
+    private void saveMovieLanguages(Movie movie, Language language, LanguageRole languageRole, MovieLanguagesId movieLanguagesId) {
+        MovieLanguages movieLanguages = new MovieLanguages();
+        movieLanguages.setLanguage(language);
+        movieLanguages.setMovie(movie);
+        movieLanguages.setLanguageRole(languageRole);
         movieLanguages.setId(movieLanguagesId);
         movieLanguagesRepo.save(movieLanguages);
-
-        return null;
     }
 
 

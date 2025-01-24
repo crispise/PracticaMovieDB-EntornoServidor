@@ -87,7 +87,7 @@ public class PCompanyController {
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Compañia creada exitosamente!");
         } else {
-            model.addAttribute("errorMessage", resultMessage); // El mensaje de error es proporcionado por el servicio
+            model.addAttribute("errorMessage", resultMessage);
         }
         return "productionCompany";
     }

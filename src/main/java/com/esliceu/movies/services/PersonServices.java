@@ -38,7 +38,7 @@ public class PersonServices {
         if (name == null || name.trim().isEmpty()) {
             return "El nombre de la persona no puede estar vacío.";
         }
-        if (personRepo.findPersonByPersonName(name).size() > 1) {
+        if (personRepo.findPersonByPersonName(name).size() >= 1) {
             return "Ya existe una persona con ese nombre.";
         }
         Person person = new Person();

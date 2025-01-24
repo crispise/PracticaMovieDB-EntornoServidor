@@ -15,7 +15,7 @@
     var jsonInfo2 = /*[[${jsonInfo2}]]*/ {};
 
 </script>
-<h1> Gestión de Personajes de la película</h1>
+<h1>Reparto de la película</h1>
 <div class="ui-widget">
     <form action="/addMovieCast" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
@@ -38,8 +38,14 @@
         <input type="submit" value="Añadir">
     </form>
 </div>
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
 <section th:if="${movie}">
-    <h2>Lista de Personajes de la Película</h2>
     <table>
         <thead>
         <tr>
@@ -61,6 +67,7 @@
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
                 <input type="hidden" th:value="${cast.person.personId}" name="personId">
                 <input type="hidden" th:value="${cast.gender.genderId}" name="genderId">
+                <input type="hidden" th:value="${cast.characterName}" name="characterName">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar este personaje?')">
                     Eliminar
@@ -71,12 +78,6 @@
         </tbody>
     </table>
 </section>
-<div th:if="${successMessage}" class="success-message">
-    <p th:text="${successMessage}"></p>
-</div>
 
-<div th:if="${errorMessage}" class="error-message">
-    <p th:text="${errorMessage}"></p>
-</div>
 </body>
 </html>

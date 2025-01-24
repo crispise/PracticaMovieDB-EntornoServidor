@@ -37,7 +37,7 @@ public class DepartmentServices {
         if (name == null || name.trim().isEmpty()) {
             return "El nombre del departamento no puede estar vacío.";
         }
-        if (departmentRepo.findDepartmentByDepartmentName(name).size() > 1) {
+        if (departmentRepo.findDepartmentByDepartmentName(name).size() >= 1) {
             return "Ya existe un departamento con ese nombre.";
         }
         Department department = new Department();

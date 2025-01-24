@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -29,9 +30,9 @@ public class MovieCrewController {
     DepartmentServices departmentServices;
 
     @GetMapping("/movieCrew/{movieId}")
-    public String getMovieCrew (@PathVariable("movieId") Integer movieId,
-                                @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "20") int size, Model model) {
+    public String getMovieCrew(@PathVariable("movieId") Integer movieId,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "20") int size, Model model) {
         String personJsonToSend = personServices.getPersonJson();
         model.addAttribute("jsonInfo", personJsonToSend);
         String departmentJsondToSend = departmentServices.getDepartmentJson();
@@ -49,62 +50,33 @@ public class MovieCrewController {
     }
 
     @PostMapping("/addMovieCrew")
-    public String addMovieCrew(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "20") int size,
-                               @RequestParam Integer movieId,
+    public String addMovieCrew(@RequestParam Integer movieId,
                                @RequestParam String personName,
                                @RequestParam String departmentName,
                                @RequestParam String job
-                               , Model model) {
-        String personJsonToSend = personServices.getPersonJson();
-        model.addAttribute("jsonInfo", personJsonToSend);
-        String departmentJsondToSend = departmentServices.getDepartmentJson();
-        model.addAttribute("jsonInfo2", departmentJsondToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<MovieCrew> movieCrew = movieCrewServices.getMovieCrew(pageable, movie);
-        model.addAttribute("movieCrew", movieCrew.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", movieCrew.getTotalPages());
-        model.addAttribute("size", size);
-        String message = movieCrewServices.addMovieCrew(personName,departmentName,job,movie);
+            , RedirectAttributes redirectAttributes) {
+        String message = movieCrewServices.addMovieCrew(personName, departmentName, job, movieId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El miembro del equipo se ha añadido correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El miembro del equipo se ha añadido correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
         }
-        return "redirect:movieCrew/"+ movieId;
+        return "redirect:movieCrew/" + movieId;
     }
 
     @PostMapping("/deleteMovieCrew")
-    public String deleteMovieCrew(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "20") int size,
-                                  @RequestParam Integer movieId,
+    public String deleteMovieCrew(@RequestParam Integer movieId,
                                   @RequestParam Integer departmentId,
-                                  @RequestParam Integer personId, Model model) {
-        String personJsonToSend = personServices.getPersonJson();
-        model.addAttribute("jsonInfo", personJsonToSend);
-        String departmentJsondToSend = departmentServices.getDepartmentJson();
-        model.addAttribute("jsonInfo2", departmentJsondToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<MovieCrew> movieCrew = movieCrewServices.getMovieCrew(pageable, movie);
-        model.addAttribute("movieCrew", movieCrew.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", movieCrew.getTotalPages());
-        model.addAttribute("size", size);
+                                  @RequestParam String job,
+                                  @RequestParam Integer personId, RedirectAttributes redirectAttributes) {
 
-        String message = movieCrewServices.deleteMovieCrew(movieId, departmentId, personId);
+        String message = movieCrewServices.deleteMovieCrew(movieId, departmentId, personId, job);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El miembro del equipo se ha eliminado correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El miembro del equipo se ha eliminado correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
         }
-        return "redirect:movieCrew/"+ movieId;
+        return "redirect:movieCrew/" + movieId;
     }
-
-
 
 }

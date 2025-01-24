@@ -24,14 +24,14 @@ public class KeywordController {
 
     @GetMapping("/keywords")
     public String getKeywords() {
-           return "keywords";
+        return "keywords";
     }
 
     @PostMapping("/keywords")
-    public String newKeyword(@RequestParam String actionSelect, Model model){
+    public String newKeyword(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allKeywords";
+                return "redirect:/allKeywords";
             case "search-by-name":
                 return "redirect:/searchKeywords";
             case "create-new":
@@ -74,7 +74,6 @@ public class KeywordController {
     }
 
 
-
     @GetMapping("/createKeyword")
     public String createKeyword(Model model) {
         model.addAttribute("createNew", true);
@@ -84,8 +83,8 @@ public class KeywordController {
 
     @PostMapping("/createKeyword")
     public String saveKeyword(@RequestParam String keywordName, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =keywordServices.saveKeyword(keywordName);
+        model.addAttribute("createNew", true);
+        String resultMessage = keywordServices.saveKeyword(keywordName);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Keyword creada correctamente!");
         } else {
@@ -95,18 +94,14 @@ public class KeywordController {
     }
 
     @PostMapping("/deleteKeyword")
-    public String deleteKeyword(@RequestParam Integer keywordId,  Model model){
+    public String deleteKeyword(@RequestParam Integer keywordId, Model model) {
         String message = keywordServices.deleteKeyword(keywordId);
-        if (message.equals("Ok")){
+        if (message.equals("Ok")) {
             model.addAttribute("successMessage", "La keyword se ha eliminado correctamente");
-        }else {
+        } else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar la keyword");
         }
-
-
-            return "keywords";
-
-
+        return "keywords";
     }
 
     @GetMapping("/updateKeyword/{id}")
@@ -122,14 +117,13 @@ public class KeywordController {
         }
     }
 
-   @PostMapping("/updateKeyword/{keywordId}")
-    public String updateKeyword(@RequestParam Integer keywordId, @RequestParam String keywordName, Model model){
+    @PostMapping("/updateKeyword/{keywordId}")
+    public String updateKeyword(@RequestParam Integer keywordId, @RequestParam String keywordName, Model model) {
         Keyword keywordUpdate = keywordServices.updateKeyword(keywordId, keywordName);
         model.addAttribute("keyword", keywordUpdate);
         model.addAttribute("update", true);
         return "keywords";
-   }
-
+    }
 
 
 }

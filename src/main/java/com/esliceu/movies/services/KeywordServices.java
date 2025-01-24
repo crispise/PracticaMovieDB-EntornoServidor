@@ -37,7 +37,7 @@ public class KeywordServices {
         if (name == null || name.trim().isEmpty()) {
             return "El nombre de la keyword no puede estar vacío.";
         }
-        if (keywordRepo.findKeywordByKeywordName(name).size() > 1) {
+        if (keywordRepo.findKeywordByKeywordName(name).size() >= 1) {
             return "Ya existe una keyword con ese nombre.";
         }
         Keyword keyword = new Keyword();

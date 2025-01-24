@@ -38,7 +38,7 @@ public class LanguageRoleServices {
         if (name == null || name.trim().isEmpty()) {
             return "El role del lenguaje no puede estar vacío.";
         }
-        if (languageRoleRepo.findLanguageRoleByLanguageRole(name).size() > 1) {
+        if (languageRoleRepo.findLanguageRoleByLanguageRole(name).size() >= 1) {
             return "Ya existe un rol con ese nombre.";
         }
        LanguageRole languageRole = new LanguageRole();

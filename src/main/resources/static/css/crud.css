@@ -228,6 +228,8 @@ div a:active {
     border-radius: none;
     box-shadow: none;
 }
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     form input[type="text"], form input[type="submit"] {

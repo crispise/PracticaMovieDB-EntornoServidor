@@ -27,7 +27,6 @@ public class GenreServices {
         List<String> names = genres.stream()
                 .map(p -> p.getGenreName())
                 .collect(Collectors.toList());
-
         Gson gson = new Gson();
         String result = gson.toJson(names);
         return result;
@@ -37,7 +36,7 @@ public class GenreServices {
         if (name == null || name.trim().isEmpty()) {
             return "El nombre del género no puede estar vacío.";
         }
-        if (genreRepo.findGenreByGenreName(name).size() > 1) {
+        if (genreRepo.findGenreByGenreName(name).size() >= 1) {
             return "Ya existe un género con ese nombre.";
         }
         Genre genre = new Genre();

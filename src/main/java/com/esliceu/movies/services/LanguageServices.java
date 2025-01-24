@@ -38,7 +38,7 @@ public class LanguageServices {
         if (code == null || code.trim().isEmpty()) {
             return "El código no puede estar vacío.";
         }
-        if (languageRepo.findLanguageByLanguageName(name).size() > 1) {
+        if (languageRepo.findLanguageByLanguageName(name).size() >= 1) {
             return "Ya existe un lenguaje con ese nombre.";
         }
         Language language = new Language();

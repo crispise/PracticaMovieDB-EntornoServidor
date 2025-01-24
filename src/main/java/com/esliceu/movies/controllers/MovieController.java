@@ -35,15 +35,11 @@ public class MovieController {
         switch (actionSelect) {
             case "view-all":
                 return "redirect:/allMovies";
-            case "search-by-name":
-                return "redirect:/searchMovies";
             case "create-new":
                 return "redirect:/createMovie";
             default:
-                model.addAttribute("error", "Acción no reconocida");
-                break;
+                return "redirect:/searchMovies/"+actionSelect;
         }
-        return "movies";
     }
 
     @GetMapping("/allMovies")
@@ -58,15 +54,27 @@ public class MovieController {
         return "movies";
     }
 
-    @GetMapping("/searchMovies")
-    public String searchMovies(Model model) {
-        model.addAttribute("searchByName", true);
-        String jsonToSend = movieServices.getMovieJson();
+    @GetMapping("/searchMovies/{actionSelect}")
+    public String searchMovies(@PathVariable("actionSelect") String actionSelect, Model model) {
+        String jsonToSend = "";
+        switch (actionSelect) {
+            case "searchByTitle":
+                model.addAttribute("searchByName", true);
+                jsonToSend = movieServices.getMovieJson();
+            case "searchByActor":
+                model.addAttribute("searchByActor", true);
+            case "searchByCharacter":
+                model.addAttribute("searchByCharacter", true);
+            case "searchByGenre":
+                model.addAttribute("searchByGenre", true);
+            case "searchByDirector":
+                model.addAttribute("searchByDirector", true);
+        }
         model.addAttribute("jsonInfo", jsonToSend);
         return "movies";
     }
 
-    @PostMapping("/searchMovies")
+    @PostMapping("/searchMovies/{actionSelect}")
     public String getMovieWanted(@RequestParam String title, Model model) {
         model.addAttribute("searchByName", true);
         String jsonToSend = movieServices.getMovieJson();
@@ -119,33 +127,6 @@ public class MovieController {
         return "movies";
     }
 
-    @PostMapping("/selectedEntity")
-    public String selectedEntity(@RequestParam Integer movieId, @RequestParam String selectedEntity,  RedirectAttributes redirectAttributes) {
-        System.out.println("la entidad selecionada es");
-        System.out.println(selectedEntity);
-        switch (selectedEntity) {
-            case "movieInfo":
-                redirectAttributes.addFlashAttribute("updateForm", true);
-                return "redirect:/updateMovie/" + movieId;
-            case "movieCast":
-                return "redirect:/movieCast/"+movieId;
-            case "movieCrew":
-                return "redirect:/movieCrew/"+movieId;
-            case "movieCompany":
-                return "redirect:movieCompany/"+movieId;
-            case "movieKeyword":
-                return "redirect:/movieKeyword/"+movieId;
-            case "movieGenre":
-                return "redirect:/movieGenre/"+movieId;
-            case "movieLanguage":
-                return "redirect:/movieLanguage/"+movieId;
-            case "movieCountry":
-                return "redirect:/productionCountry/"+movieId;
-
-        }
-        return "movies";
-    }
-
     @GetMapping("/updateMovie/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Movie movie = movieServices.findMovieById(id);
@@ -179,6 +160,31 @@ public class MovieController {
         model.addAttribute("update", true);
         return "movies";
     }
+
+    @PostMapping("/selectedEntity")
+    public String selectedEntity(@RequestParam Integer movieId, @RequestParam String selectedEntity,  RedirectAttributes redirectAttributes) {
+        switch (selectedEntity) {
+            case "movieInfo":
+                redirectAttributes.addFlashAttribute("updateForm", true);
+                return "redirect:/updateMovie/" + movieId;
+            case "movieCast":
+                return "redirect:/movieCast/"+movieId;
+            case "movieCrew":
+                return "redirect:/movieCrew/"+movieId;
+            case "movieCompany":
+                return "redirect:movieCompany/"+movieId;
+            case "movieKeyword":
+                return "redirect:/movieKeyword/"+movieId;
+            case "movieGenre":
+                return "redirect:/movieGenre/"+movieId;
+            case "movieLanguage":
+                return "redirect:/movieLanguage/"+movieId;
+            case "movieCountry":
+                return "redirect:/productionCountry/"+movieId;
+        }
+        return "movies";
+    }
+
 
 
 

@@ -15,7 +15,7 @@
     var jsonInfo2 = /*[[${jsonInfo2}]]*/ {};
 
 </script>
-<h1> Gestión del Equipo de la película</h1>
+<h1>Miembros del equipo</h1>
 <div class="ui-widget">
     <form action="/addMovieCrew" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
@@ -34,25 +34,14 @@
         <input type="submit" value="Añadir">
     </form>
 </div>
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
 <section th:if="${movie}">
-    <h2>Lista de Miembros del Equipo de la Película</h2>
-    <div>
-        <a th:if="${currentPage > 0}"
-           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=0, size=${size})}">Primero</a>
-
-        <a th:if="${currentPage > 0}"
-           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${currentPage - 1}, size=${size})}">Anterior</a>
-
-        <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${currentPage + 1}, size=${size})}">Siguiente</a>
-
-        <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${totalPages - 1}, size=${size})}">Último</a>
-    </div>
-
-    <div class="pagination-info">
-        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
-    </div>
     <table>
         <thead>
         <tr>
@@ -72,6 +61,7 @@
                 <input type="hidden" th:value="${movie.movieId}" name="movieId">
                 <input type="hidden" th:value="${crew.person.personId}" name="personId">
                 <input type="hidden" th:value="${crew.department.departmentId}" name="departmentId">
+                <input type="hidden" th:value="${crew.job}" name="job">
                 <button type="submit" class="btn btn-delete"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar a este miembro del equipo?')">
                     Eliminar
@@ -81,13 +71,24 @@
         </tr>
         </tbody>
     </table>
-</section>
-<div th:if="${successMessage}" class="success-message">
-    <p th:text="${successMessage}"></p>
-</div>
 
-<div th:if="${errorMessage}" class="error-message">
-    <p th:text="${errorMessage}"></p>
-</div>
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=0, size=${size})}">Primero</a>
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${currentPage - 1}, size=${size})}">Anterior</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${currentPage + 1}, size=${size})}">Siguiente</a>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/movieCrew/{movieId}(movieId=${movie.movieId}, page=${totalPages - 1}, size=${size})}">Último</a>
+    </div>
+
+    <div class="pagination-info">
+        <span>Página actual: <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+    </div>
+</section>
 </body>
 </html>

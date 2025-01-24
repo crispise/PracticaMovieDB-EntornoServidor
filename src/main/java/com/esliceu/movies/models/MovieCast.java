@@ -8,9 +8,6 @@ public class MovieCast {
     @EmbeddedId
     private MovieCastId id;
 
-    @Column(length = 400)
-    private String characterName;
-
     @Column(name = "cast_order")
     private Integer castOrder;
 
@@ -29,20 +26,24 @@ public class MovieCast {
     @JoinColumn(name = "person_id")
     private Person person;
 
+    public String getCharacterName() {
+        return id != null ? id.getCharacterName() : null;
+    }
+
+    public void setCharacterName(String characterName) {
+        if (id == null) {
+            id = new MovieCastId();
+        }
+        id.setCharacterName(characterName);
+    }
+
+
     public MovieCastId getId() {
         return id;
     }
 
     public void setId(MovieCastId id) {
         this.id = id;
-    }
-
-    public String getCharacterName() {
-        return characterName;
-    }
-
-    public void setCharacterName(String characterName) {
-        this.characterName = characterName;
     }
 
     public Integer getCastOrder() {

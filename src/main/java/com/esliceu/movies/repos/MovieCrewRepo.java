@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface MovieCrewRepo extends JpaRepository<MovieCrew, MovieCrewId> {
     Page<MovieCrew> findByMovie(Movie movie, Pageable pageable);
-    List<MovieCrew> findByJob(String role);
+    List<MovieCrew> findById_Job(String job);
 
 }

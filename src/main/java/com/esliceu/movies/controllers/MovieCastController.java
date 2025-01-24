@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -35,8 +36,6 @@ public class MovieCastController {
         List<MovieCast> movieCast = movieCastServices.getMovieCast(movie);
         model.addAttribute("movieCast", movieCast);
         Integer minCastOrder = movieCastServices.getTheMinCastOrder(movie);
-        System.out.println("castOrder");
-        System.out.println(minCastOrder);
         model.addAttribute("minCastOrder", minCastOrder);
         return "movieCast";
     }
@@ -47,20 +46,13 @@ public class MovieCastController {
                                @RequestParam String gender,
                                @RequestParam String characterName,
                                @RequestParam Integer castOrder
-                               , Model model) {
-        String personJsonToSend = personServices.getPersonJson();
-        model.addAttribute("jsonInfo", personJsonToSend);
-        String genderJsondToSend = genderServices.getGenderJson();
-        model.addAttribute("jsonInfo2", genderJsondToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        List<MovieCast> movieCast = movieCastServices.getMovieCast(movie);
-        model.addAttribute("movieCast", movieCast);
-        String message = movieCastServices.addMovieCast(personName,gender,characterName,castOrder,movie);
+                               ,RedirectAttributes redirectAttributes) {
+
+        String message = movieCastServices.addMovieCast(personName,gender,characterName,castOrder,movieId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El personaje se ha añadido correctamente!");
+           redirectAttributes.addFlashAttribute("successMessage", "¡El personaje se ha añadido correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+           redirectAttributes.addFlashAttribute("errorMessage", message);
         }
         return "redirect:movieCast/"+ movieId;
     }
@@ -68,20 +60,14 @@ public class MovieCastController {
     @PostMapping("/deleteMovieCast")
     public String deleteMovieCast(@RequestParam Integer movieId,
                                   @RequestParam Integer genderId,
-                                  @RequestParam Integer personId, Model model) {
-        String personJsonToSend = personServices.getPersonJson();
-        model.addAttribute("jsonInfo", personJsonToSend);
-        String genderJsondToSend = genderServices.getGenderJson();
-        model.addAttribute("jsonInfo2", genderJsondToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        List<MovieCast> movieCast = movieCastServices.getMovieCast(movie);
-        model.addAttribute("movieCast", movieCast);
-        String message = movieCastServices.deleteMovieCast(movieId, genderId, personId);
+                                  @RequestParam String characterName,
+                                  @RequestParam Integer personId,RedirectAttributes redirectAttributes) {
+
+        String message = movieCastServices.deleteMovieCast(movieId, genderId, personId, characterName);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El personaje se ha eliminado correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El personaje se ha eliminado correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+           redirectAttributes.addFlashAttribute("errorMessage", message);
         }
         return "redirect:movieCast/"+ movieId;
     }

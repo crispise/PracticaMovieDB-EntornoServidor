@@ -7,17 +7,11 @@ import com.esliceu.movies.models.ProductionCompany;
 import com.esliceu.movies.repos.MovieCompanyRepo;
 import com.esliceu.movies.repos.MovieRepo;
 import com.esliceu.movies.repos.PCompaniesRepo;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieCompanyServices {
@@ -25,6 +19,8 @@ public class MovieCompanyServices {
     PCompaniesRepo pCompaniesRepo;
     @Autowired
     MovieCompanyRepo movieCompanyRepo;
+    @Autowired
+    MovieRepo movieRepo;
 
 
     public List<MovieCompany> getMovieCompanies(Movie movie) {
@@ -32,35 +28,38 @@ public class MovieCompanyServices {
         return movieCompanies;
     }
 
-    public String addMovieCompany(String companyName, Movie movie) {
+    public String addMovieCompany(String companyName, Integer movieId) {
+        if (companyName.isEmpty()) return "Falta introducir el nombre";
+        Movie movie = movieRepo.findById(movieId).get();
         List<ProductionCompany> productionCompanies = pCompaniesRepo.findProductionCompanyByCompanyName(companyName);
-        if (productionCompanies.size() == 1) {
-            ProductionCompany productionCompany = productionCompanies.get(0);
-            boolean exists = false;
-            for (MovieCompany mc : movie.getMovieCompanies()) {
-                if (mc.getProductionCompany().getCompanyId().equals(productionCompany.getCompanyId())) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (exists) {
-                return "Esta compañia ya está añadida";
-            }
-            return createAndSaveMovieCompany(movie, productionCompany);
+        if (productionCompanies.size() > 1) {
+            return "Hay más de una compañia con ese nombre";
+        } else if (productionCompanies.isEmpty()) {
+            return "No existe una compañia con ese nombre";
         }
-        return "Hay más de una compañia con ese nombre";
+        ProductionCompany productionCompany = productionCompanies.get(0);
+        return createKeyAndMovieCompany(movie,productionCompany);
     }
 
-    private String createAndSaveMovieCompany(Movie movie, ProductionCompany productionCompany) {
-        MovieCompany movieCompany = new MovieCompany();
-        movieCompany.setMovie(movie);
-        movieCompany.setProductionCompany(productionCompany);
+    private String createKeyAndMovieCompany(Movie movie, ProductionCompany productionCompany) {
         MovieCompanyId mci = new MovieCompanyId();
         mci.setCompanyId(productionCompany.getCompanyId());
         mci.setMovieId(movie.getMovieId());
+
+        Optional<MovieCompany> movieCompanySearch = movieCompanyRepo.findById(mci);
+        if (movieCompanySearch.isPresent()){
+            return "Este registro ya está en la lista";
+        }
+        saveMovieCompany(movie, productionCompany, mci);
+        return null;
+    }
+
+    private void saveMovieCompany(Movie movie, ProductionCompany productionCompany, MovieCompanyId mci) {
+        MovieCompany movieCompany = new MovieCompany();
+        movieCompany.setMovie(movie);
+        movieCompany.setProductionCompany(productionCompany);
         movieCompany.setId(mci);
         movieCompanyRepo.save(movieCompany);
-        return null;
     }
 
     public String deleteMovieCompany(Integer movieId, Integer companyId) {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -37,38 +38,26 @@ public class MovieGenresController {
 
     @PostMapping("/addMovieGenre")
     public String addMovieGenre(@RequestParam Integer movieId,
-                                  @RequestParam String genreName, Model model) {
-        String jsonToSend = genreServices.getGenreJson();
-        model.addAttribute("jsonInfo", jsonToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
-        model.addAttribute("movieGenres", movieGenres);
-
-        String message = movieGenresServices.addMovieGenre(genreName, movie);
+                                @RequestParam String genreName,
+                                RedirectAttributes redirectAttributes) {
+        String message = movieGenresServices.addMovieGenre(genreName, movieId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El género se ha añadido correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El género se ha añadido correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
         }
         return "redirect:movieGenre/"+ movieId;
     }
 
     @PostMapping("/deleteMovieGenre")
     public String deleteMovieGenre(@RequestParam Integer movieId,
-                                     @RequestParam Integer genreId, Model model) {
-        String jsonToSend = genreServices.getGenreJson();
-        model.addAttribute("jsonInfo", jsonToSend);
-        Movie movie = movieServices.findMovieById(movieId);
-        model.addAttribute("movie", movie);
-        List<MovieGenres> movieGenres = movieGenresServices.getMovieGenres(movie);
-        model.addAttribute("movieGenres", movieGenres);
-
+                                   @RequestParam Integer genreId,
+                                   RedirectAttributes redirectAttributes) {
         String message = movieGenresServices.deleteMovieGenre(movieId, genreId);
         if (message == null) {
-            model.addAttribute("successMessage", "¡El género se ha eliminado correctamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡El género se ha eliminado correctamente!");
         } else {
-            model.addAttribute("errorMessage", message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
         }
         return "redirect:movieGenre/"+movieId;
     }

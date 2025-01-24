@@ -3,6 +3,7 @@ package com.esliceu.movies.services;
 import com.esliceu.movies.models.*;
 import com.esliceu.movies.repos.GenreRepo;
 import com.esliceu.movies.repos.MovieGenresRepo;
+import com.esliceu.movies.repos.MovieRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ public class MovieGenresServices {
     GenreRepo  genreRepo;
     @Autowired
     MovieGenresRepo movieGenreRepo;
+    @Autowired
+    MovieRepo movieRepo;
 
 
     public List<MovieGenres> getMovieGenres(Movie movie) {
@@ -22,39 +25,37 @@ public class MovieGenresServices {
         return movieGenres;
     }
 
-    public String addMovieGenre (String genreName, Movie movie) {
+    public String addMovieGenre (String genreName, Integer movieId) {
+        if (genreName.isEmpty())return "Falta introducir el género";
+        Movie movie = movieRepo.findById(movieId).get();
         List<Genre> genres = genreRepo.findGenreByGenreName(genreName);
-        if (genres.size() == 1) {
-            Genre genre = genres.get(0);
-            boolean exists = false;
-            for (MovieGenres mg : movie.getMovieGenres()) {
-                if (mg.getGenre().getGenreId().equals(genre.getGenreId())) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (exists) {
-                return "Esta compañia ya está añadida";
-            }
-            return createAndSaveMovieGenre(movie, genre);
+        if (genres.size() > 1) {
+            return "Hay más de un género con ese nombre";
+        } else if (genres.isEmpty()) {
+            return "No hay géneros con ese nombre";
         }
-        return "Hay más de una compañia con ese nombre";
+        Genre genre = genres.get(0);
+        return createKeyAndMovieGenre(movie, genre);
     }
 
-    private String createAndSaveMovieGenre(Movie movie, Genre genre) {
-        System.out.println("entra en create and save");
-        MovieGenres movieGenres = new MovieGenres();
-        movieGenres.setGenre(genre);
-        movieGenres.setMovie(movie);
-
+    private String createKeyAndMovieGenre(Movie movie, Genre genre) {
         MovieGenresId mgi = new MovieGenresId();
         mgi.setGenreId(genre.getGenreId());
         mgi.setMovieId(movie.getMovieId());
+        Optional<MovieGenres> movieGenresSearch = movieGenreRepo.findById(mgi);
+        if (movieGenresSearch.isPresent()){
+            return "Este regístro ya está en la lista";
+        }
+        saveMovieGenre(movie, genre, mgi);
+        return null;
+    }
 
+    private void saveMovieGenre(Movie movie, Genre genre, MovieGenresId mgi) {
+        MovieGenres movieGenres = new MovieGenres();
+        movieGenres.setGenre(genre);
+        movieGenres.setMovie(movie);
         movieGenres.setId(mgi);
         movieGenreRepo.save(movieGenres);
-
-        return null;
     }
 
     public String deleteMovieGenre(Integer movieId, Integer genreId) {

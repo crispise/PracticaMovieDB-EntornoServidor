@@ -4,10 +4,8 @@ import com.esliceu.movies.models.*;
 import com.esliceu.movies.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieKeywordsServices {
@@ -15,6 +13,8 @@ public class MovieKeywordsServices {
     KeywordRepo keywordRepo;
     @Autowired
     MovieKeywordRepo movieKeywordRepo;
+    @Autowired
+    MovieRepo movieRepo;
 
 
     public List<MovieKeywords> getMovieKeywords(Movie movie) {
@@ -22,35 +22,37 @@ public class MovieKeywordsServices {
         return movieKeywords;
     }
 
-    public String addMovieKeyword(String keywordName, Movie movie) {
+    public String addMovieKeyword(String keywordName, Integer movieId) {
+        if (keywordName.isEmpty()) return "Falta introducir la palabra";
+        Movie movie = movieRepo.findById(movieId).get();
         List<Keyword> keywords = keywordRepo.findKeywordByKeywordName(keywordName);
-        if (keywords.size() == 1) {
-            Keyword keyword = keywords.get(0);
-            boolean exists = false;
-            for (MovieKeywords ky : movie.getMovieKeywords()) {
-                if (ky.getKeyword().getKeywordId().equals(keyword.getKeywordId())) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (exists) {
-                return "Esta palabra clave ya está añadida";
-            }
-            return createAndSaveMovieKeyword(movie, keyword);
+        if (keywords.size() > 1) {
+            return "Hay más de una palabra clave con ese nombre";
+        }else if (keywords.isEmpty()){
+            return "No hay palabras claves con ese nombre";
         }
-        return "Hay más de una palabra clave con ese nombre";
+        Keyword keyword = keywords.get(0);
+        return createKeyAndMovieKeyword(movie, keyword);
     }
 
-    private String createAndSaveMovieKeyword(Movie movie, Keyword keyword) {
-        MovieKeywords movieKeyword = new MovieKeywords();
-        movieKeyword.setKeyword(keyword);
-        movieKeyword.setMovie(movie);
+    private String createKeyAndMovieKeyword(Movie movie, Keyword keyword) {
         MovieKeywordId mKi = new MovieKeywordId();
         mKi.setKeywordId(keyword.getKeywordId());
         mKi.setMovieId(movie.getMovieId());
+        Optional<MovieKeywords> movieKeywordSearch = movieKeywordRepo.findById(mKi);
+        if (movieKeywordSearch.isPresent()){
+            return "Este registro ya está en la lista";
+        }
+        saveMovieKeyword(movie, keyword, mKi);
+        return null;
+    }
+
+    private void saveMovieKeyword(Movie movie, Keyword keyword, MovieKeywordId mKi) {
+        MovieKeywords movieKeyword = new MovieKeywords();
+        movieKeyword.setKeyword(keyword);
+        movieKeyword.setMovie(movie);
         movieKeyword.setId(mKi);
         movieKeywordRepo.save(movieKeyword);
-        return null;
     }
 
     public String deleteMovieKeyword(Integer movieId, Integer keywordId) {

@@ -37,7 +37,7 @@ public class GenderServices {
         if (name == null || name.trim().isEmpty()) {
             return "El genero no puede estar vacío.";
         }
-        if (genderRepo.findGenderByGender(name).size() > 1) {
+        if (genderRepo.findGenderByGender(name).size() >= 1) {
             return "Ya existe un genero con ese nombre.";
         }
         Gender gender = new Gender();

@@ -25,6 +25,7 @@ public class InitController {
     @PostMapping("/init")
     public String getEntity (@RequestParam String entityManagment) {
         return switch (entityManagment) {
+            case "movie" -> "redirect:/movies";
             case "production_company" -> "redirect:/productionCompany";
             case "departments" -> "redirect:/departments";
             case "genders" -> "redirect:/genders";
@@ -32,7 +33,7 @@ public class InitController {
             case "languages" -> "redirect:/languages";
             case "countries" -> "redirect:/countries";
             case "keywords" -> "redirect:/keywords";
-            case "people" -> "redirect:/people";
+            case "people" -> "redirect:/persons";
             case "language_roles" -> "redirect:/languageRoles";
             default -> "redirect:/";
         };

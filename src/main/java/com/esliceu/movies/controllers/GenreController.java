@@ -23,14 +23,14 @@ public class GenreController {
 
     @GetMapping("/genres")
     public String getGenres() {
-           return "genres";
+        return "genres";
     }
 
     @PostMapping("/genres")
-    public String newGenre(@RequestParam String actionSelect, Model model){
+    public String newGenre(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allGenres";
+                return "redirect:/allGenres";
             case "search-by-name":
                 return "redirect:/searchGenres";
             case "create-new":
@@ -73,7 +73,6 @@ public class GenreController {
     }
 
 
-
     @GetMapping("/createGenre")
     public String createGenre(Model model) {
         model.addAttribute("createNew", true);
@@ -83,8 +82,8 @@ public class GenreController {
 
     @PostMapping("/createGenre")
     public String saveGenre(@RequestParam String genreName, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =genreServices.saveGenre(genreName);
+        model.addAttribute("createNew", true);
+        String resultMessage = genreServices.saveGenre(genreName);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Género creado correctamente!");
         } else {
@@ -94,17 +93,14 @@ public class GenreController {
     }
 
     @PostMapping("/deleteGenre")
-    public String deleteGenre(@RequestParam Integer genreId, Model model){
+    public String deleteGenre(@RequestParam Integer genreId, Model model) {
         String message = genreServices.deleteGenre(genreId);
-        if (message.equals("Ok")){
+        if (message.equals("Ok")) {
             model.addAttribute("successMessage", "El género se ha eliminado correctamente");
-        }else {
+        } else {
             model.addAttribute("errorMessage", "Ha habido un error al eliminar el género");
         }
-
-            return "genres";
-
-
+        return "genres";
     }
 
     @GetMapping("/updateGenre/{id}")
@@ -120,13 +116,13 @@ public class GenreController {
         }
     }
 
-   @PostMapping("/updateGenre/{genreId}")
-    public String updateGenre(@RequestParam Integer genreId, @RequestParam String genreName, Model model){
+    @PostMapping("/updateGenre/{genreId}")
+    public String updateGenre(@RequestParam Integer genreId, @RequestParam String genreName, Model model) {
         Genre genreUpdate = genreServices.updateGenre(genreId, genreName);
         model.addAttribute("genre", genreUpdate);
         model.addAttribute("update", true);
         return "genres";
-   }
+    }
 
 
 }

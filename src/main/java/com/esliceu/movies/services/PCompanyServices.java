@@ -37,7 +37,8 @@ public class PCompanyServices {
         if (name == null || name.trim().isEmpty()) {
             return "El nombre de la compañia no puede estar vacío.";
         }
-        if (productionCompanyRepo.findProductionCompanyByCompanyName(name).size() > 1) {
+
+        if (productionCompanyRepo.findProductionCompanyByCompanyName(name).size() >= 1) {
             return "Ya existe una compañia con ese nombre.";
         }
         ProductionCompany productionCompany = new ProductionCompany();

@@ -38,7 +38,7 @@ public class CountryServices {
         if (isoCode == null || isoCode.trim().isEmpty()) {
             return "El código iso no puede estar vacío.";
         }
-        if (countryRepo.findCountryByCountryName(name).size() > 1) {
+        if (countryRepo.findCountryByCountryName(name).size() >= 1) {
             return "Ya existe un país con ese nombre.";
         }
         Country country = new Country();

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Paises de producción</title>
+    <title>Países de producción</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -14,17 +14,25 @@
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
-<h1> Gestión de Países de prouducción</h1>
+<h1>Países de producción</h1>
 <div class="ui-widget">
     <form action="/addProductionCountry" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
-        <label for="tags">Añadir País: </label>
+        <label for="tags">Nombre del país: </label>
         <input type="text" id="tags" name="countryName">
         <input type="submit" value="Añadir">
     </form>
 </div>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <section th:if="${movie}">
-    <h2>Lista de Países de la Película</h2>
     <table>
         <thead>
         <tr>
@@ -51,12 +59,5 @@
         </tbody>
     </table>
 </section>
-<div th:if="${successMessage}" class="success-message">
-    <p th:text="${successMessage}"></p>
-</div>
-
-<div th:if="${errorMessage}" class="error-message">
-    <p th:text="${errorMessage}"></p>
-</div>
 </body>
 </html>

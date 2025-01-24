@@ -47,7 +47,11 @@
         <label for="action-select">Seleccione una acción:</label>
         <select id="action-select" name="actionSelect">
             <option value="view-all">Obtener todas las películas</option>
-            <option value="search-by-name">Buscar por título</option>
+            <option value="searchByTitle">Buscar por título</option>
+            <option value="searchByActor">Buscar por actor</option>
+            <option value="searchByCharacter">Buscar por personaje</option>
+            <option value="searchByGenre">Buscar por género de la película</option>
+            <option value="searchByDirector">Buscar por director</option>
             <option value="create-new">Crear nueva película</option>
         </select>
         <input type="submit">
@@ -135,35 +139,64 @@
     <table th:if="${moviesFound != null and #lists.size(moviesFound) > 0}">
         <thead>
         <tr>
-            <th style="width: 3%;">Id</th>
-            <th style="width: 4%;">Título</th>
-            <th>Presupuesto</th>
-            <th style="width: 6%;">Enlace</th>
-            <th style="width: 15%;">Resumen</th>
-            <th>Popularidad</th>
-            <th>Estreno</th>
-            <th>Ingresos</th>
-            <th>Duración</th>
-            <th>Estado</th>
-            <th style="width: 13%;">Tagline</th>
-            <th style="width: 3%;">Votos</th>
-            <th th style="width: 13%;">Opciones</th>
+            <th>Atributo</th>
+            <th>Valor</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="movie : ${moviesFound}">
-            <td th:text="${movie.movieId}"></td>
+            <td colspan="2" style="background-color: #f4f4f4; text-align: center;">
+                Película ID: <span th:text="${movie.movieId}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Título</td>
             <td th:text="${movie.title}"></td>
+        </tr>
+        <tr>
+            <td>Presupuesto</td>
             <td th:text="${movie.budget}"></td>
-            <td th:text="${movie.homepage}"></td>
+        </tr>
+        <tr>
+            <td>Enlace</td>
+            <td>
+                <a th:href="${movie.homepage}" th:text="${movie.homepage}" target="_blank"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>Resumen</td>
             <td th:text="${movie.overview}"></td>
+        </tr>
+        <tr>
+            <td>Popularidad</td>
             <td th:text="${movie.popularity}"></td>
+        </tr>
+        <tr>
+            <td>Estreno</td>
             <td th:text="${movie.releaseDate}"></td>
+        </tr>
+        <tr>
+            <td>Ingresos</td>
             <td th:text="${movie.revenue}"></td>
+        </tr>
+        <tr>
+            <td>Duración</td>
             <td th:text="${movie.runtime}"></td>
+        </tr>
+        <tr>
+            <td>Estado</td>
             <td th:text="${movie.movieStatus}"></td>
+        </tr>
+        <tr>
+            <td>Tagline</td>
             <td th:text="${movie.tagline}"></td>
+        </tr>
+        <tr>
+            <td>Votos</td>
             <td th:text="${movie.voteAverage}"></td>
+        </tr>
+        <tr>
+            <td>Opciones</td>
             <td>
                 <a th:href="@{/updateMovie/{id}(id=${movie.movieId})}" class="btn btn-update">
                     Actualizar
@@ -176,6 +209,9 @@
                     </button>
                 </form>
             </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="height: 10px;"></td>
         </tr>
         </tbody>
     </table>
@@ -233,40 +269,6 @@
 
 <section th:if="${update}">
     <h2>Actualizar película</h2>
-    <table>
-        <thead>
-        <tr>
-            <th style="width: 3%;">Id</th>
-            <th style="width: 4%;">Título</th>
-            <th>Presupuesto</th>
-            <th style="width: 6%;">Enlace</th>
-            <th style="width: 15%;">Resumen</th>
-            <th>Popularidad</th>
-            <th>Estreno</th>
-            <th>Ingresos</th>
-            <th>Duración</th>
-            <th>Estado</th>
-            <th style="width: 13%;">Tagline</th>
-            <th style="width: 3%;">Votos</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td th:text="${movie.movieId}"></td>
-            <td th:text="${movie.title}"></td>
-            <td th:text="${movie.budget}"></td>
-            <td th:text="${movie.homepage}"></td>
-            <td th:text="${movie.overview}"></td>
-            <td th:text="${movie.popularity}"></td>
-            <td th:text="${movie.releaseDate}"></td>
-            <td th:text="${movie.revenue}"></td>
-            <td th:text="${movie.runtime}"></td>
-            <td th:text="${movie.movieStatus}"></td>
-            <td th:text="${movie.tagline}"></td>
-            <td th:text="${movie.voteAverage}"></td>
-        </tr>
-        </tbody>
-    </table>
     <div class="menu">
         <form action="/selectedEntity" method="post">
             <input type="hidden" th:value="${movie.movieId}" name="movieId">
@@ -274,57 +276,140 @@
             <select id="action" name="selectedEntity">
                 <option value="movieInfo">Datos de la película</option>
                 <option value="movieCast">Elenco</option>
-                <option value="movieCrew">Equipo de producción</option>
-                <option value="movieCompany">Productoras</option>
+                <option value="movieCrew">Equipo</option>
+                <option value="movieCompany">Compañias Productoras</option>
                 <option value="movieKeyword">Palábras clave</option>
-                <option value="movieGenre">Género de película</option>
+                <option value="movieGenre">Géneros de la película</option>
                 <option value="movieLanguage">Idiomas de la película</option>
-                <option value="movieCountry">Paises</option>
+                <option value="movieCountry">Paises de producción</option>
             </select>
             <input type="submit">
         </form>
     </div>
-    <div th:if="${updateForm}">
-        <form th:action="@{/updateMovie/{movieId}(movieId=${movie.movieId})}" method="post">
+    <table>
+        <thead>
+        <tr>
+            <th>Atributo</th>
+            <th>Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Id</td>
+            <td th:text="${movie.movieId}"></td>
+        </tr>
+        <tr>
+            <td>Título</td>
+            <td th:text="${movie.title}"></td>
+        </tr>
+        <tr>
+            <td>Presupuesto</td>
+            <td th:text="${movie.budget}"></td>
+        </tr>
+        <tr>
+            <td>Enlace</td>
+            <td th:text="${movie.homepage}"></td>
+        </tr>
+        <tr>
+            <td>Resumen</td>
+            <td th:text="${movie.overview}"></td>
+        </tr>
+        <tr>
+            <td>Popularidad</td>
+            <td th:text="${movie.popularity}"></td>
+        </tr>
+        <tr>
+            <td>Estreno</td>
+            <td th:text="${movie.releaseDate}"></td>
+        </tr>
+        <tr>
+            <td>Ingresos</td>
+            <td th:text="${movie.revenue}"></td>
+        </tr>
+        <tr>
+            <td>Duración</td>
+            <td th:text="${movie.runtime}"></td>
+        </tr>
+        <tr>
+            <td>Estado</td>
+            <td th:text="${movie.movieStatus}"></td>
+        </tr>
+        <tr>
+            <td>Tagline</td>
+            <td th:text="${movie.tagline}"></td>
+        </tr>
+        <tr>
+            <td>Votos</td>
+            <td th:text="${movie.voteAverage}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${updateForm}" class="form-container">
+        <form th:action="@{/updateMovie/{movieId}(movieId=${movie.movieId})}" method="post" class="update-form">
             <input type="hidden" th:value="${movie.movieId}" name="movieId">
 
-            <label for="title2">Título:</label>
-            <input type="text" id="title2" name="title" th:value="${movie.title}" required><br><br>
+            <div class="form-group">
+                <label for="title2" class="form-label">Título:</label>
+                <input type="text" id="title2" name="title" th:value="${movie.title}" class="form-input" required>
+            </div>
 
-            <label for="budget2">Presupuesto:</label>
-            <input type="number" id="budget2" name="budget" th:value="${movie.budget}" required><br><br>
+            <div class="form-group">
+                <label for="budget2" class="form-label">Presupuesto:</label>
+                <input type="number" id="budget2" name="budget" th:value="${movie.budget}" class="form-input" required>
+            </div>
 
-            <label for="homepage2">Enlace:</label>
-            <input type="text" id="homepage2" name="homepage" th:value="${movie.homepage}" required><br><br>
+            <div class="form-group">
+                <label for="homepage2" class="form-label">Enlace:</label>
+                <input type="text" id="homepage2" name="homepage" th:value="${movie.homepage}" class="form-input" required>
+            </div>
 
-            <label for="overview2">Resumen:</label>
-            <input type="text" id="overview2" name="overview" th:value="${movie.overview}" required><br><br>
+            <div class="form-group">
+                <label for="overview2" class="form-label">Resumen:</label>
+                <input type="text" id="overview2" name="overview" th:value="${movie.overview}" class="form-input" required>
+            </div>
 
-            <label for="popularity2">Popularidad:</label>
-            <input type="number" step="0.01" id="popularity2" name="popularity" th:value="${movie.popularity}" required><br><br>
+            <div class="form-group">
+                <label for="popularity2" class="form-label">Popularidad:</label>
+                <input type="number" step="0.01" id="popularity2" name="popularity" th:value="${movie.popularity}" class="form-input" required>
+            </div>
 
-            <label for="releaseDate2">Fecha de estreno:</label>
-            <input type="date" id="releaseDate2" name="releaseDate" th:value="${movie.releaseDate}" required><br><br>
+            <div class="form-group">
+                <label for="releaseDate2" class="form-label">Fecha de estreno:</label>
+                <input type="date" id="releaseDate2" name="releaseDate" th:value="${movie.releaseDate}" class="form-input" required>
+            </div>
 
-            <label for="revenue2">Ingresos:</label>
-            <input type="number" id="revenue2" name="revenue" th:value="${movie.revenue}" required><br><br>
+            <div class="form-group">
+                <label for="revenue2" class="form-label">Ingresos:</label>
+                <input type="number" id="revenue2" name="revenue" th:value="${movie.revenue}" class="form-input" required>
+            </div>
 
-            <label for="runtime2">Duración:</label>
-            <input type="number" id="runtime2" name="runtime" th:value="${movie.runtime}" required><br><br>
+            <div class="form-group">
+                <label for="runtime2" class="form-label">Duración:</label>
+                <input type="number" id="runtime2" name="runtime" th:value="${movie.runtime}" class="form-input" required>
+            </div>
 
-            <label for="movieStatus2">Estado:</label>
-            <input type="text" id="movieStatus2" name="movieStatus" th:value="${movie.movieStatus}" required><br><br>
+            <div class="form-group">
+                <label for="movieStatus2" class="form-label">Estado:</label>
+                <input type="text" id="movieStatus2" name="movieStatus" th:value="${movie.movieStatus}" class="form-input" required>
+            </div>
 
-            <label for="tagline2">Tagline:</label>
-            <input type="text" id="tagline2" name="tagline" th:value="${movie.tagline}" required><br><br>
+            <div class="form-group">
+                <label for="tagline2" class="form-label">Tagline:</label>
+                <input type="text" id="tagline2" name="tagline" th:value="${movie.tagline}" class="form-input" required>
+            </div>
 
-            <label for="voteAverage2">Promedio de votos:</label>
-            <input type="number" step="0.01" id="voteAverage2" name="voteAverage" th:value="${movie.voteAverage}" required><br><br>
+            <div class="form-group">
+                <label for="voteAverage2" class="form-label">Promedio de votos:</label>
+                <input type="number" step="0.01" id="voteAverage2" name="voteAverage" th:value="${movie.voteAverage}" class="form-input" required>
+            </div>
 
-            <input type="submit" value="Actualizar Película">
+            <div class="form-actions">
+                <input type="submit" value="Actualizar Película" class="btn btn-primary">
+            </div>
         </form>
-
     </div>
+
 
 
 </section>

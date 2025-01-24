@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>MovieCompanies</title>
+    <title>Productoras</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -14,7 +14,7 @@
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
-<h1> Gestión de Compañias de peliculas</h1>
+<h1>Compañias productoras de la película</h1>
 <div class="ui-widget">
     <form action="/addMovieCompany" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
@@ -22,9 +22,14 @@
         <input type="text" id="tags" name="companyName">
         <input type="submit" value="Añadir">
     </form>
+</div><div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
 </div>
 <section th:if="${movie}">
-    <h2>Lista de Compañias de la Película</h2>
     <table>
         <thead>
         <tr>
@@ -49,12 +54,6 @@
         </tbody>
     </table>
 </section>
-<div th:if="${successMessage}" class="success-message">
-    <p th:text="${successMessage}"></p>
-</div>
 
-<div th:if="${errorMessage}" class="error-message">
-    <p th:text="${errorMessage}"></p>
-</div>
 </body>
 </html>

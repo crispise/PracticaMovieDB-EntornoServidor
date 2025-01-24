@@ -8,9 +8,6 @@ public class MovieCrew {
     @EmbeddedId
     private MovieCrewId id;
 
-    @Column(length = 200)
-    private String job;
-
     @ManyToOne
     @MapsId("movieId")
     @JoinColumn(name = "movie_id")
@@ -26,6 +23,17 @@ public class MovieCrew {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    public String getJob() {
+        return id != null ? id.getJob() : null;
+    }
+
+    public void setJob(String job) {
+        if (id == null) {
+            id = new MovieCrewId();
+        }
+        id.setJob(job);
+    }
+
 
     public MovieCrewId getId() {
         return id;
@@ -35,13 +43,6 @@ public class MovieCrew {
         this.id = id;
     }
 
-    public String getJob() {
-        return job;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
 
     public Movie getMovie() {
         return movie;
@@ -66,6 +67,4 @@ public class MovieCrew {
     public void setDepartment(Department department) {
         this.department = department;
     }
-
-
 }
