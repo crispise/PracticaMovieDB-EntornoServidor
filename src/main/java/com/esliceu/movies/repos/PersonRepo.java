@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PersonRepo extends JpaRepository<Person, Integer> {
     List<Person> findPersonByPersonName(String personSearch);
+    List<Person> findByMovieCastIsNotEmpty();
 }

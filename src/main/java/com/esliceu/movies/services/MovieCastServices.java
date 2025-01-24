@@ -4,11 +4,13 @@ import com.esliceu.movies.models.*;
 import com.esliceu.movies.repos.GenderRepo;
 import com.esliceu.movies.repos.MovieCastRepo;
 import com.esliceu.movies.repos.PersonRepo;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieCastServices {
@@ -91,5 +93,23 @@ public class MovieCastServices {
         } else {
             return "Ese personaje no está relacionada con la película";
         }
+    }
+
+    public String getActorsJson() {
+        List <Person> personsMovieCast = personRepo.findByMovieCastIsNotEmpty();
+        List<String> personNames = personsMovieCast.stream()
+                .map(p -> p.getPersonName())
+                .collect(Collectors.toList());
+        Gson gson = new Gson();
+        String result = gson.toJson(personNames);
+        return result;
+    }
+
+    public String getCharactersJson() {
+        List<String> charactersName = movieCastRepo.findAll()
+                .stream().map(mc -> mc.getCharacterName()).toList();
+        Gson gson = new Gson();
+        String result = gson.toJson(charactersName);
+        return result;
     }
 }

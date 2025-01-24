@@ -11,6 +11,15 @@ public class MovieCrewId implements Serializable {
     private Integer departmentId;
     private Integer personId;
 
+    public MovieCrewId() {
+    }
+
+    public MovieCrewId(Integer movieId, Integer departmentId, Integer personId) {
+        this.movieId = movieId;
+        this.departmentId = departmentId;
+        this.personId = personId;
+    }
+
     public Integer getMovieId() {
         return movieId;
     }
@@ -40,9 +49,9 @@ public class MovieCrewId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MovieCrewId that = (MovieCrewId) o;
-        return movieId.equals(that.movieId) &&
-                departmentId.equals(that.departmentId) &&
-                personId.equals(that.personId);
+        return (movieId != null && movieId.equals(that.movieId)) &&
+                (departmentId != null && departmentId.equals(that.departmentId)) &&
+                (personId != null && personId.equals(that.personId));
     }
 
     @Override

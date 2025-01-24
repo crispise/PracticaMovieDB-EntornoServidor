@@ -2,13 +2,16 @@ package com.esliceu.movies.services;
 
 import com.esliceu.movies.models.*;
 import com.esliceu.movies.repos.*;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class MovieCrewServices {
@@ -85,4 +88,13 @@ public class MovieCrewServices {
         }
     }
 
+    public String getDirectorJson() {
+        List<String> directors = movieCrewRepo.findByJob("Director")
+                .stream()
+                .map(mc -> mc.getPerson().getPersonName()).toList();
+        Set set = new HashSet<>(directors);
+        Gson gson = new Gson();
+        String result = gson.toJson(set);
+        return result;
+    }
 }
