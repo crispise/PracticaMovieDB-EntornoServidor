@@ -100,9 +100,6 @@ public class MovieServices {
         return movieRepo.findById(id).get();
     }
 
-    public List<Movie> findMovieByName(String movieSearch) {
-        return movieRepo.findMovieByTitle(movieSearch);
-    }
 
     public String deleteMovie(Integer id) {
         try {
@@ -205,20 +202,47 @@ public class MovieServices {
         }
     }
 
-    public List<Movie> findMoviesByActionType(String condition, String actionType) {
+    public Page<Movie> findMoviesByActionType(String condition, String actionType, Pageable pageable) {
+        Page<Movie> moviePage;
+
         switch (actionType) {
             case "searchByTitle":
-                return movieRepo.findMovieByTitle(condition);
-            case "searchByActor":
-                return movieRepo.findDistinctByMovieCastPersonPersonName(condition);
-            case "searchByCharacter":
-                return movieRepo.findDistinctByMovieCastIdCharacterName(condition);
-            case "searchByGenre":
-                return movieRepo.findDistinctByMovieGenresGenreGenreName(condition);
-            case "searchByDirector":
-                return movieRepo.findDistinctByMovieCrewPersonPersonNameAndMovieCrewIdJob(condition, "Director");
-        }
-        return null;
-    }
+                moviePage = movieRepo.findMovieByTitle(condition, pageable);
+                if (moviePage.getTotalElements() == 0) {
+                    moviePage = movieRepo.findByTitleContaining(condition, pageable);
+                }
+                return moviePage;
 
+            case "searchByActor":
+                moviePage = movieRepo.findDistinctByMovieCastPersonPersonName(condition, pageable);
+                if (moviePage.getTotalElements() == 0) {
+                    moviePage = movieRepo.findDistinctByMovieCastPersonPersonNameContaining(condition, pageable);
+                }
+                return moviePage;
+
+            case "searchByCharacter":
+                moviePage = movieRepo.findDistinctByMovieCastIdCharacterName(condition, pageable);
+                if (moviePage.getTotalElements() == 0) {
+                    moviePage = movieRepo.findDistinctByMovieCastIdCharacterNameContaining(condition, pageable);
+                }
+                return moviePage;
+
+            case "searchByGenre":
+                moviePage = movieRepo.findDistinctByMovieGenresGenreGenreName(condition, pageable);
+                if (moviePage.getTotalElements() == 0) {
+                    moviePage = movieRepo.findDistinctByMovieGenresGenreGenreNameContaining(condition, pageable);
+                }
+                return moviePage;
+
+            case "searchByDirector":
+                moviePage = movieRepo.findDistinctByMovieCrewPersonPersonNameAndMovieCrewIdJob(condition, "Director", pageable);
+                if (moviePage.getTotalElements() == 0) {
+                    moviePage = movieRepo.findDistinctByMovieCrewPersonPersonNameContainingAndMovieCrewIdJob(condition, "Director", pageable);
+                }
+                return moviePage;
+
+            default:
+                return Page.empty();
+        }
+    }
 }

@@ -1,4 +1,5 @@
 package com.esliceu.movies.controllers;
+
 import com.esliceu.movies.models.Country;
 import com.esliceu.movies.models.Movie;
 import com.esliceu.movies.services.*;
@@ -21,6 +22,7 @@ public class QueriesController {
 
     @Autowired
     MovieServices movieServices;
+    @Autowired
     MovieCastServices movieCastServices;
     @Autowired
     MovieCrewServices movieCrewServices;
@@ -29,11 +31,11 @@ public class QueriesController {
 
     @GetMapping("/moviesQuerys")
     public String getQuerie() {
-           return "consults";
+        return "consults";
     }
 
-    @GetMapping("/moviesQuerys/{actionSelect}")
-    public String setMovieQuery(@PathVariable("actionSelect") String actionSelect, Model model) {
+    @PostMapping("/moviesQuerys")
+    public String setMovieQuery(@RequestParam String actionSelect, Model model) {
         model.addAttribute("search", true);
         String jsonToSend = "";
         switch (actionSelect) {
@@ -64,22 +66,58 @@ public class QueriesController {
         return "consults";
     }
 
-    @PostMapping("/moviesQuerys/{actionSelect}")
-    public String getMovieQuery(@PathVariable("actionSelect") String actionSelect, @RequestParam String condition, RedirectAttributes redirectAttributes) {
-        List<Movie> moviesFound = movieServices.findMoviesByActionType(condition,actionSelect);
-        redirectAttributes.addFlashAttribute("moviesFound", moviesFound);
-        return "redirect:/moviesQuerys/"+actionSelect;
+    @GetMapping("/searchMovieByType/{actionSelect}")
+    public String getMovieQ(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @PathVariable("actionSelect") String actionSelect,
+            @RequestParam String condition,
+            Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieServices.findMoviesByActionType(condition, actionSelect, pageable);
+        model.addAttribute("movies", moviePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", moviePage.getTotalPages());
+        model.addAttribute("size", size);
+        model.addAttribute("searchType", true);
+        return "consults";
+    }
+
+    @PostMapping("/searchMovieByType/{actionSelect}")
+    public String getMovieQuery(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "20") int size,
+                                @PathVariable("actionSelect") String actionSelect,
+                                @RequestParam String condition, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieServices.findMoviesByActionType(condition, actionSelect, pageable);
+        if (moviePage.isEmpty()) {
+            model.addAttribute("errorMessage", "No se ha encontrado nada con ese nombre");
+        } else {
+            model.addAttribute("movies", moviePage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", moviePage.getTotalPages());
+            model.addAttribute("size", size);
+            model.addAttribute("searchType", true);
+        }
+        return "consults";
     }
 
     @GetMapping("/allMovieQuerys")
     public String getAllMoviesQuerys(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
-        model.addAttribute("viewAll", true);
         Pageable pageable = PageRequest.of(page, size);
         Page<Movie> moviePage = movieServices.findAllMovies(pageable);
         model.addAttribute("movies", moviePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", moviePage.getTotalPages());
         model.addAttribute("size", size);
+        model.addAttribute("allMovies", true);
         return "consults";
+    }
+
+    @GetMapping("/seeMovieInfo/{id}")
+    public String seeMovieInfo(@PathVariable ("id") Integer movieId, Model model) {
+        Movie movie = movieServices.findMovieById(movieId);
+        model.addAttribute("movie", movie);
+        return "movieInfo";
     }
 }

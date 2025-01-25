@@ -91,10 +91,22 @@ public class MovieController {
     }
 
     @PostMapping("/searchMovies/{actionSelect}")
-    public String getMovieWanted(@PathVariable("actionSelect") String actionSelect, @RequestParam String condition,RedirectAttributes redirectAttributes) {
-        List<Movie> moviesFound = movieServices.findMoviesByActionType(condition,actionSelect);
-        redirectAttributes.addFlashAttribute("moviesFound", moviesFound);
-        return "redirect:/searchMovies/"+actionSelect;
+    public String getMovieWanted(
+            @PathVariable("actionSelect") String actionSelect,
+            @RequestParam String condition,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            RedirectAttributes redirectAttributes) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieServices.findMoviesByActionType(condition, actionSelect, pageable);
+        redirectAttributes.addFlashAttribute("moviesFound", moviePage.getContent());
+        redirectAttributes.addFlashAttribute("currentPage", page);
+        redirectAttributes.addFlashAttribute("totalPages", moviePage.getTotalPages());
+        redirectAttributes.addFlashAttribute("size", size);
+        redirectAttributes.addFlashAttribute("condition", condition);
+        redirectAttributes.addFlashAttribute("actionSelect", actionSelect);
+        return "redirect:/searchMovies/" + actionSelect;
     }
 
     @GetMapping("/createMovie")
