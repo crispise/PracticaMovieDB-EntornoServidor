@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface MovieRepo extends JpaRepository<Movie, Integer> {
     List<Movie> findMovieByTitle(String title);
+    List<Movie> findDistinctByMovieCastPersonPersonName(String personName);
+    List<Movie> findDistinctByMovieCastIdCharacterName(String characterName);
+    List<Movie> findDistinctByMovieGenresGenreGenreName(String genreName);
+    List<Movie> findDistinctByMovieCrewPersonPersonNameAndMovieCrewIdJob(String personName, String job);
 }

@@ -2,7 +2,7 @@ package com.esliceu.movies.controllers;
 
 
 import com.esliceu.movies.models.Movie;
-import com.esliceu.movies.services.MovieServices;
+import com.esliceu.movies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +24,12 @@ public class MovieController {
 
     @Autowired
     MovieServices movieServices;
+    @Autowired
+    MovieCastServices movieCastServices;
+    @Autowired
+    MovieCrewServices movieCrewServices;
+    @Autowired
+    GenreServices genreServices;
 
     @GetMapping("/movies")
     public String getMovies() {
@@ -56,32 +62,39 @@ public class MovieController {
 
     @GetMapping("/searchMovies/{actionSelect}")
     public String searchMovies(@PathVariable("actionSelect") String actionSelect, Model model) {
+        model.addAttribute("search", true);
         String jsonToSend = "";
         switch (actionSelect) {
             case "searchByTitle":
-                model.addAttribute("searchByName", true);
+                model.addAttribute("searchByTitle", true);
                 jsonToSend = movieServices.getMovieJson();
+                break;
             case "searchByActor":
                 model.addAttribute("searchByActor", true);
+                jsonToSend = movieCastServices.getActorsJson();
+                break;
             case "searchByCharacter":
                 model.addAttribute("searchByCharacter", true);
+                jsonToSend = movieCastServices.getCharactersJson();
+                break;
             case "searchByGenre":
                 model.addAttribute("searchByGenre", true);
+                jsonToSend = genreServices.getGenreJson();
+                break;
             case "searchByDirector":
                 model.addAttribute("searchByDirector", true);
+                jsonToSend = movieCrewServices.getDirectorJson();
+                break;
         }
         model.addAttribute("jsonInfo", jsonToSend);
         return "movies";
     }
 
     @PostMapping("/searchMovies/{actionSelect}")
-    public String getMovieWanted(@RequestParam String title, Model model) {
-        model.addAttribute("searchByName", true);
-        String jsonToSend = movieServices.getMovieJson();
-        model.addAttribute("jsonInfo", jsonToSend);
-        List<Movie> moviesFound = movieServices.findMovieByName(title);
-        model.addAttribute("moviesFound", moviesFound);
-        return "movies";
+    public String getMovieWanted(@PathVariable("actionSelect") String actionSelect, @RequestParam String condition,RedirectAttributes redirectAttributes) {
+        List<Movie> moviesFound = movieServices.findMoviesByActionType(condition,actionSelect);
+        redirectAttributes.addFlashAttribute("moviesFound", moviesFound);
+        return "redirect:/searchMovies/"+actionSelect;
     }
 
     @GetMapping("/createMovie")

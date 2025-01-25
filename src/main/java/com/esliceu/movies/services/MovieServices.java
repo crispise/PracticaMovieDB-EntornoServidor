@@ -4,9 +4,7 @@ import com.esliceu.movies.models.Movie;
 import com.esliceu.movies.models.MovieCompany;
 import com.esliceu.movies.models.MovieCompanyId;
 import com.esliceu.movies.models.ProductionCompany;
-import com.esliceu.movies.repos.MovieCompanyRepo;
-import com.esliceu.movies.repos.MovieRepo;
-import com.esliceu.movies.repos.PCompaniesRepo;
+import com.esliceu.movies.repos.*;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +22,12 @@ public class MovieServices {
     @Autowired
     MovieRepo movieRepo;
     @Autowired
-    PCompaniesRepo pCompaniesRepo;
+    MovieCastRepo movieCastRepo;
     @Autowired
-    MovieCompanyRepo movieCompanyRepo;
+    MovieCrewRepo movieCrewRepo;
+    @Autowired
+    GenreRepo genreRepo;
+
 
     public Page<Movie> findAllMovies(Pageable pageable) {
         return movieRepo.findAll(pageable);
@@ -202,6 +203,22 @@ public class MovieServices {
         if (voteAverage != null) {
             movie.setVoteAverage(voteAverage);
         }
+    }
+
+    public List<Movie> findMoviesByActionType(String condition, String actionType) {
+        switch (actionType) {
+            case "searchByTitle":
+                return movieRepo.findMovieByTitle(condition);
+            case "searchByActor":
+                return movieRepo.findDistinctByMovieCastPersonPersonName(condition);
+            case "searchByCharacter":
+                return movieRepo.findDistinctByMovieCastIdCharacterName(condition);
+            case "searchByGenre":
+                return movieRepo.findDistinctByMovieGenresGenreGenreName(condition);
+            case "searchByDirector":
+                return movieRepo.findDistinctByMovieCrewPersonPersonNameAndMovieCrewIdJob(condition, "Director");
+        }
+        return null;
     }
 
 }

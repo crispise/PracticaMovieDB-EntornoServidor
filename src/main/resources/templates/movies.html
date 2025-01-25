@@ -127,80 +127,94 @@
     </div>
 </section>
 
-<section th:if="${searchByName}">
+<section th:if="${search}">
+    <div th:if="${searchByTitle}">
     <h2>Buscar Película por Título</h2>
-    <div class="ui-widget">
-        <form action="/searchMovies" method="post">
+        <div class="ui-widget">
+            <form action="/searchMovies/searchByTitle" method="post">
             <label for="tags">Título de la película: </label>
-            <input type="text" id="tags" name="title">
+            <input type="text" id="tags" name="condition">
             <input type="submit" value="Buscar">
         </form>
+        </div>
+    </div>
+    <div th:if="${searchByActor}">
+        <h2>Buscar Película por Actor</h2>
+        <div class="ui-widget">
+            <form action="/searchMovies/searchByActor" method="post">
+                <label for="tags">Nombre del actor: </label>
+                <input type="text" id="tags" name="condition">
+                <input type="submit" value="Buscar">
+            </form>
+        </div>
+    </div>
+    <div th:if="${searchByCharacter}">
+        <h2>Buscar Película por Personaje</h2>
+        <div class="ui-widget">
+            <form action="/searchMovies/searchByCharacter" method="post">
+                <label for="tags">Nombre del personaje: </label>
+                <input type="text" id="tags" name="condition">
+                <input type="submit" value="Buscar">
+            </form>
+        </div>
+    </div>
+    <div th:if="${searchByGenre}">
+        <h2>Buscar Película por Género</h2>
+        <div class="ui-widget">
+            <form action="/searchMovies/searchByGenre" method="post">
+                <label for="tags">Género: </label>
+                <input type="text" id="tags" name="condition">
+                <input type="submit" value="Buscar">
+            </form>
+        </div>
+    </div>
+    <div th:if="${searchByDirector}">
+        <h2>Buscar Película por Director</h2>
+        <div class="ui-widget">
+            <form action="/searchMovies/searchByDirector" method="post">
+                <label for="tags">Nombre del director: </label>
+                <input type="text" id="tags" name="condition">
+                <input type="submit" value="Buscar">
+            </form>
+        </div>
     </div>
     <table th:if="${moviesFound != null and #lists.size(moviesFound) > 0}">
         <thead>
         <tr>
-            <th>Atributo</th>
-            <th>Valor</th>
+            <th style="width: 3%;">Id</th>
+            <th style="width: 4%;">Título</th>
+            <th>Presupuesto</th>
+            <th style="width: 6%;">Enlace</th>
+            <th style="width: 15%;">Resumen</th>
+            <th>Popularidad</th>
+            <th>Estreno</th>
+            <th>Ingresos</th>
+            <th>Duración</th>
+            <th>Estado</th>
+            <th style="width: 13%;">Tagline</th>
+            <th style="width: 3%;">Votos</th>
+            <th th style="width: 13%;">Opciones</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="movie : ${moviesFound}">
-            <td colspan="2" style="background-color: #f4f4f4; text-align: center;">
-                Película ID: <span th:text="${movie.movieId}"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>Título</td>
+            <td th:text="${movie.movieId}"></td>
             <td th:text="${movie.title}"></td>
-        </tr>
-        <tr>
-            <td>Presupuesto</td>
             <td th:text="${movie.budget}"></td>
-        </tr>
-        <tr>
-            <td>Enlace</td>
-            <td>
-                <a th:href="${movie.homepage}" th:text="${movie.homepage}" target="_blank"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>Resumen</td>
+            <td th:text="${movie.homepage}"></td>
             <td th:text="${movie.overview}"></td>
-        </tr>
-        <tr>
-            <td>Popularidad</td>
             <td th:text="${movie.popularity}"></td>
-        </tr>
-        <tr>
-            <td>Estreno</td>
             <td th:text="${movie.releaseDate}"></td>
-        </tr>
-        <tr>
-            <td>Ingresos</td>
             <td th:text="${movie.revenue}"></td>
-        </tr>
-        <tr>
-            <td>Duración</td>
             <td th:text="${movie.runtime}"></td>
-        </tr>
-        <tr>
-            <td>Estado</td>
             <td th:text="${movie.movieStatus}"></td>
-        </tr>
-        <tr>
-            <td>Tagline</td>
             <td th:text="${movie.tagline}"></td>
-        </tr>
-        <tr>
-            <td>Votos</td>
             <td th:text="${movie.voteAverage}"></td>
-        </tr>
-        <tr>
-            <td>Opciones</td>
-            <td>
+            <td class="buttons">
                 <a th:href="@{/updateMovie/{id}(id=${movie.movieId})}" class="btn btn-update">
                     Actualizar
                 </a>
+
                 <form class="deleteButtonForm" action="/deleteMovie" method="post" style="display:inline;">
                     <input type="hidden" th:value="${movie.movieId}" name="movieId">
                     <button type="submit" class="btn btn-delete"
@@ -209,9 +223,6 @@
                     </button>
                 </form>
             </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="height: 10px;"></td>
         </tr>
         </tbody>
     </table>
