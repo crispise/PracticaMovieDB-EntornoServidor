@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Gender;
 import com.esliceu.movies.services.GenderServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,14 +25,14 @@ public class GenderController {
 
     @GetMapping("/genders")
     public String getGenders() {
-           return "genders";
+        return "genders";
     }
 
     @PostMapping("/genders")
-    public String newPerson(@RequestParam String actionSelect, Model model){
+    public String newPerson(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allGenders";
+                return "redirect:/allGenders";
             case "search-by-name":
                 return "redirect:/searchGenders";
             case "create-new":
@@ -82,51 +83,56 @@ public class GenderController {
 
 
     @PostMapping("/createGender")
-    public String saveGender(@RequestParam String gender, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =genderServices.saveGender(gender);
+    public String saveGender(HttpSession session, @RequestParam String gender, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = genderServices.saveGender(gender, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Género creado correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "genders";
     }
 
     @PostMapping("/deleteGender")
-    public String deleteGender(@RequestParam Integer genderId, Model model){
-        String message = genderServices.deleteGender(genderId);
-        if (message.equals("Ok")){
+    public String deleteGender(HttpSession session, @RequestParam Integer genderId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = genderServices.deleteGender(genderId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "El género se ha eliminado correctamente");
-        }else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar el género");
+        } else {
+            model.addAttribute("errorMessage", message);
         }
-
-            return "genders";
-
-
+        return "genders";
     }
 
     @GetMapping("/updateGender/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-       Gender gender = genderServices.findGenderById(id);
+        Gender gender = genderServices.findGenderById(id);
         if (gender != null) {
             model.addAttribute("gender", gender);
             model.addAttribute("update", true);
-            return "genders";
         } else {
             model.addAttribute("errorMessage", "EL género no fue encontrado");
-            return "genders";
         }
+        return "genders";
     }
 
-   @PostMapping("/updateGender/{genderId}")
-    public String updateGender(@RequestParam Integer genderId, @RequestParam String gender, Model model){
-        Gender genderUpdate = genderServices.updateGender(genderId, gender);
+    @PostMapping("/updateGender/{genderId}")
+    public String updateGender(HttpSession session, @RequestParam Integer genderId, @RequestParam String gender, Model model) {
+        Gender genderUpdate = genderServices.findGenderById(genderId);
+        String username = (String) session.getAttribute("user");
+        String message = genderServices.updateGender(genderId, gender, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Género actualizado correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("gender", genderUpdate);
         model.addAttribute("update", true);
         return "genders";
-   }
+    }
 
 
 }

@@ -18,6 +18,9 @@ public class DepartmentServices {
     @Autowired
     DepartmentRepo departmentRepo;
 
+    @Autowired
+    PermissionsServices permissionsServices;
+
     public Page<Department> findAllDepartments(Pageable pageable) {
         return departmentRepo.findAll(pageable);
     }
@@ -33,19 +36,6 @@ public class DepartmentServices {
         return result;
     }
 
-    public String saveDepartment (String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return "El nombre del departamento no puede estar vacío.";
-        }
-        if (departmentRepo.findDepartmentByDepartmentName(name).size() >= 1) {
-            return "Ya existe un departamento con ese nombre.";
-        }
-        Department department = new Department();
-        department.setDepartmentName(name);
-        departmentRepo.save(department);
-        return null;
-    }
-
 
     public Department findDeparmentById(Integer id) {
         return departmentRepo.findById(id).get();
@@ -55,26 +45,38 @@ public class DepartmentServices {
         return departmentRepo.findDepartmentByDepartmentName(name);
     }
 
-    public String deleteDepartment(Integer id) {
+    public String saveDepartment(String name, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Crear departamentos");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        if (name == null || name.trim().isEmpty()) return "El nombre del departamento no puede estar vacío.";
+        if (departmentRepo.findDepartmentByDepartmentName(name).size() >= 1)
+            return "Ya existe un departamento con ese nombre.";
+        Department department = new Department();
+        department.setDepartmentName(name);
+        departmentRepo.save(department);
+        return null;
+    }
+
+
+    public String deleteDepartment(Integer id, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Eliminar departamentos");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
         try {
             departmentRepo.deleteById(id);
-            return "Ok";
-        }catch (Exception e) {
-            return "Error";
-        }
-
-    }
-
-    public Department updateDeparment(Integer id, String name) {
-        Optional<Department> existingDepartment = departmentRepo.findById(id);
-        if (existingDepartment.isPresent()) {
-           Department updatedDepartment = existingDepartment.get();
-            updatedDepartment.setDepartmentName(name);
-            departmentRepo.save(updatedDepartment);
-            return updatedDepartment;
-        } else {
             return null;
+        } catch (Exception e) {
+            return "Ha habido un error al eliminar el departamento";
         }
     }
 
+    public String updateDeparment(Integer id, String name, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar departamentos");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        Optional<Department> existingDepartment = departmentRepo.findById(id);
+        if (existingDepartment.isEmpty()) return "No existe ese departamento";
+        Department updatedDepartment = existingDepartment.get();
+        updatedDepartment.setDepartmentName(name);
+        departmentRepo.save(updatedDepartment);
+        return null;
+    }
 }

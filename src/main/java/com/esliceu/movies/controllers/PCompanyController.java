@@ -2,6 +2,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.ProductionCompany;
 import com.esliceu.movies.services.PCompanyServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,14 +24,14 @@ public class PCompanyController {
 
     @GetMapping("/productionCompany")
     public String getProductionCompany() {
-           return "productionCompany";
+        return "productionCompany";
     }
 
     @PostMapping("/productionCompany")
-    public String actionProductionCompany(@RequestParam String actionSelect, Model model){
+    public String actionProductionCompany(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allCompanies";
+                return "redirect:/allCompanies";
             case "search-by-name":
                 return "redirect:/searchCompanies";
             case "create-new":
@@ -81,24 +82,26 @@ public class PCompanyController {
 
 
     @PostMapping("/createCompany")
-    public String savePerson(@RequestParam String companyName, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =pCompanyServices.saveCompany(companyName);
+    public String saveCompany(HttpSession session, @RequestParam String companyName, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = pCompanyServices.saveCompany(companyName, username);
         if (resultMessage == null) {
-            model.addAttribute("successMessage", "¡Compañia creada exitosamente!");
+            model.addAttribute("successMessage", "¡Compañia creada correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "productionCompany";
     }
 
     @PostMapping("/deleteCompany")
-    public String deleteCompany(@RequestParam Integer companyId, Model model){
-        String message = pCompanyServices.deleteCompany(companyId);
-        if (message.equals("Ok")){
+    public String deleteCompany(HttpSession session, @RequestParam Integer companyId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = pCompanyServices.deleteCompany(companyId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "La compañia se ha eliminado correctamente");
-        }else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar a la compañia");
+        } else {
+            model.addAttribute("errorMessage", message);
         }
         return "productionCompany";
     }
@@ -109,20 +112,24 @@ public class PCompanyController {
         if (company != null) {
             model.addAttribute("company", company);
             model.addAttribute("update", true);
-            return "productionCompany";
         } else {
             model.addAttribute("errorMessage", "La compañia no fue encontrada");
-            return "productionCompany";
         }
+        return "productionCompany";
     }
 
-   @PostMapping("/updateCompany/{companyId}")
-    public String updateCompany(@RequestParam Integer companyId, @RequestParam String companyName, Model model){
-        ProductionCompany companyUpdate = pCompanyServices.updateCompany(companyId, companyName);
+    @PostMapping("/updateCompany/{companyId}")
+    public String updateCompany(HttpSession session, @RequestParam Integer companyId, @RequestParam String companyName, Model model) {
+        ProductionCompany companyUpdate = pCompanyServices.findCompanyById(companyId);
+        String username = (String) session.getAttribute("user");
+        String message = pCompanyServices.updateCompany(companyId, companyName, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Compañia actualizada correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("company", companyUpdate);
         model.addAttribute("update", true);
         return "productionCompany";
-   }
-
-
+    }
 }

@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Department;
 import com.esliceu.movies.services.DepartmentServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,26 +83,28 @@ public class DepartmentController {
 
 
     @PostMapping("/createDepartment")
-    public String saveDepartment(@RequestParam String departmentName, Model model) {
-        model.addAttribute("createNew", true);
-        String resultMessage = departmentServices.saveDepartment(departmentName);
+    public String saveDepartment(HttpSession session, @RequestParam String departmentName, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = departmentServices.saveDepartment(departmentName, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Departamento creado correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "departments";
     }
 
     @PostMapping("/deleteDepartment")
-    public String deleteDepartment(@RequestParam Integer departmentId, Model model) {
-        String message = departmentServices.deleteDepartment(departmentId);
-        if (message.equals("Ok")) {
+    public String deleteDepartment(HttpSession session, @RequestParam Integer departmentId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = departmentServices.deleteDepartment(departmentId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "El departamento se ha eliminado correctamente");
         } else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar el departamento");
+            model.addAttribute("errorMessage", message);
         }
-         return "departments";
+        return "departments";
     }
 
     @GetMapping("/updateDepartment/{id}")
@@ -118,8 +121,15 @@ public class DepartmentController {
     }
 
     @PostMapping("/updateDepartment/{departmentId}")
-    public String updateDepartment(@RequestParam Integer departmentId, @RequestParam String departmentName, Model model) {
-        Department departmentUpdate = departmentServices.updateDeparment(departmentId, departmentName);
+    public String updateDepartment(HttpSession session, @RequestParam Integer departmentId, @RequestParam String departmentName, Model model) {
+        Department departmentUpdate = departmentServices.findDeparmentById(departmentId);
+        String username = (String) session.getAttribute("user");
+        String message = departmentServices.updateDeparment(departmentId, departmentName, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Departamento actualizado correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("department", departmentUpdate);
         model.addAttribute("update", true);
         return "departments";

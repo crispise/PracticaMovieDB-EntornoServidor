@@ -2,6 +2,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Person;
 import com.esliceu.movies.services.PersonServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,14 +24,14 @@ public class PersonController {
 
     @GetMapping("/persons")
     public String getPersons() {
-           return "persons";
+        return "persons";
     }
 
     @PostMapping("/persons")
-    public String newPerson(@RequestParam String actionSelect, Model model){
+    public String newPerson(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allPersons";
+                return "redirect:/allPersons";
             case "search-by-name":
                 return "redirect:/searchPersons";
             case "create-new":
@@ -73,7 +74,6 @@ public class PersonController {
     }
 
 
-
     @GetMapping("/createPerson")
     public String createPerson(Model model) {
         model.addAttribute("createNew", true);
@@ -82,28 +82,29 @@ public class PersonController {
 
 
     @PostMapping("/createPerson")
-    public String savePerson(@RequestParam String personName, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =personServices.savePerson(personName);
+    public String savePerson(HttpSession session, @RequestParam String personName, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = personServices.savePerson(personName, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Persona creada correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
+
         return "persons";
     }
 
     @PostMapping("/deletePerson")
-    public String deletePerson(@RequestParam Integer personId, Model model){
-        String message = personServices.deletePerson(personId);
-        if (message.equals("Ok")){
+    public String deletePerson(HttpSession session, @RequestParam Integer personId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = personServices.deletePerson(personId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "La persona se ha eliminado correctamente");
-        }else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar a la persona");
+        } else {
+            model.addAttribute("errorMessage", message);
         }
         return "persons";
-
-
     }
 
     @GetMapping("/updatePerson/{id}")
@@ -112,20 +113,26 @@ public class PersonController {
         if (person != null) {
             model.addAttribute("person", person);
             model.addAttribute("update", true);
-            return "persons";
         } else {
             model.addAttribute("errorMessage", "La persona no fue encontrada");
-            return "persons";
         }
+        return "persons";
     }
 
-   @PostMapping("/updatePerson/{personId}")
-    public String updatePerson(@RequestParam Integer personId, @RequestParam String personName, Model model){
-        Person personUpdate = personServices.updatePerson(personId, personName);
+    @PostMapping("/updatePerson/{personId}")
+    public String updatePerson(HttpSession session, @RequestParam Integer personId, @RequestParam String personName, Model model) {
+        Person personUpdate = personServices.findPersonById(personId);
+        String username = (String) session.getAttribute("user");
+        String message = personServices.updatePerson(personId, personName, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Persona actualizada correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("person", personUpdate);
         model.addAttribute("update", true);
         return "persons";
-   }
+    }
 
 
 }

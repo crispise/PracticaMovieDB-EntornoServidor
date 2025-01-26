@@ -1,5 +1,4 @@
 package com.esliceu.movies.services;
-
 import com.esliceu.movies.models.ProductionCompany;
 import com.esliceu.movies.repos.PCompaniesRepo;
 import com.google.gson.Gson;
@@ -16,6 +15,8 @@ import java.util.stream.Collectors;
 public class PCompanyServices {
     @Autowired
     PCompaniesRepo productionCompanyRepo;
+    @Autowired
+    PermissionsServices permissionsServices;
 
 
     public Page<ProductionCompany> findAllCompanies(Pageable pageable) {
@@ -33,20 +34,6 @@ public class PCompanyServices {
         return result;
     }
 
-    public String saveCompany(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return "El nombre de la compañia no puede estar vacío.";
-        }
-
-        if (productionCompanyRepo.findProductionCompanyByCompanyName(name).size() >= 1) {
-            return "Ya existe una compañia con ese nombre.";
-        }
-        ProductionCompany productionCompany = new ProductionCompany();
-        productionCompany.setCompanyName(name);
-        productionCompanyRepo.save(productionCompany);
-        return null;
-    }
-
     public ProductionCompany findCompanyById(Integer id) {
         return productionCompanyRepo.findById(id).get();
     }
@@ -55,26 +42,37 @@ public class PCompanyServices {
         return productionCompanyRepo.findProductionCompanyByCompanyName(name);
     }
 
-    public String deleteCompany(Integer id) {
+    public String saveCompany(String name, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Crear compañias");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        if (name == null || name.trim().isEmpty()) return "El nombre de la compañia no puede estar vacío.";
+        if (productionCompanyRepo.findProductionCompanyByCompanyName(name).size() >= 1)
+            return "Ya existe una compañia con ese nombre.";
+        ProductionCompany productionCompany = new ProductionCompany();
+        productionCompany.setCompanyName(name);
+        productionCompanyRepo.save(productionCompany);
+        return null;
+    }
+
+    public String deleteCompany(Integer id, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Eliminar compañias");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
         try {
             productionCompanyRepo.deleteById(id);
-            return "Ok";
-        }catch (Exception e) {
-            return "Error";
-        }
-
-    }
-
-    public ProductionCompany updateCompany(Integer id, String name) {
-        Optional<ProductionCompany> existingCompany = productionCompanyRepo.findById(id);
-        if (existingCompany.isPresent()) {
-           ProductionCompany updatedCompany = existingCompany.get();
-            updatedCompany.setCompanyName(name);
-            productionCompanyRepo.save(updatedCompany);
-            return updatedCompany;
-        } else {
             return null;
+        } catch (Exception e) {
+            return "Ha habido un error al eliminar a la compañia";
         }
     }
 
+    public String updateCompany(Integer id, String name, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar compañias");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        Optional<ProductionCompany> existingCompany = productionCompanyRepo.findById(id);
+        if (existingCompany.isEmpty()) return "No existe esa compañia";
+        ProductionCompany updatedCompany = existingCompany.get();
+        updatedCompany.setCompanyName(name);
+        productionCompanyRepo.save(updatedCompany);
+        return null;
+    }
 }

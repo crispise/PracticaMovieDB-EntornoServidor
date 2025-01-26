@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Keyword;
 import com.esliceu.movies.services.KeywordServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,24 +83,27 @@ public class KeywordController {
 
 
     @PostMapping("/createKeyword")
-    public String saveKeyword(@RequestParam String keywordName, Model model) {
-        model.addAttribute("createNew", true);
-        String resultMessage = keywordServices.saveKeyword(keywordName);
+    public String saveKeyword(HttpSession session, @RequestParam String keywordName, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = keywordServices.saveKeyword(keywordName, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Keyword creada correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
+
         return "keywords";
     }
 
     @PostMapping("/deleteKeyword")
-    public String deleteKeyword(@RequestParam Integer keywordId, Model model) {
-        String message = keywordServices.deleteKeyword(keywordId);
-        if (message.equals("Ok")) {
+    public String deleteKeyword(HttpSession session,@RequestParam Integer keywordId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = keywordServices.deleteKeyword(keywordId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "La keyword se ha eliminado correctamente");
         } else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar la keyword");
+            model.addAttribute("errorMessage", message);
         }
         return "keywords";
     }
@@ -118,8 +122,15 @@ public class KeywordController {
     }
 
     @PostMapping("/updateKeyword/{keywordId}")
-    public String updateKeyword(@RequestParam Integer keywordId, @RequestParam String keywordName, Model model) {
-        Keyword keywordUpdate = keywordServices.updateKeyword(keywordId, keywordName);
+    public String updateKeyword(HttpSession session,@RequestParam Integer keywordId, @RequestParam String keywordName, Model model) {
+        Keyword keywordUpdate = keywordServices.findKeywordById(keywordId);
+        String username = (String) session.getAttribute("user");
+        String message =  keywordServices.updateKeyword(keywordId, keywordName, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Palabra clave actualizada correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("keyword", keywordUpdate);
         model.addAttribute("update", true);
         return "keywords";

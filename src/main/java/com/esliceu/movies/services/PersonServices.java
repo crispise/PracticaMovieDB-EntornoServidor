@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class PersonServices {
     @Autowired
     PersonRepo personRepo;
+    @Autowired
+    PermissionsServices permissionsServices;
 
     public Page<Person> findAllPersons(Pageable pageable) {
         return personRepo.findAll(pageable);
@@ -34,20 +36,6 @@ public class PersonServices {
         return result;
     }
 
-    public String savePerson(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return "El nombre de la persona no puede estar vacío.";
-        }
-        if (personRepo.findPersonByPersonName(name).size() >= 1) {
-            return "Ya existe una persona con ese nombre.";
-        }
-        Person person = new Person();
-        person.setPersonName(name);
-        personRepo.save(person);
-        return null;
-    }
-
-
     public Person findPersonById(Integer id) {
         return personRepo.findById(id).get();
     }
@@ -56,26 +44,36 @@ public class PersonServices {
         return personRepo.findPersonByPersonName(personSearch);
     }
 
-    public String deletePerson(Integer id) {
+    public String savePerson(String name, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Crear personas");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        if (name == null || name.trim().isEmpty()) return "El nombre de la persona no puede estar vacío.";
+        if (personRepo.findPersonByPersonName(name).size() >= 1) return "Ya existe una persona con ese nombre.";
+        Person person = new Person();
+        person.setPersonName(name);
+        personRepo.save(person);
+        return null;
+    }
+
+    public String deletePerson(Integer id, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Eliminar personas");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
         try {
             personRepo.deleteById(id);
-            return "Ok";
-        }catch (Exception e) {
-            return "Error";
-        }
-
-    }
-
-    public Person updatePerson(Integer id, String name) {
-        Optional<Person> existingPerson = personRepo.findById(id);
-        if (existingPerson.isPresent()) {
-            Person updatedPerson = existingPerson.get();
-            updatedPerson.setPersonName(name);
-            personRepo.save(updatedPerson);
-            return updatedPerson;
-        } else {
             return null;
+        } catch (Exception e) {
+            return "Ha habido un error al eliminar a la persona";
         }
     }
 
+    public String updatePerson(Integer id, String name, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar personas");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        Optional<Person> existingPerson = personRepo.findById(id);
+        if (existingPerson.isEmpty()) return "No existe esa persona";
+        Person updatedPerson = existingPerson.get();
+        updatedPerson.setPersonName(name);
+        personRepo.save(updatedPerson);
+        return null;
+    }
 }

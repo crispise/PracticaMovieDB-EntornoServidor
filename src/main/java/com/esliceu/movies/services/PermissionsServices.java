@@ -88,4 +88,13 @@ public class PermissionsServices {
         authorizationRepo.save(authorization);
         return null;
     }
+
+    public String checkPermisions(String username, String permissionName) {
+        User user = userRepo.findByUsername(username);
+        Permission permission = permissionRepo.findByPermissionName(permissionName).get();
+        Optional<Authorization> authorization = authorizationRepo.findByUserAndPermission(user, permission);
+        if (authorization.isPresent() && String.valueOf(authorization.get().getStatus()).equals("APROVADO"))
+            return "Ok";
+        return null;
+    }
 }

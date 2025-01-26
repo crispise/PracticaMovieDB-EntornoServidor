@@ -7,9 +7,11 @@ import com.esliceu.movies.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthorizationRepo extends JpaRepository<Authorization, Long> {
     List<Authorization> findByUser(User user);
     List<Authorization> findByPermission(Permission permission);
     List<Authorization> findByStatus(Authorization.Status status);
+    Optional<Authorization> findByUserAndPermission(User user, Permission permission);
 }
