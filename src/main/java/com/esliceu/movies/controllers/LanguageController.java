@@ -1,6 +1,8 @@
 package com.esliceu.movies.controllers;
+
 import com.esliceu.movies.models.Language;
 import com.esliceu.movies.services.LanguageServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,14 +24,14 @@ public class LanguageController {
 
     @GetMapping("/languages")
     public String getLanguages() {
-           return "languages";
+        return "languages";
     }
 
     @PostMapping("/languages")
-    public String newLanguage(@RequestParam String actionSelect, Model model){
+    public String newLanguage(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allLanguages";
+                return "redirect:/allLanguages";
             case "search-by-name":
                 return "redirect:/searchLanguages";
             case "create-new":
@@ -72,7 +74,6 @@ public class LanguageController {
     }
 
 
-
     @GetMapping("/createLanguage")
     public String createLanguage(Model model) {
         model.addAttribute("createNew", true);
@@ -81,29 +82,28 @@ public class LanguageController {
 
 
     @PostMapping("/createLanguage")
-    public String saveLanguage(@RequestParam String languageName, @RequestParam String languageCode, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =languageServices.saveLanguage(languageName, languageCode);
+    public String saveLanguage(HttpSession session, @RequestParam String languageName, @RequestParam String languageCode, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = languageServices.saveLanguage(languageName, languageCode, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Lenguaje creado correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "languages";
     }
 
     @PostMapping("/deleteLanguage")
-    public String deleteLanguage(@RequestParam Integer languageId, Model model){
-        String message = languageServices.deleteLanguage(languageId);
-        if (message.equals("Ok")){
+    public String deleteLanguage(HttpSession session, @RequestParam Integer languageId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = languageServices.deleteLanguage(languageId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "El lenguaje se ha eliminado correctamente");
-        }else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar el lenguaje del lenguaje");
+        } else {
+            model.addAttribute("errorMessage", message);
         }
-
-            return "languages";
-
-
+        return "languages";
     }
 
     @GetMapping("/updateLanguage/{id}")
@@ -112,21 +112,27 @@ public class LanguageController {
         if (language != null) {
             model.addAttribute("language", language);
             model.addAttribute("update", true);
-            return "languages";
         } else {
             model.addAttribute("errorMessage", "El lenguaje no fue encontrada");
-            return "languages";
         }
+        return "languages";
     }
 
-   @PostMapping("/updateLanguage/{languageId}")
-    public String updateLanguage(@RequestParam Integer languageId, @RequestParam String languageName,
-                                 @RequestParam String languageCode, Model model){
-        Language languageUpdate = languageServices.updateLanguage(languageId, languageName,languageCode );
+    @PostMapping("/updateLanguage/{languageId}")
+    public String updateLanguage(HttpSession session, @RequestParam Integer languageId, @RequestParam String languageName,
+                                 @RequestParam String languageCode, Model model) {
+        Language languageUpdate = languageServices.findLanguageById(languageId);
+        String username = (String) session.getAttribute("user");
+        String message =languageServices.updateLanguage(languageId, languageName, languageCode,username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Lenguaje actualizado correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("language", languageUpdate);
         model.addAttribute("update", true);
         return "languages";
-   }
+    }
 
 
 }

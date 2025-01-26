@@ -22,11 +22,7 @@ public class MovieServices {
     @Autowired
     MovieRepo movieRepo;
     @Autowired
-    MovieCastRepo movieCastRepo;
-    @Autowired
-    MovieCrewRepo movieCrewRepo;
-    @Autowired
-    GenreRepo genreRepo;
+    PermissionsServices permissionsServices;
 
 
     public Page<Movie> findAllMovies(Pageable pageable) {
@@ -43,18 +39,21 @@ public class MovieServices {
         return result;
     }
 
-    public String saveMovie(String title, Integer budget, String homepage, String overview, BigDecimal popularity,
+    public Movie findMovieById(Integer id) {
+        return movieRepo.findById(id).get();
+    }
+
+
+    public String saveMovie(String username, String title, Integer budget, String homepage, String overview, BigDecimal popularity,
                             LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
                             BigDecimal voteAverage) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Crear películas");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
         String validationMessage = validateMovieParams(title, budget, homepage, overview, popularity,
                 releaseDate, revenue, runtime, movieStatus, tagline, voteAverage);
-
-        if (validationMessage != null) {
-            return validationMessage;
-        }
+        if (validationMessage != null) return validationMessage;
         Movie movie = createMovie(title, budget, homepage, overview, popularity, releaseDate, revenue, runtime,
                 movieStatus, tagline, voteAverage);
-
         movieRepo.save(movie);
         return null;
     }
@@ -63,17 +62,10 @@ public class MovieServices {
                                       LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
                                       BigDecimal voteAverage) {
         if (title == null || title.trim().isEmpty() ||
-                budget == null ||
-                homepage == null || homepage.trim().isEmpty() ||
                 overview == null || overview.trim().isEmpty() ||
-                popularity == null ||
                 releaseDate == null ||
-                revenue == null ||
-                runtime == null ||
-                movieStatus == null || movieStatus.trim().isEmpty() ||
-                tagline == null || tagline.trim().isEmpty() ||
-                voteAverage == null) {
-            return "No puede haber valores vacíos.";
+                runtime == null ) {
+            return "No puedes dejar vacío el título, el resumen, el año de estreno ni el tiempo de duración ";
         }
         return null;
     }
@@ -96,44 +88,37 @@ public class MovieServices {
         return movie;
     }
 
-    public Movie findMovieById(Integer id) {
-        return movieRepo.findById(id).get();
-    }
-
-
-    public String deleteMovie(Integer id) {
+    public String deleteMovie(Integer id, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Eliminar películas");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
         try {
             movieRepo.deleteById(id);
-            return "Ok";
+            return null;
         } catch (Exception e) {
-            System.out.println(e);
-            return "Error";
+            return "Ha habido un error al eliminar la película";
         }
 
     }
 
-    public Movie updateMovie(Integer id, String title, Integer budget, String homepage, String overview, BigDecimal popularity,
-                             LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
-                             BigDecimal voteAverage) {
+    public String updateMovie(Integer id, String title, Integer budget, String homepage, String overview, BigDecimal popularity,
+                              LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
+                              BigDecimal voteAverage) {
         Optional<Movie> existingMovie = movieRepo.findById(id);
-        if (existingMovie.isPresent()) {
-            Movie updatedMovie = existingMovie.get();
-            updateTitle(updatedMovie, title);
-            updateBudget(updatedMovie, budget);
-            updateHomepage(updatedMovie, homepage);
-            updateOverview(updatedMovie, overview);
-            updatePopularity(updatedMovie, popularity);
-            updateReleaseDate(updatedMovie, releaseDate);
-            updateRevenue(updatedMovie, revenue);
-            updateRuntime(updatedMovie, runtime);
-            updateMovieStatus(updatedMovie, movieStatus);
-            updateTagline(updatedMovie, tagline);
-            updateVoteAverage(updatedMovie, voteAverage);
-            movieRepo.save(updatedMovie);
-            return updatedMovie;
-        } else {
-            return null;
-        }
+        if (existingMovie.isEmpty()) return "No existe esa película";
+        Movie updatedMovie = existingMovie.get();
+        updateTitle(updatedMovie, title);
+        updateBudget(updatedMovie, budget);
+        updateHomepage(updatedMovie, homepage);
+        updateOverview(updatedMovie, overview);
+        updatePopularity(updatedMovie, popularity);
+        updateReleaseDate(updatedMovie, releaseDate);
+        updateRevenue(updatedMovie, revenue);
+        updateRuntime(updatedMovie, runtime);
+        updateMovieStatus(updatedMovie, movieStatus);
+        updateTagline(updatedMovie, tagline);
+        updateVoteAverage(updatedMovie, voteAverage);
+        movieRepo.save(updatedMovie);
+        return null;
     }
 
     private void updateTitle(Movie movie, String title) {
@@ -204,45 +189,64 @@ public class MovieServices {
 
     public Page<Movie> findMoviesByActionType(String condition, String actionType, Pageable pageable) {
         Page<Movie> moviePage;
-
         switch (actionType) {
             case "searchByTitle":
-                moviePage = movieRepo.findMovieByTitle(condition, pageable);
-                if (moviePage.getTotalElements() == 0) {
-                    moviePage = movieRepo.findByTitleContaining(condition, pageable);
-                }
-                return moviePage;
-
+                return getMoviesByTitle(condition, pageable);
             case "searchByActor":
-                moviePage = movieRepo.findDistinctByMovieCastPersonPersonName(condition, pageable);
-                if (moviePage.getTotalElements() == 0) {
-                    moviePage = movieRepo.findDistinctByMovieCastPersonPersonNameContaining(condition, pageable);
-                }
-                return moviePage;
-
+                return getMoviesByActor(condition, pageable);
             case "searchByCharacter":
-                moviePage = movieRepo.findDistinctByMovieCastIdCharacterName(condition, pageable);
-                if (moviePage.getTotalElements() == 0) {
-                    moviePage = movieRepo.findDistinctByMovieCastIdCharacterNameContaining(condition, pageable);
-                }
-                return moviePage;
-
+                return getMoviesByCharacter(condition, pageable);
             case "searchByGenre":
-                moviePage = movieRepo.findDistinctByMovieGenresGenreGenreName(condition, pageable);
-                if (moviePage.getTotalElements() == 0) {
-                    moviePage = movieRepo.findDistinctByMovieGenresGenreGenreNameContaining(condition, pageable);
-                }
-                return moviePage;
-
+                return getMoviesByGenre(condition, pageable);
             case "searchByDirector":
-                moviePage = movieRepo.findDistinctByMovieCrewPersonPersonNameAndMovieCrewIdJob(condition, "Director", pageable);
-                if (moviePage.getTotalElements() == 0) {
-                    moviePage = movieRepo.findDistinctByMovieCrewPersonPersonNameContainingAndMovieCrewIdJob(condition, "Director", pageable);
-                }
-                return moviePage;
-
+                return getMoviesByDirector(condition, pageable);
             default:
                 return Page.empty();
         }
+    }
+
+    private Page<Movie> getMoviesByDirector(String condition, Pageable pageable) {
+        Page<Movie> moviePage;
+        moviePage = movieRepo.findDistinctByMovieCrewPersonPersonNameAndMovieCrewIdJob(condition, "Director", pageable);
+        if (moviePage.getTotalElements() == 0) {
+            moviePage = movieRepo.findDistinctByMovieCrewPersonPersonNameContainingAndMovieCrewIdJob(condition, "Director", pageable);
+        }
+        return moviePage;
+    }
+
+    private Page<Movie> getMoviesByGenre(String condition, Pageable pageable) {
+        Page<Movie> moviePage;
+        moviePage = movieRepo.findDistinctByMovieGenresGenreGenreName(condition, pageable);
+        if (moviePage.getTotalElements() == 0) {
+            moviePage = movieRepo.findDistinctByMovieGenresGenreGenreNameContaining(condition, pageable);
+        }
+        return moviePage;
+    }
+
+    private Page<Movie> getMoviesByCharacter(String condition, Pageable pageable) {
+        Page<Movie> moviePage;
+        moviePage = movieRepo.findDistinctByMovieCastIdCharacterName(condition, pageable);
+        if (moviePage.getTotalElements() == 0) {
+            moviePage = movieRepo.findDistinctByMovieCastIdCharacterNameContaining(condition, pageable);
+        }
+        return moviePage;
+    }
+
+    private Page<Movie> getMoviesByActor(String condition, Pageable pageable) {
+        Page<Movie> moviePage;
+        moviePage = movieRepo.findDistinctByMovieCastPersonPersonName(condition, pageable);
+        if (moviePage.getTotalElements() == 0) {
+            moviePage = movieRepo.findDistinctByMovieCastPersonPersonNameContaining(condition, pageable);
+        }
+        return moviePage;
+    }
+
+    private Page<Movie> getMoviesByTitle(String condition, Pageable pageable) {
+        Page<Movie> moviePage;
+        moviePage = movieRepo.findMovieByTitle(condition, pageable);
+        if (moviePage.getTotalElements() == 0) {
+            moviePage = movieRepo.findByTitleContaining(condition, pageable);
+        }
+        return moviePage;
     }
 }

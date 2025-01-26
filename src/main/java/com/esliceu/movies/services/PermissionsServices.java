@@ -81,6 +81,13 @@ public class PermissionsServices {
         if (getUserType(username).equals("ADMIN")) return "No necesitas permisos";
         Permission permission = permissionRepo.findById(permissionId).get();
         User user = userRepo.findByUsername(username);
+        Optional<Authorization> optionalOldAuthoritzation = authorizationRepo.findByUserAndPermission(user, permission);
+        if (optionalOldAuthoritzation.isPresent()){
+            Authorization a = optionalOldAuthoritzation.get();
+            a.setStatus(Authorization.Status.PENDIENTE);
+            authorizationRepo.save(a);
+            return null;
+        }
         Authorization authorization = new Authorization();
         authorization.setUser(user);
         authorization.setPermission(permission);
@@ -91,6 +98,7 @@ public class PermissionsServices {
 
     public String checkPermisions(String username, String permissionName) {
         User user = userRepo.findByUsername(username);
+        if (String.valueOf(user.getRole()).equals("ADMIN")) return "Ok";
         Permission permission = permissionRepo.findByPermissionName(permissionName).get();
         Optional<Authorization> authorization = authorizationRepo.findByUserAndPermission(user, permission);
         if (authorization.isPresent() && String.valueOf(authorization.get().getStatus()).equals("APROVADO"))

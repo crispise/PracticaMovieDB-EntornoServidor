@@ -33,15 +33,12 @@ public class QueriesController {
     @GetMapping("/moviesQuerys")
     public String getQuerie(HttpSession session, Model model) {
         String username = (String) session.getAttribute("user");
-        if (username == null) {
-            model.addAttribute("logReg", true);
-        }
-
+        if (username == null) model.addAttribute("logReg", true);
         return "consults";
     }
 
     @PostMapping("/moviesQuerys")
-    public String setMovieQuery(@RequestParam String actionSelect, HttpSession session, Model model) {
+    public String setMovieQuery(HttpSession session, @RequestParam String actionSelect, Model model) {
         model.addAttribute("search", true);
         String jsonToSend = "";
         switch (actionSelect) {
@@ -68,6 +65,8 @@ public class QueriesController {
                 jsonToSend = movieCrewServices.getDirectorJson();
                 break;
         }
+        String username = (String) session.getAttribute("user");
+        if (username == null) model.addAttribute("logReg", true);
         model.addAttribute("jsonInfo", jsonToSend);
         return "consults";
     }
@@ -109,7 +108,9 @@ public class QueriesController {
     }
 
     @GetMapping("/allMovieQuerys")
-    public String getAllMoviesQuerys(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
+    public String getAllMoviesQuerys(HttpSession session, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, Model model) {
+        String username = (String) session.getAttribute("user");
+        if (username == null) model.addAttribute("logReg", true);
         Pageable pageable = PageRequest.of(page, size);
         Page<Movie> moviePage = movieServices.findAllMovies(pageable);
         model.addAttribute("movies", moviePage.getContent());

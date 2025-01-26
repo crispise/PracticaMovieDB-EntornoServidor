@@ -2,6 +2,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Genre;
 import com.esliceu.movies.services.GenreServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -81,24 +82,26 @@ public class GenreController {
 
 
     @PostMapping("/createGenre")
-    public String saveGenre(@RequestParam String genreName, Model model) {
-        model.addAttribute("createNew", true);
-        String resultMessage = genreServices.saveGenre(genreName);
+    public String saveGenre(HttpSession session, @RequestParam String genreName, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = genreServices.saveGenre(genreName, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Género creado correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "genres";
     }
 
     @PostMapping("/deleteGenre")
-    public String deleteGenre(@RequestParam Integer genreId, Model model) {
-        String message = genreServices.deleteGenre(genreId);
-        if (message.equals("Ok")) {
+    public String deleteGenre(HttpSession session,@RequestParam Integer genreId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = genreServices.deleteGenre(genreId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "El género se ha eliminado correctamente");
         } else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar el género");
+            model.addAttribute("errorMessage", message);
         }
         return "genres";
     }
@@ -117,12 +120,17 @@ public class GenreController {
     }
 
     @PostMapping("/updateGenre/{genreId}")
-    public String updateGenre(@RequestParam Integer genreId, @RequestParam String genreName, Model model) {
-        Genre genreUpdate = genreServices.updateGenre(genreId, genreName);
+    public String updateGenre(HttpSession session,@RequestParam Integer genreId, @RequestParam String genreName, Model model) {
+        Genre genreUpdate = genreServices.findGenreById(genreId);
+        String username = (String) session.getAttribute("user");
+        String message = genreServices.updateGenre(genreId, genreName, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Género actualizado correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("genre", genreUpdate);
         model.addAttribute("update", true);
         return "genres";
     }
-
-
 }

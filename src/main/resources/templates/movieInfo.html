@@ -11,19 +11,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <style>
-        /* Estilos personalizados */
-        body {
-            background-color: #f7f7f7;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .navbar {
-            margin-bottom: 20px;
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-        }
 
         h1 {
             text-align: center;
@@ -126,7 +113,7 @@
 </script>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Películas</a>
+        <h4 class="text-light">Películas</h4>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -134,13 +121,40 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Consultas</a>
+                    <a class="nav-link active" href="/moviesQuerys">Consultas</a>
                 </li>
-                <li class="nav-item">
+
+                <li th:if="${logReg}" class="nav-item">
                     <a class="nav-link" href="/login">Login</a>
                 </li>
-                <li class="nav-item">
+                <li th:if="${logReg}" class="nav-item">
                     <a class="nav-link" href="/register">Registro</a>
+                </li>
+
+                <li th:if="${managment}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="gestionesDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Gestión Entidades
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="gestionesDropdown">
+                        <li><a class="dropdown-item" href="/manage/movie">Películas</a></li>
+                        <li><a class="dropdown-item" href="/manage/production_company">Compañías de Producción</a></li>
+                        <li><a class="dropdown-item" href="/manage/departments">Departamentos</a></li>
+                        <li><a class="dropdown-item" href="/manage/genders">Géneros</a></li>
+                        <li><a class="dropdown-item" href="/manage/movie_genres">Géneros de Película</a></li>
+                        <li><a class="dropdown-item" href="/manage/languages">Idiomas</a></li>
+                        <li><a class="dropdown-item" href="/manage/countries">Países de Producción</a></li>
+                        <li><a class="dropdown-item" href="/manage/keywords">Palabras Clave</a></li>
+                        <li><a class="dropdown-item" href="/manage/people">Personas</a></li>
+                        <li><a class="dropdown-item" href="/manage/language_roles">Roles del Lenguaje</a></li>
+                    </ul>
+                </li>
+
+                <li th:unless="${logReg}" class="nav-item">
+                    <a class="nav-link" href="/permissions">Permisos</a>
+                </li>
+                <li th:unless="${logReg}" class="nav-item">
+                    <a class="nav-link" href="/closeSesion">Cerrar sesión</a>
                 </li>
             </ul>
         </div>

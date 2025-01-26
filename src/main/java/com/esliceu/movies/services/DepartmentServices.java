@@ -2,6 +2,7 @@ package com.esliceu.movies.services;
 
 
 import com.esliceu.movies.models.Department;
+import com.esliceu.movies.models.Person;
 import com.esliceu.movies.repos.DepartmentRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,8 @@ public class DepartmentServices {
     public String updateDeparment(Integer id, String name, String username) {
         String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar departamentos");
         if (necessaryPermission == null) return "No tienes el permiso necesario";
+        List<Department> sameName = departmentRepo.findDepartmentByDepartmentName(name);
+        if (!sameName.isEmpty()) return "Ya existe un registro con ese nombre";
         Optional<Department> existingDepartment = departmentRepo.findById(id);
         if (existingDepartment.isEmpty()) return "No existe ese departamento";
         Department updatedDepartment = existingDepartment.get();

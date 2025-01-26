@@ -11,31 +11,9 @@
     <script src="/js/crud.js" defer></script>
     <link rel="stylesheet" href="/css/crud.css">
     <style>
-
-
         table {
-            width: 100%;
-            table-layout: fixed; /* Ajusta el ancho de las columnas según el contenido */
-            font-size: 12px; /* Tamaño de fuente reducido */
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            word-wrap: break-word; /* Permite que el contenido largo se ajuste dentro de la celda */
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tbody tr:hover {
-            background-color: #f1f1f1;
+            table-layout: fixed;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -44,16 +22,16 @@
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Películas</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 p-2">
+    <div class="container-fluid m-0 p-0">
+        <h5 class="text-light fw-bold m-0">Películas</h5>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
+        <div class="collapse navbar-collapse mt-0 " id="navbarNav">
+            <ul class="navbar-nav ms-auto ">
+                <li class="nav-item d-flex justify-content-center align-items-center">
                     <a class="nav-link active" href="/moviesQuerys">Consultas</a>
                 </li>
 
@@ -64,9 +42,7 @@
                     <a class="nav-link" href="/register">Registro</a>
                 </li>
 
-
-                <!-- Dropdown for Gestión Entidades -->
-                <li th:unless="${logReg}" class="nav-item dropdown">
+                <li th:if="${managment}" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="gestionesDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
                         Gestión Entidades
@@ -168,17 +144,17 @@
     <p th:text="${errorMessage}"></p>
 </div>
 <section th:if="${movies != null and #lists.size(movies) > 0}">
-    <table>
+    <table class="mt-2">
         <thead>
         <tr>
             <th style="width: 15%;">Título</th>
             <th>Estreno</th>
-            <th>Duración</th>
-            <th style="width: 3%;">Nota</th>
-            <th style="width: 25%;">Resumen</th>
+            <th style="width: 6%;" >Duración</th>
+            <th style="width: 4%;">Nota</th>
+            <th style="width: 27%;">Resumen</th>
             <th>Presupuesto</th>
             <th>Ingresos</th>
-            <th th style="width: 13%;">Opciones</th>
+            <th th style="width: 8%;">Opciones</th>
         </tr>
         </thead>
         <tbody>

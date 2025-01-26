@@ -2,6 +2,7 @@ package com.esliceu.movies.services;
 
 
 import com.esliceu.movies.models.Keyword;
+import com.esliceu.movies.models.Person;
 import com.esliceu.movies.repos.KeywordRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,8 @@ public class KeywordServices {
     public String updateKeyword(Integer id, String name, String username) {
         String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar palabras clave");
         if (necessaryPermission == null) return "No tienes el permiso necesario";
+        List<Keyword> sameName = keywordRepo.findKeywordByKeywordName(name);
+        if (!sameName.isEmpty()) return "Ya existe un registro con ese nombre";
         Optional<Keyword> existingKeyword = keywordRepo.findById(id);
         if (existingKeyword.isEmpty()) return "No existe esa palabra clave";
         Keyword updatedKeyword = existingKeyword.get();

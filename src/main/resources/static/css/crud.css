@@ -1,13 +1,14 @@
-body, h1, h3, form, table {
+body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Arial', sans-serif;
+    background-color: gray;
 }
 
 h1, h2, h3 {
     text-align: center;
-    color: #333;
+    color: white;
+    font-weight: bold;
 }
 
 h1 {
@@ -32,48 +33,87 @@ h3 {
     font-weight: bold;
 }
 
-/* Forms */
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: gray;
+}
+
+
 form {
     max-width: 500px;
     margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    background-color: #f9f9f9; /* Fondo ligeramente gris */
+    border-radius: 12px; /* Bordes más redondeados */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra más visible */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    gap: 15px; /* Espaciado entre los elementos */
+    font-family: 'Arial', sans-serif; /* Tipografía limpia y moderna */
+    color: #333; /* Color de texto principal */
+    font-size: 1.2rem;
+    font-weight:bold;
 }
 
-.menu form {
-    gap: 20px;
-}
-
+/* Inputs de texto */
 form input[type="text"], #tags, #tags2, #character {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+    padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
+    background-color: #fff; /* Fondo blanco para contraste */
+    font-size: 1rem;
     box-sizing: border-box;
+    transition: all 0.3s ease; /* Transición suave */
 }
 
+/* Cambios al enfocar */
+form input[type="text"]:focus, #tags:focus, #tags2:focus, #character:focus {
+    outline: none;
+    border-color: #4CAF50; /* Color verde para el borde al enfocar */
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Sombra verde tenue */
+}
+
+/* Botón de envío */
 form input[type="submit"] {
-    margin-top: 5px;
     width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
+    padding: 12px;
+    background-color: #4CAF50; /* Verde principal */
+    color: #fff; /* Texto blanco */
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s;
+    font-weight: bold;
+    transition: all 0.3s ease; /* Suavidad en hover */
 }
 
+/* Botón de envío: hover */
 form input[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: #45a049; /* Verde más oscuro al pasar */
+    box-shadow: 0 4px 10px rgba(69, 160, 73, 0.4); /* Sombra verde */
+}
+
+/* Botón de envío: activo */
+form input[type="submit"]:active {
+    background-color: #3e8e41; /* Verde aún más oscuro */
+    transform: scale(0.98); /* Efecto de "presionar" */
+}
+
+/* Títulos dentro del formulario */
+form h1, form h2, form h3 {
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+/* Texto adicional o etiquetas */
+form label {
+    margin-top: 10px;
+    color: #555; /* Texto en gris */
+    font-size: 1.2rem;
+    font-weight: 500;
 }
 
 /* Tables */
@@ -98,6 +138,9 @@ table th {
 table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
 
 /* Input Groups */
 .input-group2 {
@@ -120,9 +163,10 @@ div {
 
 div a {
     text-decoration: none;
-    color: #333;
+    color: white;
     padding: 10px 15px;
     margin: 0 10px;
+    margin-bottom: 3px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
@@ -131,6 +175,7 @@ div a {
 
 div a:hover {
     background-color: #f1f1f1;
+    color: gray;
 }
 
 div a:active {
@@ -207,6 +252,7 @@ div a:active {
 
 .pagination-info span {
     margin: 0 10px;
+    color:white;
 }
 
 /* Responsive Design */

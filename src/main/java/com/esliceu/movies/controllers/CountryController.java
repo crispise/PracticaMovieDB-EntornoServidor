@@ -1,6 +1,8 @@
 package com.esliceu.movies.controllers;
+
 import com.esliceu.movies.models.Country;
 import com.esliceu.movies.services.CountryServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,14 +24,14 @@ public class CountryController {
 
     @GetMapping("/countries")
     public String getCountries() {
-           return "countries";
+        return "countries";
     }
 
     @PostMapping("/countries")
-    public String newCountry(@RequestParam String actionSelect, Model model){
+    public String newCountry(@RequestParam String actionSelect, Model model) {
         switch (actionSelect) {
             case "view-all":
-               return "redirect:/allCountries";
+                return "redirect:/allCountries";
             case "search-by-name":
                 return "redirect:/searchCountries";
             case "create-new":
@@ -78,24 +80,26 @@ public class CountryController {
     }
 
     @PostMapping("/createCountry")
-    public String saveCountry(@RequestParam String countryName, @RequestParam String countryIsoCode, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =countryServices.saveCountry(countryName, countryIsoCode);
+    public String saveCountry(HttpSession session, @RequestParam String countryName, @RequestParam String countryIsoCode, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage = countryServices.saveCountry(countryName, countryIsoCode,username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡País creado correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "countries";
     }
 
     @PostMapping("/deleteCountry")
-    public String deleteCountry(@RequestParam Integer countryId, Model model){
-        String message = countryServices.deleteCountry(countryId);
-        if (message.equals("Ok")){
+    public String deleteCountry(HttpSession session, @RequestParam Integer countryId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = countryServices.deleteCountry(countryId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "El país se ha eliminado correctamente");
-        }else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar el país");
+        } else {
+            model.addAttribute("errorMessage", message);
         }
         return "countries";
     }
@@ -106,21 +110,27 @@ public class CountryController {
         if (country != null) {
             model.addAttribute("country", country);
             model.addAttribute("update", true);
-            return "countries";
         } else {
             model.addAttribute("errorMessage", "El país no fue encontrado");
-            return "countries";
         }
+        return "countries";
     }
 
-   @PostMapping("/updateCountry/{countryId}")
-    public String updateCountry(@RequestParam Integer countryId, @RequestParam String countryName,
-                                @RequestParam String countryIsoCode ,Model model){
-        Country countryUpdate = countryServices.updateCountry(countryId, countryName, countryIsoCode);
+    @PostMapping("/updateCountry/{countryId}")
+    public String updateCountry(HttpSession session, @RequestParam Integer countryId, @RequestParam String countryName,
+                                @RequestParam String countryIsoCode, Model model) {
+        Country countryUpdate = countryServices.findCountryById(countryId);
+        String username = (String) session.getAttribute("user");
+        String message = countryServices.updateCountry(countryId, countryName, countryIsoCode, username);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡País actualizado correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("country", countryUpdate);
         model.addAttribute("update", true);
-       return "countries";
-   }
+        return "countries";
+    }
 
 
 }

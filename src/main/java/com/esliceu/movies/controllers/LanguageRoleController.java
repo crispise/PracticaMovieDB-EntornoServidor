@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.LanguageRole;
 import com.esliceu.movies.services.LanguageRoleServices;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -81,26 +82,27 @@ public class LanguageRoleController {
 
 
     @PostMapping("/createLanguageRole")
-    public String saveLanguageRole(@RequestParam String languageRole, Model model) {
-       model.addAttribute("createNew", true);
-        String resultMessage =languageRoleServices.saveLanguageRole(languageRole);
+    public String saveLanguageRole(HttpSession session, @RequestParam String languageRole, Model model) {
+        String username = (String) session.getAttribute("user");
+        String resultMessage =languageRoleServices.saveLanguageRole(languageRole, username);
         if (resultMessage == null) {
             model.addAttribute("successMessage", "¡Rol de lenguaje creado correctamente!");
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "languageRoles";
     }
 
     @PostMapping("/deleteLanguageRole")
-    public String deleteLanguageRole(@RequestParam Integer roleId,Model model){
-        String message = languageRoleServices.deleteLanguageRole(roleId);
-        if (message.equals("Ok")){
+    public String deleteLanguageRole(HttpSession session,@RequestParam Integer roleId,Model model){
+        String username = (String) session.getAttribute("user");
+        String message = languageRoleServices.deleteLanguageRole(roleId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "El rol del lenguaje se ha eliminado correctamente");
         }else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar el rol del lenguaje");
+            model.addAttribute("errorMessage", message);
         }
-
         return "languageRoles";
 
     }
@@ -111,16 +113,22 @@ public class LanguageRoleController {
         if (languageRole != null) {
             model.addAttribute("languageRole", languageRole);
             model.addAttribute("update", true);
-            return "languageRoles";
         } else {
-            model.addAttribute("errorMessage", "El rol del lenguaje no fue encontrada");
-            return "languageRoles";
+            model.addAttribute("errorMessage", "El rol del lenguaje no fue encontrado");
         }
+        return "languageRoles";
     }
 
    @PostMapping("/updateLanguageRole/{roleId}")
-    public String updateLanguageRole(@RequestParam Integer roleId, @RequestParam String languageRole, Model model){
-        LanguageRole languageRoleUpdate = languageRoleServices.updateLanguageRole(roleId, languageRole);
+    public String updateLanguageRole(HttpSession session,@RequestParam Integer roleId, @RequestParam String languageRole, Model model){
+       LanguageRole languageRoleUpdate = languageRoleServices.findLanguageRoleById(roleId);
+       String username = (String) session.getAttribute("user");
+       String message =  languageRoleServices.updateLanguageRole(roleId, languageRole, username);
+       if (message == null) {
+           model.addAttribute("successMessage", "¡Rol actualizado correctamente!");
+       } else {
+           model.addAttribute("errorMessage", message);
+       }
         model.addAttribute("languageRole", languageRoleUpdate);
         model.addAttribute("update", true);
         return "languageRoles";

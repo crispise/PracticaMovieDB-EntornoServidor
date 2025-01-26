@@ -69,6 +69,8 @@ public class PersonServices {
     public String updatePerson(Integer id, String name, String username) {
         String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar personas");
         if (necessaryPermission == null) return "No tienes el permiso necesario";
+        List<Person> sameName = personRepo.findPersonByPersonName(name);
+        if (!sameName.isEmpty()) return "Ya existe un registro con ese nombre";
         Optional<Person> existingPerson = personRepo.findById(id);
         if (existingPerson.isEmpty()) return "No existe esa persona";
         Person updatedPerson = existingPerson.get();

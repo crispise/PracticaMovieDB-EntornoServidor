@@ -45,7 +45,7 @@ public class MovieCastController {
                                @RequestParam String personName,
                                @RequestParam String gender,
                                @RequestParam String characterName,
-                               @RequestParam Integer castOrder
+                               @RequestParam (required = false) Integer castOrder
                                ,RedirectAttributes redirectAttributes) {
 
         String message = movieCastServices.addMovieCast(personName,gender,characterName,castOrder,movieId);

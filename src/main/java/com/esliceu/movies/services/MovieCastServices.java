@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class MovieCastServices {
     }
 
     public String addMovieCast(String personName, String gender, String character_name, Integer castOrder, Integer movieId) {
-        if (personName.isEmpty() || gender.isEmpty() || character_name.isEmpty())return "Falta rellenar un campo";
+        if (personName.isEmpty() || gender.isEmpty() || character_name.isEmpty() || castOrder == null)return "Falta rellenar un campo";
         List<Person> persons = personRepo.findPersonByPersonName(personName);
         if (persons.size() > 1) {
             return "Hay más de un actor con ese nombre";
@@ -73,8 +74,10 @@ public class MovieCastServices {
 
     public Integer getTheMinCastOrder(Movie movie) {
         Integer min = movie.getMovieCast().stream()
-                .map(mc -> mc.getCastOrder())
-                .max(Integer::compareTo).orElse(null);
+                .map(MovieCast::getCastOrder)
+                .filter(Objects::nonNull)
+                .max(Integer::compareTo)
+                .orElse(0);
         min = min + 1;
         return min;
     }

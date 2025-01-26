@@ -1,6 +1,7 @@
 package com.esliceu.movies.services;
 
 import com.esliceu.movies.models.Gender;
+import com.esliceu.movies.models.Person;
 import com.esliceu.movies.repos.GenderRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,8 @@ public class GenderServices {
     public String updateGender(Integer id, String name, String username) {
         String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar géneros");
         if (necessaryPermission == null) return "No tienes el permiso necesario";
+        List<Gender> sameName = genderRepo.findGenderByGender(name);
+        if (!sameName.isEmpty()) return "Ya existe un registro con ese nombre";
         Optional<Gender> existingGender = genderRepo.findById(id);
         if (existingGender.isEmpty()) return "No existe ese género";
         Gender updatedGender = existingGender.get();

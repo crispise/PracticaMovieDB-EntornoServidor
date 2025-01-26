@@ -1,5 +1,7 @@
 package com.esliceu.movies.services;
+
 import com.esliceu.movies.models.Country;
+import com.esliceu.movies.models.Person;
 import com.esliceu.movies.repos.CountryRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 public class CountryServices {
     @Autowired
     CountryRepo countryRepo;
+    @Autowired
+    PermissionsServices permissionsServices;
 
     public Page<Country> findAllCountries(Pageable pageable) {
         return countryRepo.findAll(pageable);
@@ -31,24 +35,6 @@ public class CountryServices {
         return result;
     }
 
-    public String saveCountry(String name, String isoCode) {
-        if (name == null || name.trim().isEmpty()) {
-            return "El nombre del país no puede estar vacío.";
-        }
-        if (isoCode == null || isoCode.trim().isEmpty()) {
-            return "El código iso no puede estar vacío.";
-        }
-        if (countryRepo.findCountryByCountryName(name).size() >= 1) {
-            return "Ya existe un país con ese nombre.";
-        }
-        Country country = new Country();
-        country.setCountryName(name);
-        country.setCountryIsoCode(isoCode);
-        countryRepo.save(country);
-        return null;
-    }
-
-
     public Country findCountryById(Integer id) {
         return countryRepo.findById(id).get();
     }
@@ -57,31 +43,45 @@ public class CountryServices {
         return countryRepo.findCountryByCountryName(countrySearch);
     }
 
-    public String deleteCountry(Integer id) {
+
+    public String saveCountry(String name, String isoCode, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Crear países");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        if (name == null || name.trim().isEmpty()) return "El nombre del país no puede estar vacío.";
+        if (isoCode == null || isoCode.trim().isEmpty()) return "El código iso no puede estar vacío.";
+        if (countryRepo.findCountryByCountryName(name).size() >= 1) return "Ya existe un país con ese nombre.";
+        Country country = new Country();
+        country.setCountryName(name);
+        country.setCountryIsoCode(isoCode);
+        countryRepo.save(country);
+        return null;
+    }
+
+
+    public String deleteCountry(Integer id, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Eliminar países");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
         try {
             countryRepo.deleteById(id);
-            return "Ok";
-        }catch (Exception e) {
-            return "Error";
+            return null;
+        } catch (Exception e) {
+            return "Ha habido un error al eliminar el país";
         }
 
     }
 
-    public Country updateCountry(Integer id, String name, String isoCode) {
+    public String updateCountry(Integer id, String name, String isoCode, String username) {
+        String necessaryPermission = permissionsServices.checkPermisions(username, "Crear países");
+        if (necessaryPermission == null) return "No tienes el permiso necesario";
+        List<Country> sameName = countryRepo.findCountryByCountryName(name);
+        if (!sameName.isEmpty()) return "Ya existe un registro con ese nombre";
         Optional<Country> existingCountry = countryRepo.findById(id);
-        if (existingCountry.isPresent()) {
-            Country updatedCountry = existingCountry.get();
-            if (name != null && !name.isEmpty()) {
-                updatedCountry.setCountryName(name);
-            }
-            if (isoCode != null && !isoCode.isEmpty()) {
-                updatedCountry.setCountryIsoCode(isoCode);
-            }
-            countryRepo.save(updatedCountry);
-            return updatedCountry;
-        } else {
-            return null;
-        }
+        if (existingCountry.isEmpty()) return "No existe ese país";
+        Country updatedCountry = existingCountry.get();
+        if (name != null && !name.isEmpty()) updatedCountry.setCountryName(name);
+        if (isoCode != null && !isoCode.isEmpty()) updatedCountry.setCountryIsoCode(isoCode);
+        countryRepo.save(updatedCountry);
+        return null;
     }
 
 }

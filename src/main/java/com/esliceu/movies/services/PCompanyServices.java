@@ -1,4 +1,5 @@
 package com.esliceu.movies.services;
+import com.esliceu.movies.models.Person;
 import com.esliceu.movies.models.ProductionCompany;
 import com.esliceu.movies.repos.PCompaniesRepo;
 import com.google.gson.Gson;
@@ -68,6 +69,8 @@ public class PCompanyServices {
     public String updateCompany(Integer id, String name, String username) {
         String necessaryPermission = permissionsServices.checkPermisions(username, "Modificar compañias");
         if (necessaryPermission == null) return "No tienes el permiso necesario";
+        List<ProductionCompany> sameName = productionCompanyRepo.findProductionCompanyByCompanyName(name);
+        if (!sameName.isEmpty()) return "Ya existe un registro con ese nombre";
         Optional<ProductionCompany> existingCompany = productionCompanyRepo.findById(id);
         if (existingCompany.isEmpty()) return "No existe esa compañia";
         ProductionCompany updatedCompany = existingCompany.get();

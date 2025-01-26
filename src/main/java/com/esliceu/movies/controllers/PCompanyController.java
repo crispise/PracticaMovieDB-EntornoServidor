@@ -84,11 +84,11 @@ public class PCompanyController {
     @PostMapping("/createCompany")
     public String saveCompany(HttpSession session, @RequestParam String companyName, Model model) {
         String username = (String) session.getAttribute("user");
-        String resultMessage = pCompanyServices.saveCompany(companyName, username);
-        if (resultMessage == null) {
+        String message = pCompanyServices.saveCompany(companyName, username);
+        if (message == null) {
             model.addAttribute("successMessage", "¡Compañia creada correctamente!");
         } else {
-            model.addAttribute("errorMessage", resultMessage);
+            model.addAttribute("errorMessage", message);
         }
         model.addAttribute("createNew", true);
         return "productionCompany";

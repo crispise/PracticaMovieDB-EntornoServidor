@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 
 import com.esliceu.movies.models.Movie;
 import com.esliceu.movies.services.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,8 @@ public class MovieController {
     MovieCrewServices movieCrewServices;
     @Autowired
     GenreServices genreServices;
+    @Autowired
+    PermissionsServices permissionsServices;
 
     @GetMapping("/movies")
     public String getMovies() {
@@ -44,7 +47,7 @@ public class MovieController {
             case "create-new":
                 return "redirect:/createMovie";
             default:
-                return "redirect:/searchMovies/"+actionSelect;
+                return "redirect:/searchMovies/" + actionSelect;
         }
     }
 
@@ -115,9 +118,9 @@ public class MovieController {
         return "movies";
     }
 
-
     @PostMapping("/createMovie")
-    public String saveMovie(@RequestParam String title,
+    public String saveMovie(HttpSession session,
+                            @RequestParam String title,
                             @RequestParam Integer budget,
                             @RequestParam String homepage,
                             @RequestParam String overview,
@@ -129,8 +132,8 @@ public class MovieController {
                             @RequestParam String tagline,
                             @RequestParam BigDecimal voteAverage,
                             Model model) {
-        model.addAttribute("createNew", true);
-        String resultMessage = movieServices.saveMovie(title, budget, homepage, overview, popularity,
+        String username = (String) session.getAttribute("user");
+        String resultMessage = movieServices.saveMovie(username, title, budget, homepage, overview, popularity,
                 releaseDate, revenue, runtime, movieStatus,
                 tagline, voteAverage);
         if (resultMessage == null) {
@@ -138,16 +141,18 @@ public class MovieController {
         } else {
             model.addAttribute("errorMessage", resultMessage);
         }
+        model.addAttribute("createNew", true);
         return "movies";
     }
 
     @PostMapping("/deleteMovie")
-    public String deleteMovie(@RequestParam Integer movieId, Model model) {
-        String message = movieServices.deleteMovie(movieId);
-        if (message.equals("Ok")) {
+    public String deleteMovie(HttpSession session, @RequestParam Integer movieId, Model model) {
+        String username = (String) session.getAttribute("user");
+        String message = movieServices.deleteMovie(movieId, username);
+        if (message == null) {
             model.addAttribute("successMessage", "La película se ha eliminado correctamente");
         } else {
-            model.addAttribute("errorMessage", "Ha habido un error al eliminar la película");
+            model.addAttribute("errorMessage", message);
         }
         return "movies";
     }
@@ -178,40 +183,47 @@ public class MovieController {
                               @RequestParam String movieStatus,
                               @RequestParam String tagline,
                               @RequestParam BigDecimal voteAverage, Model model) {
-        Movie movieUpdate = movieServices.updateMovie(movieId, title, budget, homepage, overview, popularity,
+        Movie movieUpdate = movieServices.findMovieById(movieId);
+        String message = movieServices.updateMovie(movieId, title, budget, homepage, overview, popularity,
                 releaseDate, revenue, runtime, movieStatus,
                 tagline, voteAverage);
+        if (message == null) {
+            model.addAttribute("successMessage", "¡Película actualizada correctamente!");
+        } else {
+            model.addAttribute("errorMessage", message);
+        }
         model.addAttribute("movie", movieUpdate);
         model.addAttribute("update", true);
         return "movies";
     }
 
     @PostMapping("/selectedEntity")
-    public String selectedEntity(@RequestParam Integer movieId, @RequestParam String selectedEntity,  RedirectAttributes redirectAttributes) {
+    public String selectedEntity(HttpSession session,Model model, @RequestParam Integer movieId, @RequestParam String selectedEntity, RedirectAttributes redirectAttributes) {
+        String username = (String) session.getAttribute("user");
+        String necesaryPermision = permissionsServices.checkPermisions(username, "Modificar películas");
+        if (necesaryPermision == null) {
+            model.addAttribute("errorMessage", "No tienes el permiso necesario para modificar películas");
+            return "movies";
+        }
         switch (selectedEntity) {
             case "movieInfo":
                 redirectAttributes.addFlashAttribute("updateForm", true);
                 return "redirect:/updateMovie/" + movieId;
             case "movieCast":
-                return "redirect:/movieCast/"+movieId;
+                return "redirect:/movieCast/" + movieId;
             case "movieCrew":
-                return "redirect:/movieCrew/"+movieId;
+                return "redirect:/movieCrew/" + movieId;
             case "movieCompany":
-                return "redirect:movieCompany/"+movieId;
+                return "redirect:movieCompany/" + movieId;
             case "movieKeyword":
-                return "redirect:/movieKeyword/"+movieId;
+                return "redirect:/movieKeyword/" + movieId;
             case "movieGenre":
-                return "redirect:/movieGenre/"+movieId;
+                return "redirect:/movieGenre/" + movieId;
             case "movieLanguage":
-                return "redirect:/movieLanguage/"+movieId;
+                return "redirect:/movieLanguage/" + movieId;
             case "movieCountry":
-                return "redirect:/productionCountry/"+movieId;
+                return "redirect:/productionCountry/" + movieId;
         }
         return "movies";
     }
-
-
-
-
-
 }
