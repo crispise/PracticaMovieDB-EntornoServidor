@@ -21,9 +21,9 @@ public class Authorization {
     private Status status;
 
     public enum Status {
-        PENDING,
-        APPROVED,
-        REJECTED
+       PENDIENTE,
+       APROVADO,
+       RECHAZADO
     }
 
     public Long getId() {

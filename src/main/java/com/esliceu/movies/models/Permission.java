@@ -1,6 +1,8 @@
 package com.esliceu.movies.models;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 
 @Entity
 public class Permission {
@@ -11,6 +13,9 @@ public class Permission {
 
     @Column(name = "permission_name", nullable = false, unique = true)
     private String permissionName;
+
+    @OneToMany(mappedBy = "permission")
+    Set<Authorization> authorizations;
 
     public Long getId() {
         return id;
@@ -26,5 +31,13 @@ public class Permission {
 
     public void setPermissionName(String permissionName) {
         this.permissionName = permissionName;
+    }
+
+    public Set<Authorization> getAuthorizations() {
+        return authorizations;
+    }
+
+    public void setAuthorizations(Set<Authorization> authorizations) {
+        this.authorizations = authorizations;
     }
 }

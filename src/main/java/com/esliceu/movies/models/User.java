@@ -1,6 +1,8 @@
 package com.esliceu.movies.models;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class User {
     @Id
@@ -20,6 +22,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    Set<Authorization> authorizations;
+
 
     public Long getId() {
         return id;

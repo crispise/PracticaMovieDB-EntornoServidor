@@ -2,33 +2,37 @@ body, h1, h3, form, table {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
 }
 
-body {
-    background-color: #f4f4f9;
-    padding: 20px;
+h1, h2, h3 {
+    text-align: center;
+    color: #333;
 }
 
 h1 {
-    text-align: center;
-    color: #333;
     font-size: 2rem;
     margin-bottom: 20px;
 }
 
-h2{
-    text-align:center
+h2 {
+    font-size: 1.8rem;
 }
 
 h3 {
-    text-align: center;
-    color: #333;
     font-size: 1.5rem;
     margin-top: 30px;
-    text-align: center;
 }
 
+.navbar {
+    margin-bottom: 20px;
+}
 
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Forms */
 form {
     max-width: 500px;
     margin: 20px auto;
@@ -36,35 +40,20 @@ form {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex
-    flex-direction: column;
-    align-items:center;
-    justify-content:center;
-
-}
-
-.menu form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px; /* Espacio entre los elementos del formulario */
-    max-width: 500px;
-    margin: 0 auto;
+    justify-content: center;
 }
 
-#action-select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px; /* Espacio adicional entre el select y el botón */
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
+.menu form {
+    gap: 20px;
 }
 
-form input[type="text"] {
+form input[type="text"], #tags, #tags2, #character {
     width: 100%;
     padding: 10px;
-    margin: 10px 5;
+    margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
@@ -80,19 +69,20 @@ form input[type="submit"] {
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
+    transition: background-color 0.3s;
 }
 
 form input[type="submit"]:hover {
     background-color: #45a049;
 }
 
-
+/* Tables */
 table {
-
     margin: 20px auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
 table th, table td {
@@ -109,32 +99,20 @@ table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.ui-widget {
-    margin-bottom: 10px;
-    display: block;
-    text-align: center;
-}
-
-
-#tags, #tags2, #character{
-    padding: 10px;
-    width: 60%;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    box-sizing: border-box;
-}
-
-.input-group2{
+/* Input Groups */
+.input-group2 {
     display: flex;
     align-items: center;
-    justify-content:center;
-    flex-direction:row;
+    justify-content: center;
+    flex-direction: row;
     margin-bottom: 10px;
 }
 
-.input-group2 label{
-    margin-right:10px;
+.input-group2 label {
+    margin-right: 10px;
 }
+
+/* Div Links */
 div {
     text-align: center;
     margin-top: 10px;
@@ -148,6 +126,7 @@ div a {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
+    transition: background-color 0.3s;
 }
 
 div a:hover {
@@ -158,39 +137,29 @@ div a:active {
     background-color: #ddd;
 }
 
-
-.pagination-info {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: #333;
-}
-
-.pagination-info span {
-    margin: 0 10px;
+/* Messages */
+.success-message, .error-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
 }
 
 .success-message {
     color: green;
     background-color: #d4edda;
     border: 1px solid green;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
 }
 
 .error-message {
     color: red;
     background-color: #f8d7da;
     border: 1px solid red;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
 }
 
-
+/* Buttons */
 .btn {
     align-items: center;
-    padding: 6px 6px;
+    padding: 6px;
     font-size: 12px;
     font-weight: bold;
     border-radius: 4px;
@@ -202,41 +171,47 @@ div a:active {
 .btn-update {
     background-color: #4c54ae;
     color: white;
-    border: 2px solid #3942a4;  /* Borde de color amarillo oscuro */
+    border: 2px solid #3942a4;
 }
 
 .btn-update:hover {
-    background-color: #232c8e;  /* Amarillo oscuro en hover */
-    transform: scale(1.05);  /* Aumento del tamaño del botón */
+    background-color: #232c8e;
+    transform: scale(1.05);
 }
 
 .btn-delete {
-    background-color: #dc3545;  /* Rojo */
+    background-color: #dc3545;
     color: white;
-    border: 2px solid #c82333;  /* Borde de color rojo oscuro */
+    border: 2px solid #c82333;
 }
 
 .btn-delete:hover {
-    background-color: #c82333;  /* Rojo oscuro en hover */
-    transform: scale(1.05);  /* Aumento del tamaño del botón */
+    background-color: #c82333;
+    transform: scale(1.05);
 }
-.deleteButtonForm{
+
+.deleteButtonForm {
     max-width: 500px;
     margin-left: 10px;
     padding: 0;
     background-color: #fff;
-    border-radius: none;
     box-shadow: none;
 }
 
+/* Pagination Info */
+.pagination-info {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.pagination-info span {
+    margin: 0 10px;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    form input[type="text"], form input[type="submit"] {
-        width: 100%;
-    }
-
-    #tags {
+    form input[type="text"], form input[type="submit"], #tags {
         width: 100%;
     }
 

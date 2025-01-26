@@ -33,4 +33,12 @@ public class LoginController {
             return "login";
         }
     }
+
+    @GetMapping("/closeSesion")
+    public String closeSesion(Model m, HttpSession session) {
+        String username = (String) session.getAttribute("user");
+        session.invalidate();
+        return "redirect:/moviesQuerys";
+    }
+
 }

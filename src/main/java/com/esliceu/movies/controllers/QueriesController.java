@@ -3,6 +3,7 @@ package com.esliceu.movies.controllers;
 import com.esliceu.movies.models.Country;
 import com.esliceu.movies.models.Movie;
 import com.esliceu.movies.services.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,12 +31,17 @@ public class QueriesController {
     GenreServices genreServices;
 
     @GetMapping("/moviesQuerys")
-    public String getQuerie() {
+    public String getQuerie(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("user");
+        if (username == null) {
+            model.addAttribute("logReg", true);
+        }
+
         return "consults";
     }
 
     @PostMapping("/moviesQuerys")
-    public String setMovieQuery(@RequestParam String actionSelect, Model model) {
+    public String setMovieQuery(@RequestParam String actionSelect, HttpSession session, Model model) {
         model.addAttribute("search", true);
         String jsonToSend = "";
         switch (actionSelect) {
