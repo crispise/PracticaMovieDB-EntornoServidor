@@ -16,19 +16,17 @@
     var jsonInfo = /*[[${jsonInfo}]]*/ {};
 
 </script>
-
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Películas</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 p-2">
+    <div class="container-fluid m-0 p-0">
+        <h5 class="text-light fw-bold m-0">Películas</h5>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/moviesQuerys">Consultas</a>
+        <div class="collapse navbar-collapse mt-0 " id="navbarNav">
+            <ul class="navbar-nav ms-auto ">
+                <li class="nav-item d-flex justify-content-center align-items-center">
+                    <a class="nav-link " href="/moviesQuerys">Consultas</a>
                 </li>
 
                 <li th:if="${logReg}" class="nav-item">
@@ -38,10 +36,8 @@
                     <a class="nav-link" href="/register">Registro</a>
                 </li>
 
-
-                <!-- Dropdown for Gestión Entidades -->
                 <li th:unless="${logReg}" class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="gestionesDropdown" role="button"
+                    <a class="nav-link active dropdown-toggle" href="#" id="gestionesDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
                         Gestión Entidades
                     </a>
@@ -60,7 +56,7 @@
                 </li>
 
                 <li th:unless="${logReg}" class="nav-item">
-                    <a class="nav-link" href="/permissions">Permisos</a>
+                    <a class="nav-link " href="/permissions">Permisos</a>
                 </li>
                 <li th:unless="${logReg}" class="nav-item">
                     <a class="nav-link" href="/closeSesion">Cerrar sesión</a>
@@ -69,14 +65,14 @@
         </div>
     </div>
 </nav>
-
-
 <h1>Palabras clave de la película</h1>
 <div class="ui-widget">
     <form action="/addMovieKeyword" method="post">
         <input type="hidden" th:value="${movie.movieId}" name="movieId">
+        <div class="input-group2">
         <label for="tags">Añadir Palabra Clave: </label>
         <input type="text" id="tags" name="keywordName">
+        </div>
         <input type="submit" value="Añadir">
     </form>
 </div>

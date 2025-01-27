@@ -32,8 +32,6 @@ public class QueriesController {
 
     @GetMapping("/moviesQuerys")
     public String getQuerie(HttpSession session, Model model) {
-        String username = (String) session.getAttribute("user");
-        if (username == null) model.addAttribute("logReg", true);
         return "consults";
     }
 
@@ -65,8 +63,6 @@ public class QueriesController {
                 jsonToSend = movieCrewServices.getDirectorJson();
                 break;
         }
-        String username = (String) session.getAttribute("user");
-        if (username == null) model.addAttribute("logReg", true);
         model.addAttribute("jsonInfo", jsonToSend);
         return "consults";
     }
@@ -124,6 +120,7 @@ public class QueriesController {
     @GetMapping("/seeMovieInfo/{id}")
     public String seeMovieInfo(@PathVariable ("id") Integer movieId, Model model) {
         Movie movie = movieServices.findMovieById(movieId);
+
         model.addAttribute("movie", movie);
         return "movieInfo";
     }

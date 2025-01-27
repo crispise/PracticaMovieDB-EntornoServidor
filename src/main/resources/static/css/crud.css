@@ -4,7 +4,12 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: gray;
 }
-
+section {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
 h1, h2, h3 {
     text-align: center;
     color: white;
@@ -50,7 +55,7 @@ form {
     gap: 15px; /* Espaciado entre los elementos */
     font-family: 'Arial', sans-serif; /* Tipografía limpia y moderna */
     color: #333; /* Color de texto principal */
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight:bold;
 }
 
@@ -105,24 +110,23 @@ form h1, form h2, form h3 {
     color: #333;
     text-align: center;
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 /* Texto adicional o etiquetas */
 form label {
     margin-top: 10px;
     color: #555; /* Texto en gris */
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
 }
 
 /* Tables */
 table {
-    margin: 20px auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 95%;
 }
 
 table th, table td {
@@ -254,7 +258,23 @@ div a:active {
     margin: 0 10px;
     color:white;
 }
+.dropdown-menu {
+    background-color: white
+    color: black; /* Texto blanco */
+    border: 1px solid #444; /* Borde oscuro */
+}
 
+.dropdown-menu a {
+    color: black; /* Enlaces blancos */
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: green;
+    color:white;
+    border-radius: 4px;
+
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     form input[type="text"], form input[type="submit"], #tags {

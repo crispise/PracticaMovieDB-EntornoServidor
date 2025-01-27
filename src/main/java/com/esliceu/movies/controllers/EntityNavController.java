@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-public class EntityController {
+public class EntityNavController {
 
     @GetMapping("/manage/{entity}")
     public String getinitPage(@PathVariable("entity") String entity){

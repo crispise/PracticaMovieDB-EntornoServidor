@@ -197,7 +197,7 @@ public class MovieController {
         return "movies";
     }
 
-    @PostMapping("/selectedEntity")
+    @PostMapping("/entityMovieForUpdate")
     public String selectedEntity(HttpSession session,Model model, @RequestParam Integer movieId, @RequestParam String selectedEntity, RedirectAttributes redirectAttributes) {
         String username = (String) session.getAttribute("user");
         String necesaryPermision = permissionsServices.checkPermisions(username, "Modificar películas");
