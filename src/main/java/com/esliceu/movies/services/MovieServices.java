@@ -49,8 +49,8 @@ public class MovieServices {
                             BigDecimal voteAverage) {
         String necessaryPermission = permissionsServices.checkPermisions(username, "Crear películas");
         if (necessaryPermission == null) return "No tienes el permiso necesario";
-        String validationMessage = validateMovieParams(title, budget, homepage, overview, popularity,
-                releaseDate, revenue, runtime, movieStatus, tagline, voteAverage);
+        String validationMessage = validateMovieParams(title,overview,
+                releaseDate,runtime);
         if (validationMessage != null) return validationMessage;
         Movie movie = createMovie(title, budget, homepage, overview, popularity, releaseDate, revenue, runtime,
                 movieStatus, tagline, voteAverage);
@@ -58,9 +58,8 @@ public class MovieServices {
         return null;
     }
 
-    public String validateMovieParams(String title, Integer budget, String homepage, String overview, BigDecimal popularity,
-                                      LocalDate releaseDate, Long revenue, Integer runtime, String movieStatus, String tagline,
-                                      BigDecimal voteAverage) {
+    public String validateMovieParams(String title,String overview,
+                                      LocalDate releaseDate, Integer runtime) {
         if (title == null || title.trim().isEmpty() ||
                 overview == null || overview.trim().isEmpty() ||
                 releaseDate == null ||

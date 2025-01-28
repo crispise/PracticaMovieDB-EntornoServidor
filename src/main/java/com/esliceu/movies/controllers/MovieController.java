@@ -40,7 +40,7 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public String newMovie(@RequestParam String actionSelect, Model model) {
+    public String getOptionsMovie(@RequestParam String actionSelect) {
         switch (actionSelect) {
             case "view-all":
                 return "redirect:/allMovies";
@@ -113,7 +113,7 @@ public class MovieController {
     }
 
     @GetMapping("/createMovie")
-    public String createPerson(Model model) {
+    public String createMovie(Model model) {
         model.addAttribute("createNew", true);
         return "movies";
     }
@@ -121,16 +121,16 @@ public class MovieController {
     @PostMapping("/createMovie")
     public String saveMovie(HttpSession session,
                             @RequestParam String title,
-                            @RequestParam Integer budget,
+                            @RequestParam(required = false) Integer budget,
                             @RequestParam String homepage,
                             @RequestParam String overview,
-                            @RequestParam BigDecimal popularity,
-                            @RequestParam LocalDate releaseDate,
-                            @RequestParam Long revenue,
-                            @RequestParam Integer runtime,
+                            @RequestParam(required = false) BigDecimal popularity,
+                            @RequestParam(defaultValue = "1000-01-01") LocalDate releaseDate,
+                            @RequestParam(required = false) Long revenue,
+                            @RequestParam(required = false) Integer runtime,
                             @RequestParam String movieStatus,
                             @RequestParam String tagline,
-                            @RequestParam BigDecimal voteAverage,
+                            @RequestParam(required = false) BigDecimal voteAverage,
                             Model model) {
         String username = (String) session.getAttribute("user");
         String resultMessage = movieServices.saveMovie(username, title, budget, homepage, overview, popularity,
@@ -173,16 +173,16 @@ public class MovieController {
     @PostMapping("/updateMovie/{movieId}")
     public String updateMovie(@RequestParam Integer movieId,
                               @RequestParam String title,
-                              @RequestParam Integer budget,
+                              @RequestParam(required = false) Integer budget,
                               @RequestParam String homepage,
                               @RequestParam String overview,
-                              @RequestParam BigDecimal popularity,
-                              @RequestParam LocalDate releaseDate,
-                              @RequestParam Long revenue,
-                              @RequestParam Integer runtime,
+                              @RequestParam(required = false) BigDecimal popularity,
+                              @RequestParam(required = false) LocalDate releaseDate,
+                              @RequestParam(required = false) Long revenue,
+                              @RequestParam(required = false) Integer runtime,
                               @RequestParam String movieStatus,
                               @RequestParam String tagline,
-                              @RequestParam BigDecimal voteAverage, Model model) {
+                              @RequestParam(required = false) BigDecimal voteAverage, Model model) {
         Movie movieUpdate = movieServices.findMovieById(movieId);
         String message = movieServices.updateMovie(movieId, title, budget, homepage, overview, popularity,
                 releaseDate, revenue, runtime, movieStatus,
